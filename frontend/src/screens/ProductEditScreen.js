@@ -1,7 +1,7 @@
 import axios from 'axios'
 import React, { useState, useEffect } from 'react'
 import { Link, useParams, useNavigate } from 'react-router-dom'
-import { Form, Button, Row, Col } from 'react-bootstrap'
+import { Form, Button} from 'react-bootstrap'
 import { useDispatch, useSelector } from 'react-redux'
 import Message from '../components/Message'
 import Loader from '../components/Loader'
@@ -76,7 +76,7 @@ const ProductEditScreen = () => {
   }
   const submitHandler = (e) => {
     e.preventDefault()
-    const newPrice = prices.filter(p => p.qty && p.price)
+
     dispatch(
       updateProduct({
         _id: id,
