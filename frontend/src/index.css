@@ -1,0 +1,91 @@
+/* This is the page to put custom style */
+main {
+  min-height: 80vh;
+}
+
+h3 {
+  padding: 1rem 0;
+}
+
+h1 {
+  font-size: 1.8rem;
+  padding: 1rem 0;
+}
+h2 {
+  font-size: 1.4rem;
+  padding: 0.5rem 0;
+}
+a {
+  text-decoration: none;
+  color: #343a40;
+}
+a:hover {
+  text-decoration: underline;
+}
+
+/* To change the text color to #8cc63e */
+header {
+  color: #8cc63e;
+}
+.navbar-light .navbar-brand,
+.navbar-light .navbar-nav .nav-link {
+  color: #8cc63e;
+}
+
+/* To change the color of Product nav item and make it bold */
+.navbar-light .nav-link,
+.navbar-light .navbar-nav .nav-link {
+  color: #010101 !important;
+  font-weight: bold;
+}
+
+.navbar-dark .dropdown-menu .dropdown-item {
+  color: #010101 !important;
+}
+
+/* nav hover and background color change on hover remove arrow */
+.navbar-nav .nav-link:hover {
+  background-color: #e5e5e5;
+}
+
+.navbar-nav .nav-link::after {
+  display: none;
+}
+
+.navbar-nav {
+  margin: 0 auto;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+/* Dropdown on hover */
+.dropdown:hover > .dropdown-menu {
+  display: block;
+}
+/* all buttons */
+.button-primary {
+  background-color: #010101;
+  border-radius: 20px;
+  color: #fff;
+  font-size: 18px;
+  font-weight: bold;
+  padding: 10px 20px;
+  cursor: pointer;
+  box-shadow: none;
+}
+.button-primary:hover {
+  background-color: #ebeae8;
+  color: #5e7f2d;
+  box-shadow: none;
+}
+
+.btn-product:focus {
+  outline: none;
+}
+
+.btn-product:active {
+  background-color: #8cc63e !important;
+  border-color: #8cc63e !important;
+  box-shadow: none !important;
+}
