@@ -1,3 +1,0 @@
-
-export PATH="/app/user/node/bin:$PATH"
-

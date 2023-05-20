@@ -5,7 +5,7 @@ import { Row, Col } from 'react-bootstrap'
 import Product from '../components/Product'
 import Message from '../components/Message'
 import Loader from '../components/Loader'
-
+import Paginate from '../components/Paginate'
 import Meta from '../components/Meta'
 //import ProductCarousel from '../components/ProductCarousel'
 import { categoryProducts } from '../actions/productActions'
@@ -16,7 +16,7 @@ const ProductCategoryScreen = () => {
 
   // state of productList from store
   const productCategory = useSelector((state) => state.productCategory)
-  const { loading, error, products} = productCategory
+  const { loading, error, products, page, pages } = productCategory
 
   useEffect(() => {
     dispatch(categoryProducts(keyword, pageNumber))
