@@ -4,12 +4,8 @@ import { Elements } from '@stripe/react-stripe-js'
 import CheckoutForm from '../components/CheckoutForm'
 import { loadStripe } from '@stripe/stripe-js'
 import { useSelector, useDispatch } from 'react-redux'
-import { getOrderDetails } from '../actions/orderActions'
 import { useParams } from 'react-router-dom'
-import {
-  ORDER_DELIVER_RESET,
-  ORDER_PAY_RESET,
-} from '../constants/orderConstants'
+
 
 function Payment() {
   const { id } = useParams()
@@ -19,10 +15,10 @@ function Payment() {
   const { totalPrice } = orderDetails.order
 
   const orderPay = useSelector((state) => state.orderPay)
-  const { loading, success } = orderPay
+  const { success } = orderPay
 
   const orderDeliver = useSelector((state) => state.orderDeliver)
-  const { loading: loadingDeliver, success: successDeliver } = orderDeliver
+  const { success: successDeliver } = orderDeliver
 
   console.log(orderDetails.order.totalPrice)
   const [stripePromise, setStripePromise] = useState(null)

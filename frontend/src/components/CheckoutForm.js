@@ -3,7 +3,7 @@ import { useState } from 'react'
 import { useStripe, useElements } from '@stripe/react-stripe-js'
 import { payOrder } from '../actions/orderActions'
 import { useDispatch } from 'react-redux'
-import { useParams, useNavigate } from 'react-router-dom'
+import { useNavigate } from 'react-router-dom'
 
 export default function CheckoutForm(props) {
   const stripe = useStripe()

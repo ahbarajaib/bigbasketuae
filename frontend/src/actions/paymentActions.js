@@ -1,6 +1,7 @@
 import { loadStripe } from '@stripe/stripe-js'
 import { PAYMENT_FAIL, PAYMENT_SUCCESS } from '../constants/paymentContants'
 
+
 export const createPaymentIntent = (data) => {
   return async (dispatch, getState) => {
     const stripe = await loadStripe(
