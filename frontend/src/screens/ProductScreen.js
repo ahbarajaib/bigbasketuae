@@ -113,9 +113,7 @@ const ProductScreen = (history) => {
                   </h4>
                 </ListGroup.Item>
 
-                <ListGroup.Item>
-                  Description: {product.description}
-                </ListGroup.Item>
+                
               </ListGroup>
             </Col>
 
@@ -179,6 +177,16 @@ const ProductScreen = (history) => {
               </Card>
             </Col>
           </Row>
+          <Row className="my-4">
+  <Col md={12}>
+    <ListGroup.Item className="description-item">
+      <h5><strong>Description:</strong></h5>
+      <p>{product.description}</p>
+    </ListGroup.Item>
+  </Col>
+</Row>
+
+
         </>
       )}
     </>
