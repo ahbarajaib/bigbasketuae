@@ -21,8 +21,6 @@ import {
 } from '../constants/orderConstants'
 import { logout } from './userActions'
 
-const axiosInstance = axios.create({baseURL:process.env.REACT_APP_API_URL})
-
 export const createOrder = (order) => async (dispatch, getState) => {
   try {
     dispatch({
@@ -40,7 +38,7 @@ export const createOrder = (order) => async (dispatch, getState) => {
       },
     }
 
-    const { data } = await axiosInstance.post(`/api/orders`, order, config)
+    const { data } = await axios.post(`/api/orders`, order, config)
 
     dispatch({
       type: ORDER_CREATE_SUCCESS,
@@ -77,7 +75,7 @@ export const getOrderDetails = (id) => async (dispatch, getState) => {
       },
     }
 
-    const { data } = await axiosInstance.get(`/api/orders/${id}`, config)
+    const { data } = await axios.get(`/api/orders/${id}`, config)
 
     dispatch({
       type: ORDER_DETAILS_SUCCESS,
@@ -113,7 +111,7 @@ export const payOrder = (id, paymentIntent) => async (dispatch, getState) => {
       },
     }
 
-    const { data } = await axiosInstance.put(
+    const { data } = await axios.put(
       `/api/orders/${id}/payment`,
       paymentIntent,
       config
@@ -154,7 +152,7 @@ export const deliverOrder = (order) => async (dispatch, getState) => {
       },
     }
 
-    const { data } = await axiosInstance.put(
+    const { data } = await axios.put(
       `/api/orders/${order._id}/deliver`,
       {},
       config
@@ -193,7 +191,7 @@ export const listMyOrder = () => async (dispatch, getState) => {
       },
     }
 
-    const { data } = await axiosInstance.get(
+    const { data } = await axios.get(
       `/api/orders/myorders`,
 
       config
@@ -230,7 +228,7 @@ export const listOrders = () => async (dispatch, getState) => {
       },
     }
 
-    const { data } = await axiosInstance.get('/api/orders', config)
+    const { data } = await axios.get('/api/orders', config)
     dispatch({
       type: ORDER_LIST_SUCCESS,
       payload: data,

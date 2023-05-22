@@ -1,7 +1,7 @@
 import axios from 'axios'
 import React, { useState, useEffect } from 'react'
 import { Link, useParams, useNavigate } from 'react-router-dom'
-import { Form, Button } from 'react-bootstrap'
+import { Form, Button,Row, Col } from 'react-bootstrap'
 import { useDispatch, useSelector } from 'react-redux'
 import Message from '../components/Message'
 import Loader from '../components/Loader'
@@ -16,7 +16,7 @@ const ProductEditScreen = () => {
   const [image, setImage] = useState('')
   const [brand, setBrand] = useState('')
   const [category, setCategory] = useState('')
-  const [prices, setPrices] = useState([]); 
+  const [prices, setPrices] = useState([])
   const [countInStock, setCountInStock] = useState(0)
   const [description, setDescription] = useState('')
   const [uploading, setUploading] = useState(false)
@@ -46,11 +46,8 @@ const ProductEditScreen = () => {
         setBrand(product.brand)
         setCategory(product.category)
         setPrices(product.prices)
-
         setCountInStock(product.countInStock)
         setDescription(product.description)
-        
-
       }
     }
   }, [dispatch, navigate, id, product, successUpdate])
@@ -74,32 +71,7 @@ const ProductEditScreen = () => {
       setUploading(false)
     }
   }
-  const submitHandler = (e) => {
-    e.preventDefault()
- 
-    dispatch(
-      updateProduct({
-        _id: id,
-        name,
-        prices,
-        image,
-        brand,
-        category,
-        description,
-        countInStock,
-      })
-    )
-  }
 
-  // const handlePriceChange = (index, field, value) => {
-  //   const newPrices = [...prices]
-  //   newPrices[index][field] = value
-  //   setPrices(newPrices)
-  //   console.log(newPrices)
-  // }
-
-
-  
   const handlePriceChange = (index, field, value) => {
     const updatedPrices = [...prices]
     updatedPrices[index] = {
@@ -109,6 +81,30 @@ const ProductEditScreen = () => {
     setPrices(updatedPrices)
   }
 
+  const handleQuantityChange = (quantity) => {
+    const updatedPrices = []
+    for (let i = 0; i < quantity; i++) {
+      updatedPrices.push({ qty: 1, price: 1 })
+    }
+    setPrices(updatedPrices)
+  }
+
+  const submitHandler = (e) => {
+    e.preventDefault()
+    const newPrice = prices.filter((p) => p.qty && p.price)
+    dispatch(
+      updateProduct({
+        _id: id,
+        name,
+        prices: newPrice,
+        image,
+        brand,
+        category,
+        description,
+        countInStock,
+      })
+    )
+  }
 
   return (
     <>
@@ -135,43 +131,46 @@ const ProductEditScreen = () => {
               ></Form.Control>
             </Form.Group>
 
+            <Form.Group controlId='quantity'>
+              <Form.Label>No of product quantities Eg: 500gm, 1kg, 3kg</Form.Label>
+              <Form.Select
+                value={prices.length}
+                onChange={(e) => handleQuantityChange(parseInt(e.target.value))}
+              >
+                <option value='1'>1</option>
+                <option value='2'>2</option>
+                <option value='3'>3</option>
+                <option value='4'>4</option>
+              </Form.Select>
+            </Form.Group>
+
             {prices.map((price, index) => (
-        <div key={index} style={{ display: 'flex' }}>
-          <Form.Group
-            controlId={`qty${index}`}
-            style={{ marginRight: '10px' }}
-            
-          >
-            <Form.Label>Qty {index + 1}</Form.Label>
-            <Form.Control
-              type='number'
-              placeholder='Enter qty'
-              value={price.qty}
-              onChange={(e) =>
-                handlePriceChange(index, 'qty', e.target.value)
-              }
-              
-            />
-          </Form.Group>
-          <Form.Group
-            controlId={`price${index}`}
-            style={{ marginRight: '10px' }}
-            
-          >
-            <Form.Label>Price {index + 1}</Form.Label>
-            <Form.Control
-              type='number'
-              placeholder='Enter price'
-              value={price.price}
-              onChange={(e) =>
-                handlePriceChange(index, 'price', e.target.value)
-              }
-              
-            />
-          </Form.Group>
-          
-        </div>
-      ))}
+                <Row key={index}>
+                  <Col xs={6} sm={6} md={6} lg={6}>
+                    <Form.Group controlId={`qty${index}`}>
+                      <Form.Label>Qty {index + 1}</Form.Label>
+                      <Form.Control
+                        type='number'
+                        placeholder='Enter qty'
+                        value={price.qty}
+                        onChange={(e) => handlePriceChange(index, 'qty', e.target.value)}
+                      />
+                    </Form.Group>
+                  </Col>
+                  <Col xs={6} sm={6} md={6} lg={6}>
+                    <Form.Group controlId={`price${index}`}>
+                      <Form.Label>Price {index + 1}</Form.Label>
+                      <Form.Control
+                        type='number'
+                        placeholder='Enter price'
+                        value={price.price}
+                        onChange={(e) => handlePriceChange(index, 'price', e.target.value)}
+                      />
+                    </Form.Group>
+                  </Col>
+                </Row>
+              ))}
+
 
             <Form.Group controlId='image'>
               <Form.Label>Image</Form.Label>
@@ -221,8 +220,8 @@ const ProductEditScreen = () => {
                 <option value='spices'>Spices</option>
                 <option value='legumes'>Legumes</option>
                 <option value='grains'>Grains</option>
-                <option value='cereals-and-pasta'>cereals &amp; Pasta</option>
-                <option value='sweetners'>Sweetners</option>
+                <option value='cereals-and-pasta'>Cereals &amp; Pasta</option>
+                <option value='sweeteners'>Sweeteners</option>
                 <option value='nuts-and-seeds'>Nuts &amp; Seeds</option>
                 <option value='sauces'>Sauces</option>
               </Form.Select>

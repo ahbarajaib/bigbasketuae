@@ -1,22 +1,20 @@
-import React from 'react'
-import { Link } from 'react-router-dom'
-import { Card } from 'react-bootstrap'
-// product in the bracket comes from HomeScreen.js
+import React from 'react';
+import { Link } from 'react-router-dom';
+import { Card } from 'react-bootstrap';
+
 const Product = ({ product }) => {
   return (
-    // my = margin top and bottom
-
-    <Card
-      className='my-3 p-3 rounded'
-      style={{
-        boxShadow: '0 4px 8px rgba(0, 0, 0, 0.1)',
-        borderRadius: '10px',
-        padding: '20px',
-      }}
-    >
-      {/* Link to = is from react router dom */}
-      <Link to={`/product/${product._id}`}>
-        <Card.Img src={product.image} variant='top' />
+    <Card className='my-3 rounded'>
+      <Link to={`/product/${product._id}`} style={{ display: 'block' }}>
+        <Card.Img
+          src={product.image}
+          variant='top'
+          style={{
+            objectFit: 'cover',
+            height: '200px', // Adjust the image height as needed
+            borderRadius: '10px',
+          }}
+        />
       </Link>
       <Card.Body>
         <Link to={`/product/${product._id}`}>
@@ -27,12 +25,15 @@ const Product = ({ product }) => {
         <Card.Subtitle as='div' className='text-muted'>
           {product.brand}
         </Card.Subtitle>
-
-        <Card.Subtitle as='div'>{product.prices[0].qty} {product.prices[0].qty < 50 ? 'kg' : 'gm'}</Card.Subtitle>
-        <Card.Text as='h2'>AED {product.prices[0].price}</Card.Text>
+        <Card.Subtitle as='div'>
+          {product.prices[0].qty} {product.prices[0].qty < 50 ? 'kg' : 'gm'}
+        </Card.Subtitle>
+        <Card.Text as='h2' style={{ marginBottom: '0' }}>
+          AED {product.prices[0].price}
+        </Card.Text>
       </Card.Body>
     </Card>
-  )
-}
+  );
+};
 
-export default Product
+export default Product;

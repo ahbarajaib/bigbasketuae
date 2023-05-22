@@ -1,58 +1,54 @@
+import React, { useState } from 'react';
+import { Link } from 'react-router-dom';
+import Navbar from 'react-bootstrap/Navbar';
+import Nav from 'react-bootstrap/Nav';
 
-import Nav from 'react-bootstrap/Nav'
+const ProductNav = () => {
+  const [expanded, setExpanded] = useState(false);
 
-import { Link } from 'react-router-dom'
+  const handleToggle = () => {
+    setExpanded(!expanded);
+  };
 
-const navStyle = {
-  display: 'flex',
-  alignItems: 'center',
-  justifyContent: 'center',
-}
-
-const linkStyle = {
-  color: '#010101',
-  fontWeight: 'bold',
-  margin: '0 10px',
-}
-
-function ProductNav() {
   return (
-    <Nav
+    <Navbar
+      expanded={expanded}
+      expand='lg'
       className='justify-content-center'
-      style={{ ...navStyle, maxHeight: '100px' }}
-      navbarScroll
+      style={{ backgroundColor: '#fff' }}
     >
-      <Link to='/category/spices' className='nav-link' style={linkStyle}>
-        Spices
-      </Link>
-      <Link to='/category/legumes' className='nav-link' style={linkStyle}>
-        Legumes
-      </Link>
-      <Link to='/category/grains' className='nav-link' style={linkStyle}>
-        Grains
-      </Link>
-      <Link
-        to='/category/cereals-and-pasta'
-        className='nav-link'
-        style={linkStyle}
-      >
-        Cereal & Pasta
-      </Link>
-      <Link to='/category/sweeteners' className='nav-link' style={linkStyle}>
-        Sweeteners
-      </Link>
-      <Link
-        to='/category/nuts-and-seeds'
-        className='nav-link'
-        style={linkStyle}
-      >
-        Nuts & Seeds
-      </Link>
-      <Link to='/category/sauces' className='nav-link' style={linkStyle}>
-        Sauces
-      </Link>
-    </Nav>
-  )
-}
+      <Navbar.Toggle
+        aria-controls='responsive-navbar-nav'
+        onClick={handleToggle}
+        className='ml-auto'
+      />
+      <Navbar.Collapse id='responsive-navbar-nav'>
+        <Nav className='justify-content-center'>
+          <Link to='/category/spices' className='nav-link'>
+            Spices
+          </Link>
+          <Link to='/category/legumes' className='nav-link'>
+            Legumes
+          </Link>
+          <Link to='/category/grains' className='nav-link'>
+            Grains
+          </Link>
+          <Link to='/category/cereals-and-pasta' className='nav-link'>
+            Cereal & Pasta
+          </Link>
+          <Link to='/category/sweeteners' className='nav-link'>
+            Sweeteners
+          </Link>
+          <Link to='/category/nuts-and-seeds' className='nav-link'>
+            Nuts & Seeds
+          </Link>
+          <Link to='/category/sauces' className='nav-link'>
+            Sauces
+          </Link>
+        </Nav>
+      </Navbar.Collapse>
+    </Navbar>
+  );
+};
 
-export default ProductNav
+export default ProductNav;

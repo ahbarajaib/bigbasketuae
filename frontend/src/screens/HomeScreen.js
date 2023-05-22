@@ -7,9 +7,12 @@ import Message from '../components/Message'
 import Loader from '../components/Loader'
 import Paginate from '../components/Paginate'
 import Meta from '../components/Meta'
+import CarouselContainer from '../components/CarouselContainer'
 import { listProducts } from '../actions/productActions'
 
+
 const HomeScreen = () => {
+
   const dispatch = useDispatch()
   const { keyword, pageNumber = 1 } = useParams()
 
@@ -19,19 +22,14 @@ const HomeScreen = () => {
 
   useEffect(() => {
     dispatch(listProducts(keyword, pageNumber))
+    
   }, [dispatch, keyword, pageNumber])
 
   return (
     <>
       <Meta />
 
-      {/* {!keyword ? (
-        <ProductCarousel category='grains' />
-      ) : (
-        <Link to='/' className='btn btn-light'>
-          Go Back
-        </Link>
-      )} */}
+      <CarouselContainer/>
       <h1>Latest Products</h1>
       {loading ? (
         <Loader />
