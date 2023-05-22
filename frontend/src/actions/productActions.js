@@ -20,13 +20,16 @@ import {
   PRODUCT_CATEGORY_FAIL,
 } from '../constants/productConstants'
 
+
+const axiosInstance = axios.create({baseURL:process.env.REACT_APP_API_URL})
+
 export const listProducts =
   (keyword = '', pageNumber = '') =>
   async (dispatch) => {
     try {
       dispatch({ type: PRODUCT_LIST_REQUEST })
 
-      const { data } = await axios.get(
+      const { data } = await axiosInstance.get(
         `/api/products?keyword=${keyword}&pageNumber=${pageNumber}`
       )
       dispatch({
@@ -50,7 +53,7 @@ export const categoryProducts =
     try {
       dispatch({ type: PRODUCT_CATEGORY_REQUEST })
 
-      const { data } = await axios.get(
+      const { data } = await axiosInstance.get(
         `/api/products?keyword=${keyword}&pageNumber=${pageNumber}&category=${category}`
       )
       dispatch({
@@ -72,7 +75,7 @@ export const listProductDetails = (id) => async (dispatch) => {
   try {
     dispatch({ type: PRODUCT_DETAILS_REQUEST })
 
-    const { data } = await axios.get(`/api/products/${id}`)
+    const { data } = await axiosInstance.get(`/api/products/${id}`)
     dispatch({
       type: PRODUCT_DETAILS_SUCCESS,
       payload: data,
@@ -92,7 +95,7 @@ export const listProductsByCategory = (category) => async (dispatch) => {
   try {
     dispatch({ type: PRODUCT_CATEGORY_REQUEST })
 
-    const { data } = await axios.get(`/api/products/category/${category}`)
+    const { data } = await axiosInstance.get(`/api/products/category/${category}`)
     dispatch({
       type: PRODUCT_CATEGORY_SUCCESS,
       payload: data,
@@ -124,7 +127,7 @@ export const deleteProduct = (id) => async (dispatch, getState) => {
       },
     }
 
-    await axios.delete(`/api/products/${id}`, config)
+    await axiosInstance.delete(`/api/products/${id}`, config)
 
     dispatch({
       type: PRODUCT_DELETE_SUCCESS,
@@ -158,7 +161,7 @@ export const createProduct = () => async (dispatch, getState) => {
       },
     }
     //{} because we are making a post request but not sending any data
-    const { data } = await axios.post(`/api/products`, {}, config)
+    const { data } = await axiosInstance.post(`/api/products`, {}, config)
 
     dispatch({
       type: PRODUCT_CREATE_SUCCESS,
@@ -194,7 +197,7 @@ export const updateProduct = (product) => async (dispatch, getState) => {
       },
     }
     //{} because we are making a post request but not sending any data
-    const { data } = await axios.put(
+    const { data } = await axiosInstance.put(
       `/api/products/${product._id}`,
       product,
       config
