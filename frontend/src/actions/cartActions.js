@@ -8,6 +8,7 @@ import {
 } from '../constants/cartConstants'
 
 const axiosInstance = axios.create({baseURL:process.env.REACT_APP_API_URL})
+
 //get id and qty from the url
 export const addToCart =
   (id, noOfProducts, selectedQty, selectedPrice, totalCartPrice) =>

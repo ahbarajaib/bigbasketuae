@@ -4,17 +4,34 @@ import multer from 'multer'
 
 const router = express.Router()
 
+// const storage = multer.diskStorage({
+//   destination(req, file, cb) {
+//     const destination = 'uploads/'.replace(/\\/g, '/');
+//     cb(null, destination);
+//   },
+//   filename(req, file, cb) {
+//     cb(
+//       null,
+//       `${file.fieldname}-${Date.now()}${path.extname(file.originalname)}`
+//     )
+//   },
+// })
+
 const storage = multer.diskStorage({
   destination(req, file, cb) {
-    cb(null, 'uploads/')
+    cb(null, 'uploads/');
   },
   filename(req, file, cb) {
-    cb(
-      null,
-      `${file.fieldname}-${Date.now()}${path.extname(file.originalname)}`
-    )
+    const uniqueSuffix = Date.now() + '-' + Math.round(Math.random() * 1E9);
+    const fileExtension = path.extname(file.originalname);
+    const fileName = `${file.fieldname}-${uniqueSuffix}${fileExtension}`;
+    cb(null, fileName);
   },
-})
+});
+
+
+
+
 
 function checkFileType(file, cb) {
   const filetypes = /jpg|jpeg|png/
@@ -37,6 +54,9 @@ const upload = multer({
 })
 
 router.post('/', upload.single('image'), (req, res) => {
-  res.send(`/${req.file.path}`)
+  const imagePath = req.file.path.replace(/\\/g, '/');
+  res.send(`/${imagePath}`);
 })
+
+
 export default router
