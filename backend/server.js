@@ -16,6 +16,7 @@ import orderRoutes from './routes/orderRoutes.js'
 import uploadRoutes from './routes/uploadRoutes.js'
 import bodyParser from 'body-parser'
 import cors from 'cors'
+import nStatic from 'node-static'
 
 // importing environmental variables
 dotenv.config()
@@ -91,6 +92,10 @@ app.use('/api/upload', uploadRoutes)
 const __dirname = path.resolve()
 app.use('/uploads', express.static(path.join(__dirname, '/uploads')))
 
+
+
+var fileServer = new nStatic.Server('./public');
+
 // Define routes
 app.get('/api/contactus', (req, res) => {
   // Handle GET request for /api/contactus
@@ -141,8 +146,7 @@ app.use(notFound)
 app.use(errorHandler)
 const PORT = process.env.PORT || 5000
 
-app.listen(
-  PORT,
+app.listen(PORT,
   console.log(
     `Server running in ${process.env.NODE_ENV} mode on port ${PORT}`.yellow.bold
   )
