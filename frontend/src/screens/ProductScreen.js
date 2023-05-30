@@ -63,7 +63,11 @@ const ProductScreen = (history) => {
           <Meta title={product.name} />
           <Row>
             <Col md={6}>
-              <Image src={product.image} alt={product.name} fluid />
+              <Image
+                src={process.env.REACT_APP_API_URL + product.image}
+                alt={product.name}
+                fluid
+              />
             </Col>
             <Col md={3}>
               <ListGroup variant='flush'>
@@ -91,13 +95,10 @@ const ProductScreen = (history) => {
                               setSelectedPrice(price.price)
                             }}
                           >
-                           {price.qty} {price.qty < 100 ? 'kg' : 'gm'}
-                            
+                            {price.qty} {price.qty < 100 ? 'kg' : 'gm'}
                           </Button>
-                          
                         </Col>
                       ))}
-                    
                   </Row>
                 </ListGroup.Item>
                 <ListGroup.Item>
@@ -112,8 +113,6 @@ const ProductScreen = (history) => {
                     </strong>
                   </h4>
                 </ListGroup.Item>
-
-                
               </ListGroup>
             </Col>
 
@@ -177,16 +176,16 @@ const ProductScreen = (history) => {
               </Card>
             </Col>
           </Row>
-          <Row className="my-4">
-  <Col md={12}>
-    <ListGroup.Item className="description-item">
-      <h5><strong>Description:</strong></h5>
-      <p>{product.description}</p>
-    </ListGroup.Item>
-  </Col>
-</Row>
-
-
+          <Row className='my-4'>
+            <Col md={12}>
+              <ListGroup.Item className='description-item'>
+                <h5>
+                  <strong>Description:</strong>
+                </h5>
+                <p>{product.description}</p>
+              </ListGroup.Item>
+            </Col>
+          </Row>
         </>
       )}
     </>

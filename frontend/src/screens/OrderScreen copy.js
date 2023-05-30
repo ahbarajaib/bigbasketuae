@@ -146,7 +146,7 @@ const OrderScreen = () => {
                       <Row>
                         <Col md={1}>
                           <Image
-                            src={item.image}
+                            src={process.env.REACT_APP_API_URL + item.image}
                             alt={item.name}
                             fluid
                             rounded

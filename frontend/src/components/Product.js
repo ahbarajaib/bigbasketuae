@@ -1,13 +1,13 @@
-import React from 'react';
-import { Link } from 'react-router-dom';
-import { Card } from 'react-bootstrap';
+import React from 'react'
+import { Link } from 'react-router-dom'
+import { Card } from 'react-bootstrap'
 
 const Product = ({ product }) => {
   return (
     <Card className='my-3 rounded'>
       <Link to={`/product/${product._id}`} style={{ display: 'block' }}>
         <Card.Img
-          src={product.image}
+          src={process.env.REACT_APP_API_URL + product.image}
           variant='top'
           style={{
             objectFit: 'cover',
@@ -33,7 +33,7 @@ const Product = ({ product }) => {
         </Card.Text>
       </Card.Body>
     </Card>
-  );
-};
+  )
+}
 
-export default Product;
+export default Product

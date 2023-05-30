@@ -2,7 +2,7 @@
 import path from 'path'
 import { resolve } from 'path'
 import stripe from 'stripe'
-
+import * as url from 'url'
 import dotenv from 'dotenv'
 import express from 'express'
 import colors from 'colors'
@@ -16,7 +16,6 @@ import orderRoutes from './routes/orderRoutes.js'
 import uploadRoutes from './routes/uploadRoutes.js'
 import bodyParser from 'body-parser'
 import cors from 'cors'
-import nStatic from 'node-static'
 
 // importing environmental variables
 dotenv.config()
@@ -87,14 +86,10 @@ app.use('/api/users', userRoutes)
 app.use('/api/orders', orderRoutes)
 app.use('/api/upload', uploadRoutes)
 
-
-
 const __dirname = path.resolve()
-app.use('/uploads', express.static(path.join(__dirname, '/uploads')))
 
-
-
-var fileServer = new nStatic.Server('./public');
+//app.use('/uploads', express.static(path.join(__dirname, './uploads')))
+app.use('/uploads', express.static(path.join(__dirname, 'uploads')))
 
 // Define routes
 app.get('/api/contactus', (req, res) => {
@@ -146,7 +141,8 @@ app.use(notFound)
 app.use(errorHandler)
 const PORT = process.env.PORT || 5000
 
-app.listen(PORT,
+app.listen(
+  PORT,
   console.log(
     `Server running in ${process.env.NODE_ENV} mode on port ${PORT}`.yellow.bold
   )
