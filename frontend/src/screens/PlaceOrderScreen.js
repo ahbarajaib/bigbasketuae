@@ -12,7 +12,7 @@ const PlaceOrderScreen = () => {
 
   const cart = useSelector((state) => state.cart)
 
-  console.log(cart)
+
   const { shippingAddress } = cart
   if (!shippingAddress) {
     navigate('/shipping')

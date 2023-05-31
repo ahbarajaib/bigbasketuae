@@ -23,7 +23,7 @@ const OrderScreen = () => {
   const orderDetails = useSelector((state) => state.orderDetails)
   const { order, loading, error } = orderDetails
 
-  console.log(orderDetails)
+
   const orderPay = useSelector((state) => state.orderPay)
   //loadingPay is just a rename because its used above
   const { loading: loadingPay, success: successPay } = orderPay

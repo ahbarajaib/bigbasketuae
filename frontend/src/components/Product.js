@@ -7,7 +7,7 @@ const Product = ({ product }) => {
     <Card className='my-3 rounded'>
       <Link to={`/product/${product._id}`} style={{ display: 'block' }}>
         <Card.Img
-          src={process.env.REACT_APP_API_URL + product.image}
+          src={product.image}
           variant='top'
           style={{
             objectFit: 'cover',
