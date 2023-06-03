@@ -26,7 +26,12 @@ const app = express()
 if (process.env.NODE_ENV === 'development') {
   app.use(morgan('dev'))
 }
-app.use(cors())
+
+//app.use(cors())
+app.use(cors({
+  origin: 'http://145.14.157.56'
+}));
+
 app.use(express.json())
 app.use(bodyParser.json())
 //middleware is a function that has access to req res cycle
