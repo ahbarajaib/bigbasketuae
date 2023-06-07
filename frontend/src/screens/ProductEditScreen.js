@@ -195,9 +195,8 @@ const ProductEditScreen = () => {
               <Form.Control
                 type='text'
                 placeholder='Enter brand'
-                value='Shahi Kohinoor'
+                value={brand}
                 onChange={(e) => setBrand(e.target.value)}
-                disabled
               ></Form.Control>
             </Form.Group>
 
