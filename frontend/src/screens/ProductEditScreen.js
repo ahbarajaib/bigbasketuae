@@ -217,13 +217,13 @@ const ProductEditScreen = () => {
                 onChange={(e) => setCategory(e.target.value)}
               >
                 <option value=''>Select a category</option>
-                <option value='spices'>Spices</option>
+                <option value='spices-and-condiments'>Spices &amp; Condiments</option>
                 <option value='legumes'>Legumes</option>
                 <option value='grains'>Grains</option>
-                <option value='cereals-and-pasta'>Cereals &amp; Pasta</option>
-                <option value='sweeteners'>Sweeteners</option>
-                <option value='nuts-and-seeds'>Nuts &amp; Seeds</option>
-                <option value='sauces'>Sauces</option>
+                <option value='oils-and-ghees'>Oils &amp; Ghees</option>
+                <option value='canned-and-jarred-goods'>Canned &amp; Jarred Goods</option>
+                <option value='dryfruits-and-nuts'>Dryfruits &amp; Nuts</option>
+                <option value='beverages'>Beverages</option>
               </Form.Select>
             </Form.Group>
 

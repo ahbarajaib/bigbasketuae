@@ -24,16 +24,16 @@ function Payment() {
   const orderDeliver = useSelector((state) => state.orderDeliver)
   const { loading: loadingDeliver, success: successDeliver } = orderDeliver
 
-  console.log(orderDetails.order.totalPrice)
+
   const [stripePromise, setStripePromise] = useState(null)
   const [clientSecret, setClientSecret] = useState('')
-
+	console.log(totalPrice)
   useEffect(() => {
     fetch('/api/config/stripe').then(
       async (r) => {
         const { publishableKey } = await r.json()
         setStripePromise(loadStripe(publishableKey))
-        console.log(publishableKey)
+        
       }
     )
   }, [dispatch, id, success, successDeliver, order])
@@ -45,6 +45,7 @@ function Payment() {
       headers: {
         'Content-Type': 'application/json',
       },
+
     }).then(async (result) => {
       var { clientSecret } = await result.json()
       setClientSecret(clientSecret)

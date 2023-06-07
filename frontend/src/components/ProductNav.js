@@ -24,8 +24,8 @@ const ProductNav = () => {
       />
       <Navbar.Collapse id='responsive-navbar-nav'>
         <Nav className='justify-content-center'>
-          <Link to='/category/spices' className='nav-link'>
-            Spices
+          <Link to='/category/spices-and-condiments' className='nav-link'>
+            Spices & Condiments
           </Link>
           <Link to='/category/legumes' className='nav-link'>
             Legumes
@@ -33,17 +33,17 @@ const ProductNav = () => {
           <Link to='/category/grains' className='nav-link'>
             Grains
           </Link>
-          <Link to='/category/cereals-and-pasta' className='nav-link'>
-            Cereal & Pasta
+          <Link to='/category/oils-and-ghees' className='nav-link'>
+            Oils & Ghees
           </Link>
-          <Link to='/category/sweeteners' className='nav-link'>
-            Sweeteners
+          <Link to='/category/canned-and-jarred-goods' className='nav-link'>
+            Canned & Jarred Goods
           </Link>
-          <Link to='/category/nuts-and-seeds' className='nav-link'>
-            Nuts & Seeds
+          <Link to='/category/dryfruits-and-nuts' className='nav-link'>
+            Dryfruits & Nuts
           </Link>
-          <Link to='/category/sauces' className='nav-link'>
-            Sauces
+          <Link to='/category/beverages' className='nav-link'>
+            Beverages
           </Link>
         </Nav>
       </Navbar.Collapse>
