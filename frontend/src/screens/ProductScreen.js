@@ -79,27 +79,29 @@ const ProductScreen = (history) => {
                   {product.brand}
                 </ListGroup.Item>
                 <ListGroup.Item>
-                  <Row>
-                    {product.prices &&
-                      product.prices.map((price) => (
-                        <Col key={price.qty}>
-                          <Button
-                            variant={
-                              selectedQty === price.qty
-                                ? 'primary'
-                                : 'outline-primary'
-                            }
-                            className='btn-product'
-                            onClick={() => {
-                              setSelectedQty(price.qty)
-                              setSelectedPrice(price.price)
-                            }}
-                          >
-                            {price.qty} {price.qty < 100 ? 'kg' : 'gm'}
-                          </Button>
-                        </Col>
-                      ))}
-                  </Row>
+		<Row className="flex-wrap align-items-center">
+		  {product.prices &&
+		    product.prices.map((price) => (
+		      <Col key={price.qty} xs="auto">
+		        <Button
+		          variant={
+		            selectedQty === price.qty ? 'primary' : 'outline-primary'
+		          }
+		          className='btn-product'
+		          onClick={() => {
+		            setSelectedQty(price.qty);
+		            setSelectedPrice(price.price);
+		          }}
+		          style={{ fontSize: '0.8rem', marginRight: '5px' }} // Adjust the font size and spacing as needed
+		        >
+		          <span style={{ whiteSpace: 'nowrap' }}>
+		            {price.qty} {price.qty < 100 ? 'kg' : 'gm'}
+		          </span>
+		        </Button>
+		      </Col>
+		    ))}
+		</Row>
+
                 </ListGroup.Item>
                 <ListGroup.Item>
                   <h4>
