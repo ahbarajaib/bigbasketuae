@@ -77,7 +77,7 @@ const deleteProduct = asyncHandler(async (req, res) => {
 const createProduct = asyncHandler(async (req, res) => {
   const product = new Product({
     name: 'Sample name',
-    prices: [{ qty: 1, price: 1 },{ qty: 1, price: 1 },{ qty: 1, price: 1 },{ qty: 1, price: 1 }],
+    prices: [{ qty: 1, mgml:'mg', price: 1 },{ qty: 1, mgml:'mg', price: 1 },{ qty: 1, mgml:'mg', price: 1 },{ qty: 1, mgml:'mg', price: 1 }],
     user: req.user._id,
     image: '/images/sample.jpg',
     brand: 'Shahi Kohinoor',

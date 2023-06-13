@@ -40,6 +40,10 @@ const productSchema = mongoose.Schema(
           type: Number,
           required: true,
         },
+        mgml: {
+          type: String,
+          required: true,
+        },
       },
     ],
     noOfProducts: {

@@ -1,6 +1,6 @@
-import React from 'react'
-import { Link } from 'react-router-dom'
-import { Card } from 'react-bootstrap'
+import React from 'react';
+import { Link } from 'react-router-dom';
+import { Card } from 'react-bootstrap';
 
 const Product = ({ product }) => {
   return (
@@ -11,7 +11,7 @@ const Product = ({ product }) => {
           variant='top'
           style={{
             objectFit: 'cover',
-            height: '200px', // Adjust the image height as needed
+            height: '200px',
             borderRadius: '10px',
           }}
         />
@@ -25,15 +25,19 @@ const Product = ({ product }) => {
         <Card.Subtitle as='div' className='text-muted'>
           {product.brand}
         </Card.Subtitle>
-        <Card.Subtitle as='div'>
-          {product.prices[0].qty} {product.prices[0].qty < 50 ? 'kg' : 'gm'}
-        </Card.Subtitle>
-        <Card.Text as='h2' style={{ marginBottom: '0' }}>
-          AED {product.prices[0].price}
-        </Card.Text>
+        {product.prices && product.prices.length > 0 && (
+          <>
+            <Card.Subtitle as='div'>
+              {product.prices[0].qty} {product.prices[0].mgml}
+            </Card.Subtitle>
+            <Card.Text as='h2' style={{ marginBottom: '0' }}>
+              AED {product.prices[0].price}
+            </Card.Text>
+          </>
+        )}
       </Card.Body>
     </Card>
-  )
-}
+  );
+};
 
-export default Product
+export default Product;

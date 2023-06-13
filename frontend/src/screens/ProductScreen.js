@@ -95,7 +95,7 @@ const ProductScreen = (history) => {
 		          style={{ fontSize: '0.8rem', marginRight: '5px' }} // Adjust the font size and spacing as needed
 		        >
 		          <span style={{ whiteSpace: 'nowrap' }}>
-		            {price.qty} {price.qty < 100 ? 'kg' : 'gm'}
+		            {price.qty} {price.mgml}
 		          </span>
 		        </Button>
 		      </Col>
