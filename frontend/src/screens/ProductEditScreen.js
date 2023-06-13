@@ -82,7 +82,7 @@ const ProductEditScreen = () => {
     setPrices(updatedPrices)
   }
   
-  const handleMgMlChange = (index, field, value) => {
+  const handleUnitsChange = (index, field, value) => {
     const updatedPrices = [...prices];
     updatedPrices[index] = {
       ...updatedPrices[index],
@@ -97,7 +97,7 @@ const ProductEditScreen = () => {
   const handleQuantityChange = (quantity) => {
     const updatedPrices = [];
     for (let i = 0; i < quantity; i++) {
-      updatedPrices.push({ qty: 1, mgml: 'mg', price: 1 });
+      updatedPrices.push({ qty: 1, units: 'gm', price: 1 });
     }
     setPrices(updatedPrices);
   };
@@ -106,7 +106,7 @@ const ProductEditScreen = () => {
 
   const submitHandler = (e) => {
     e.preventDefault()
-    const newPrice = prices.filter((p) => p.qty && p.mgml && p.price)
+    const newPrice = prices.filter((p) => p.qty && p.units && p.price)
     dispatch(
       updateProduct({
         _id: id,
@@ -173,14 +173,14 @@ const ProductEditScreen = () => {
                     </Form.Group>
                   </Col>
                   <Col xs={4} sm={4} md={4} lg={4}>
-                        <Form.Group controlId={`mgml${index}`}>
-                        <Form.Label>Mg/Ml/Kg/Ltr</Form.Label>
+                        <Form.Group controlId={`units${index}`}>
+                        <Form.Label>Gm/Ml/Kg/Ltr</Form.Label>
         
                   <Form.Select
-                    value={price.mgml}
-                    onChange={(e) => handleMgMlChange(index,'mgml', e.target.value)}
+                    value={price.units}
+                    onChange={(e) => handleUnitsChange(index,'units', e.target.value)}
                   >
-                    <option value='mg'>mg</option>
+                    <option value='gm'>gm</option>
                     <option value='kg'>kg</option>
                     <option value='ml'>ml</option>
                     <option value='ltr'>ltr</option>

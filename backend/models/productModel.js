@@ -40,7 +40,7 @@ const productSchema = mongoose.Schema(
           type: Number,
           required: true,
         },
-        mgml: {
+        units: {
           type: String,
           required: true,
         },

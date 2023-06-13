@@ -28,7 +28,7 @@ const Product = ({ product }) => {
         {product.prices && product.prices.length > 0 && (
           <>
             <Card.Subtitle as='div'>
-              {product.prices[0].qty} {product.prices[0].mgml}
+              {product.prices[0].qty} {product.prices[0].units}
             </Card.Subtitle>
             <Card.Text as='h2' style={{ marginBottom: '0' }}>
               AED {product.prices[0].price}
