@@ -1,14 +1,16 @@
-//es6 way of importing
+                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                      //es6 way of importing
+import fs from 'fs';
+import https from 'https';
+
 import path from 'path'
 import { resolve } from 'path'
 import stripe from 'stripe'
-
+import * as url from 'url'
 import dotenv from 'dotenv'
 import express from 'express'
 import colors from 'colors'
 import { notFound, errorHandler } from './middleware/errorMiddleware.js'
 import morgan from 'morgan'
-//import products from './data/products.js'
 import connectDB from './config/db.js'
 import productRoutes from './routes/productRoutes.js'
 import userRoutes from './routes/userRoutes.js'
@@ -16,11 +18,10 @@ import orderRoutes from './routes/orderRoutes.js'
 import uploadRoutes from './routes/uploadRoutes.js'
 import bodyParser from 'body-parser'
 import cors from 'cors'
-import nStatic from 'node-static'
 
 // importing environmental variables
 dotenv.config()
-
+//database
 connectDB()
 
 const app = express()
@@ -28,13 +29,18 @@ const app = express()
 if (process.env.NODE_ENV === 'development') {
   app.use(morgan('dev'))
 }
-app.use(cors())
+
+//app.use(cors())
+app.use(cors());
+
 app.use(express.json())
 app.use(bodyParser.json())
 //middleware is a function that has access to req res cycle
 app.use((req, res, next) => {
   //to check which URL triggered this console.log(req.originalUrl)
-
+  res.setHeader('Access-Control-Allow-Origin', 'https://bigbasketuae.com');
+  res.setHeader('Access-Control-Allow-Methods', 'GET, POST, OPTIONS, PUT, DELETE');
+  res.setHeader('Access-Control-Allow-Headers', 'Authorization, Content-Type, Accept');
   next()
 })
 
@@ -60,7 +66,7 @@ app.get('/api/config/stripe', (req, res) => {
 app.use(express.urlencoded({ extended: true }))
 
 app.post('/create-payment-intent', async (req, res) => {
-  try {
+ try {
     const totalPrice = req.body.totalPrice * 100
     console.log(totalPrice)
     const paymentIntent = await stripeInstance.paymentIntents.create({
@@ -81,20 +87,15 @@ app.post('/create-payment-intent', async (req, res) => {
     })
   }
 })
-
 app.use('/api/products', productRoutes)
 app.use('/api/users', userRoutes)
 app.use('/api/orders', orderRoutes)
 app.use('/api/upload', uploadRoutes)
 
-
-
 const __dirname = path.resolve()
-app.use('/uploads', express.static(path.join(__dirname, '/uploads')))
 
-
-
-var fileServer = new nStatic.Server('./public');
+//app.use('/uploads', express.static(path.join(__dirname, './uploads')))
+app.use('/uploads', express.static(path.join(__dirname, 'uploads')))
 
 // Define routes
 app.get('/api/contactus', (req, res) => {
@@ -165,8 +166,24 @@ app.use(notFound)
 app.use(errorHandler)
 const PORT = process.env.PORT || 5000
 
-app.listen(PORT,
-  console.log(
-    `Server running in ${process.env.NODE_ENV} mode on port ${PORT}`.yellow.bold
-  )
-)
+// ...
+
+// Read the SSL certificate and key files
+const privateKey = fs.readFileSync('/etc/letsencrypt/live/bigbasketuae.com/privkey.pem', 'utf8');
+const certificate = fs.readFileSync('/etc/letsencrypt/live/bigbasketuae.com/fullchain.pem', 'utf8');
+const credentials = { key: privateKey, cert: certificate };
+
+// Create an HTTPS server
+const httpsServer = https.createServer(credentials, app);
+
+// Start the HTTPS server
+httpsServer.listen(PORT, () => {
+  console.log(`Server running in ${process.env.NODE_ENV} mode on port ${PORT} (HTTPS)`.yellow.bold);
+});
+
+//app.listen(
+//  PORT,
+//  console.log(
+//    `Server running in ${process.env.NODE_ENV} mode on port ${PORT}`.yellow.bold
+// )
+//)
