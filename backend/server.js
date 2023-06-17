@@ -142,6 +142,25 @@ if (process.env.NODE_ENV === 'production') {
 //route in app then this will kick
 app.use(notFound)
 
+
+//error middleware @errorMiddleware.js
+
+
+// // ...
+
+// // Read the SSL certificate and key files
+// const privateKey = fs.readFileSync('/etc/letsencrypt/live/bigbasketuae.com/privkey.pem', 'utf8');
+// const certificate = fs.readFileSync('/etc/letsencrypt/live/bigbasketuae.com/fullchain.pem', 'utf8');
+// const credentials = { key: privateKey, cert: certificate };
+
+// // Create an HTTPS server
+// const httpsServer = https.createServer(credentials, app);
+
+// // Start the HTTPS server
+// httpsServer.listen(PORT, () => {
+//   console.log(`Server running in ${process.env.NODE_ENV} mode on port ${PORT} (HTTPS)`.yellow.bold);
+// });
+
 //error middleware @errorMiddleware.js
 app.use(errorHandler)
 const PORT = process.env.PORT || 5000
