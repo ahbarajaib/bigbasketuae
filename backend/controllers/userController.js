@@ -3,6 +3,45 @@
 import asyncHandler from 'express-async-handler'
 import generateToken from '../utils/generateToken.js'
 import User from '../models/userModel.js'
+import config from '../config/config.js'
+import bcrypt from 'bcryptjs';
+
+import nodemailer from 'nodemailer'
+import randomstring from 'randomstring'
+
+const sendResetPasswordMail = async (name, email, token, res) => {
+  try {
+    const transporter = nodemailer.createTransport({
+      host: 'smtpout.secureserver.net',
+      port: 465,
+      secure: true,
+      auth: {
+        user: config.emailUser,
+        pass: config.emailPassword,
+      },
+    });
+
+    const mailOptions = {
+      from: config.emailUser,
+      to: email,
+      subject: 'Reset Password - bigbasketuae.com',
+      html: `<p> Hi ${name}, please copy the link and <a href="http://localhost:3000/reset-password?token=${token}">reset the password</a>`,
+    };
+
+    transporter.sendMail(mailOptions, function (error, info) {
+      if (error) {
+        console.log(error);
+        res.status(400).send({ success: false, message: 'Failed to send reset password email' });
+      } else {
+        console.log('Mail has been sent:', info.response);
+        res.status(200).send({ success: true, message: 'Reset password email sent. Please check your email inbox and reset the password' });
+      }
+    });
+  } catch (error) {
+    res.status(500).send({ success: false, message: 'An error occurred while sending the reset password email' });
+  }
+};
+
 
 //@desc Auth user & get token
 //@route POST /api/users/login
@@ -164,6 +203,55 @@ const updateUser = asyncHandler(async (req, res) => {
   }
 })
 
+const forgotPassword = async (req, res) => {
+  try {
+    console.log(req.body);
+    const email = req.body.email;
+    const userData = await User.findOne({ email: email });
+    console.log(userData);
+    if (userData) {
+      const randomString = randomstring.generate();
+      const data = await User.updateOne({ email: email }, { $set: { token: randomString } });
+      sendResetPasswordMail(userData.name, userData.email, randomString, res);
+    } else {
+      res.status(400).send({ success: false, message: 'This email does not exist.' });
+    }
+  } catch (error) {
+    res.status(500).send({ success: false, message: 'An error occurred while processing the request.' });
+  }
+};
+
+
+const resetPassword = async (req, res) => {
+  try {
+    const token = req.query.token;
+    const tokenData = await User.findOne({ token: token });
+    if (tokenData) {
+      const password = req.body.password;
+      console.log(password)
+      const salt = await bcrypt.genSalt(10);
+      const hashedPassword = await bcrypt.hash(password, salt);
+      const userData = await User.findByIdAndUpdate(
+        tokenData._id,
+        { $set: { password: hashedPassword, token: '' } },
+        { new: true }
+      );
+      res.status(200).send({
+        success: true,
+        msg: 'User password has been reset',
+        data: userData,
+      });
+    } else {
+      res.status(200).send({ success: false, msg: 'This link has expired' });
+    }
+  } catch (error) {
+    res.status(400).send({ success: false, msg:error.message});
+
+  }
+};
+
+
+
 export {
   authUser,
   registerUser,
@@ -173,4 +261,6 @@ export {
   deleteUser,
   getUserById,
   updateUser,
+  forgotPassword,
+  resetPassword
 }

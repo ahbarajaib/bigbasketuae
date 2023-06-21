@@ -31,6 +31,8 @@ import AboutUsScreen from './screens/AboutUsScreen'
 import PrivacyPolicyScreen from './screens/PrivacyPolicyScreen'
 import TermsScreen from './screens/TermsScreen'
 import ProductCategoryScreen from './screens/ProductCategoryScreen'
+import ForgotPasswordScreen from './screens/ForgotPasswordScreen';
+import ResetPasswordScreen from './screens/ResetPasswordScreen';
 
 import Payment from './screens/Payment'
 import Completion from './screens/Completion'
@@ -49,6 +51,8 @@ function App() {
             <Route path='/orders/:id/payment' element={<Payment />} />
             <Route path='/completion' element={<Completion />} />
             <Route path='/orders/:id' element={<OrderScreen />} />
+            <Route path='/forgot-password' element={<ForgotPasswordScreen />} />
+            <Route path='/reset-password' element={<ResetPasswordScreen />} />
 
             <Route path='/placeorder' element={<PlaceOrderScreen />} />
             <Route path='/shipping' element={<ShippingScreen />} />
