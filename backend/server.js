@@ -144,6 +144,9 @@ app.use(notFound)
 
 
 //error middleware @errorMiddleware.js
+app.use(errorHandler)
+const PORT = process.env.PORT || 5000
+
 
 
 // // ...
@@ -161,9 +164,6 @@ app.use(notFound)
 //   console.log(`Server running in ${process.env.NODE_ENV} mode on port ${PORT} (HTTPS)`.yellow.bold);
 // });
 
-//error middleware @errorMiddleware.js
-app.use(errorHandler)
-const PORT = process.env.PORT || 5000
 
 app.listen(PORT,
   console.log(
