@@ -2,7 +2,8 @@
 import path from 'path'
 import { resolve } from 'path'
 import stripe from 'stripe'
-
+import https from 'https'
+import fs from 'fs'
 import dotenv from 'dotenv'
 import express from 'express'
 import colors from 'colors'
@@ -151,22 +152,22 @@ const PORT = process.env.PORT || 5000
 
 // // ...
 
-// // Read the SSL certificate and key files
-// const privateKey = fs.readFileSync('/etc/letsencrypt/live/bigbasketuae.com/privkey.pem', 'utf8');
-// const certificate = fs.readFileSync('/etc/letsencrypt/live/bigbasketuae.com/fullchain.pem', 'utf8');
-// const credentials = { key: privateKey, cert: certificate };
+ // Read the SSL certificate and key files
+ const privateKey = fs.readFileSync('/etc/letsencrypt/live/bigbasketuae.com/privkey.pem', 'utf8');
+ const certificate = fs.readFileSync('/etc/letsencrypt/live/bigbasketuae.com/fullchain.pem', 'utf8');
+ const credentials = { key: privateKey, cert: certificate };
 
-// // Create an HTTPS server
-// const httpsServer = https.createServer(credentials, app);
+ // Create an HTTPS server
+ const httpsServer = https.createServer(credentials, app);
 
-// // Start the HTTPS server
-// httpsServer.listen(PORT, () => {
-//   console.log(`Server running in ${process.env.NODE_ENV} mode on port ${PORT} (HTTPS)`.yellow.bold);
-// });
+// Start the HTTPS server
+ httpsServer.listen(PORT, () => {
+   console.log(`Server running in ${process.env.NODE_ENV} mode on port ${PORT} (HTTPS)`.yellow.bold);
+ });
 
 
-app.listen(PORT,
-  console.log(
-    `Server running in ${process.env.NODE_ENV} mode on port ${PORT}`.yellow.bold
-  )
-)
+//app.listen(PORT,
+//  console.log(
+//    `Server running in ${process.env.NODE_ENV} mode on port ${PORT}`.yellow.bold
+//  )
+//)

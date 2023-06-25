@@ -21,13 +21,15 @@ router
   .get(protect, getUserProfile)
   .all(protect, updateUserProfile)
 
+//  router.route('/forgot-password').post(forgotPassword)
+router.post('/forgot-password', forgotPassword)
+// router.route('/reset-password').post(resetPassword)
+router.post('/reset-password', resetPassword)
+
 router
   .route('/:id')
   .delete(protect, admin, deleteUser)
   .get(protect, admin, getUserById)
   .put(protect, admin, updateUser)
-
-  router.route('/forgot-password').post(forgotPassword)
-  router.route('/reset-password').post(resetPassword)
 
 export default router

@@ -299,7 +299,7 @@ export const forgotPassword = (email) => async (dispatch) => {
       },
     };
 
-    const { data } = await axiosInstance.post('/api/users/forgot-password', { email }, config);
+    const { data } = await axiosInstance.post(`/api/users/forgot-password`, { email }, config);
 
     dispatch({
       type: USER_FORGOT_PASSWORD_SUCCESS,

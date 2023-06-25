@@ -202,8 +202,7 @@ const updateUser = asyncHandler(async (req, res) => {
     throw new Error('User not found')
   }
 })
-
-const forgotPassword = async (req, res) => {
+const forgotPassword = asyncHandler(async (req, res) => {
   try {
     console.log(req.body);
     const email = req.body.email;
@@ -219,16 +218,15 @@ const forgotPassword = async (req, res) => {
   } catch (error) {
     res.status(500).send({ success: false, message: 'An error occurred while processing the request.' });
   }
-};
+});
 
-
-const resetPassword = async (req, res) => {
+const resetPassword = asyncHandler(async (req, res) => {
   try {
     const token = req.query.token;
     const tokenData = await User.findOne({ token: token });
     if (tokenData) {
       const password = req.body.password;
-      console.log(password)
+      console.log(password);
       const salt = await bcrypt.genSalt(10);
       const hashedPassword = await bcrypt.hash(password, salt);
       const userData = await User.findByIdAndUpdate(
@@ -245,10 +243,10 @@ const resetPassword = async (req, res) => {
       res.status(200).send({ success: false, msg: 'This link has expired' });
     }
   } catch (error) {
-    res.status(400).send({ success: false, msg:error.message});
-
+    res.status(400).send({ success: false, msg: error.message });
   }
-};
+});
+
 
 
 
