@@ -73,6 +73,7 @@ const ProductScreen = (history) => {
               <ListGroup variant='flush'>
                 <ListGroup.Item>
                   <h3>{product.name}</h3>
+                  <p>{product.category}</p>
                 </ListGroup.Item>
                 <ListGroup.Item className='text-muted'>
                   Brand:&nbsp;

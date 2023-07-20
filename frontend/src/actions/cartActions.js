@@ -1,19 +1,19 @@
-import axios from 'axios'
+import axios from "axios";
 import {
   CART_ADD_ITEM,
   CART_REMOVE_ITEM,
   CART_SAVE_SHIPPING_ADDRESS,
   CART_SAVE_PAYMENT_METHOD,
   CART_UPDATE_ITEM,
-} from '../constants/cartConstants'
+} from "../constants/cartConstants";
 
-const axiosInstance = axios.create({baseURL:process.env.REACT_APP_API_URL})
+const axiosInstance = axios.create({ baseURL: process.env.REACT_APP_API_URL });
 
 //get id and qty from the url
 export const addToCart =
   (id, noOfProducts, selectedQty, selectedPrice, totalCartPrice) =>
   async (dispatch, getState) => {
-    const { data } = await axiosInstance.get(`/api/products/${id}`)
+    const { data } = await axiosInstance.get(`/api/products/${id}`);
 
     dispatch({
       type: CART_ADD_ITEM,
@@ -28,9 +28,12 @@ export const addToCart =
 
         countInStock: data.countInStock,
       },
-    })
-    localStorage.setItem('cartItems', JSON.stringify(getState().cart.cartItems))
-  }
+    });
+    localStorage.setItem(
+      "cartItems",
+      JSON.stringify(getState().cart.cartItems)
+    );
+  };
 
 export const updateSelectedQtyPrice = (
   productId,
@@ -46,8 +49,27 @@ export const updateSelectedQtyPrice = (
       selectedQty,
       selectedPrice,
     },
-  }
-}
+  };
+};
+
+export const addProductToCartFromProductComponent = (
+  productId,
+  noOfProducts,
+  selectedQty,
+  selectedUnits,
+  selectedPrice
+) => {
+  return {
+    type: CART_UPDATE_ITEM,
+    payload: {
+      productId,
+      noOfProducts,
+      selectedQty,
+      selectedUnits,
+      selectedPrice,
+    },
+  };
+};
 
 export const updateCart =
   (noOfProducts, selectedQty, selectedPrice) => async (dispatch, getState) => {
@@ -59,33 +81,36 @@ export const updateCart =
 
         noOfProducts,
       },
-    })
-    localStorage.setItem('cartItems', JSON.stringify(getState().cart.cartItems))
-  }
+    });
+    localStorage.setItem(
+      "cartItems",
+      JSON.stringify(getState().cart.cartItems)
+    );
+  };
 
 export const removeFromCart = (id) => (dispatch, getState) => {
   dispatch({
     type: CART_REMOVE_ITEM,
     payload: id,
-  })
+  });
 
-  localStorage.setItem('cartItems', JSON.stringify(getState().cart.cartItems))
-}
+  localStorage.setItem("cartItems", JSON.stringify(getState().cart.cartItems));
+};
 
 export const saveShippingAddress = (data) => (dispatch) => {
   dispatch({
     type: CART_SAVE_SHIPPING_ADDRESS,
     payload: data,
-  })
+  });
 
-  localStorage.setItem('shippingAddress', JSON.stringify(data))
-}
+  localStorage.setItem("shippingAddress", JSON.stringify(data));
+};
 
 export const savePaymentMethod = (data) => (dispatch) => {
   dispatch({
     type: CART_SAVE_PAYMENT_METHOD,
     payload: data,
-  })
+  });
 
-  localStorage.setItem('paymentMethod', JSON.stringify(data))
-}
+  localStorage.setItem("paymentMethod", JSON.stringify(data));
+};

@@ -1,10 +1,10 @@
-import Accordion from 'react-bootstrap/Accordion'
+import Accordion from "react-bootstrap/Accordion";
 
 function AllCollapseExample() {
   return (
     <Accordion>
       <h2>Delivery FAQ</h2>
-      <Accordion.Item eventKey='0'>
+      <Accordion.Item eventKey="0">
         <Accordion.Header>In which areas do you deliver?</Accordion.Header>
         <Accordion.Body>
           We deliver to any area/building that is within the serviced area in
@@ -13,7 +13,7 @@ function AllCollapseExample() {
           the best service and we will keep you updated!
         </Accordion.Body>
       </Accordion.Item>
-      <Accordion.Item eventKey='1'>
+      <Accordion.Item eventKey="1">
         <Accordion.Header>
           Is it possible to set a specific delivery time?
         </Accordion.Header>
@@ -22,7 +22,7 @@ function AllCollapseExample() {
           your orders to arrive next day.
         </Accordion.Body>
       </Accordion.Item>
-      <Accordion.Item eventKey='2'>
+      <Accordion.Item eventKey="2">
         <Accordion.Header>
           What types of delivery does BigBasketUAE have ?
         </Accordion.Header>
@@ -31,18 +31,18 @@ function AllCollapseExample() {
           delivery through our personal delivery (UAE)
         </Accordion.Body>
       </Accordion.Item>
-      <Accordion.Item eventKey='3'>
+      <Accordion.Item eventKey="3">
         <Accordion.Header>
           Can I refuse the order upon delivery?
         </Accordion.Header>
         <Accordion.Body>
           Yes. If you do not want to accept the order, you can contact our
-          Customer Service at +971 5545710897 and tell them your reasons for
+          Customer Service at +971 522512453 and tell them your reasons for
           refusing the order. If you want to refuse your order, we request that
           you do not open the items.
         </Accordion.Body>
       </Accordion.Item>
-      <Accordion.Item eventKey='4'>
+      <Accordion.Item eventKey="4">
         <Accordion.Header>
           Can I place the order from another city or country?
         </Accordion.Header>
@@ -51,7 +51,7 @@ function AllCollapseExample() {
           delivery address is within our serviced area.
         </Accordion.Body>
       </Accordion.Item>
-      <Accordion.Item eventKey='5'>
+      <Accordion.Item eventKey="5">
         <Accordion.Header>
           I can not find my delivery area, What should I do?
         </Accordion.Header>
@@ -62,7 +62,7 @@ function AllCollapseExample() {
           the service is available in the requested area.
         </Accordion.Body>
       </Accordion.Item>
-      <Accordion.Item eventKey='6'>
+      <Accordion.Item eventKey="6">
         <Accordion.Header>What is your delivery time?</Accordion.Header>
         <Accordion.Body>
           <p>Dubai</p>
@@ -73,7 +73,7 @@ function AllCollapseExample() {
           <p> Other Emirates Next day delivery is available</p>
         </Accordion.Body>
       </Accordion.Item>
-      <Accordion.Item eventKey='7'>
+      <Accordion.Item eventKey="7">
         <Accordion.Header>
           What if I do not receive my order within Estimated Arrival Time (ETA)?
         </Accordion.Header>
@@ -86,7 +86,7 @@ function AllCollapseExample() {
           who'll definitely sort this out for you.
         </Accordion.Body>
       </Accordion.Item>
-      <Accordion.Item eventKey='8'>
+      <Accordion.Item eventKey="8">
         <Accordion.Header>
           Is there any charges for using the cash-on-delivery payment option?
         </Accordion.Header>
@@ -96,7 +96,7 @@ function AllCollapseExample() {
         </Accordion.Body>
       </Accordion.Item>
     </Accordion>
-  )
+  );
 }
 
-export default AllCollapseExample
+export default AllCollapseExample;

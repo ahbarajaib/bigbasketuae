@@ -29,7 +29,7 @@ function Payment() {
   const [clientSecret, setClientSecret] = useState('')
 	console.log(totalPrice)
   useEffect(() => {
-    fetch('/api/config/stripe').then(
+    fetch(`${process.env.REACT_APP_API_URL}/api/config/stripe`).then(
       async (r) => {
         const { publishableKey } = await r.json()
         setStripePromise(loadStripe(publishableKey))
@@ -39,7 +39,7 @@ function Payment() {
   }, [dispatch, id, success, successDeliver, order])
 
   useEffect(() => {
-    fetch('/create-payment-intent', {
+    fetch(`${process.env.REACT_APP_API_URL}/create-payment-intent`, {
       method: 'POST',
       body: JSON.stringify({ totalPrice: totalPrice }),
       headers: {

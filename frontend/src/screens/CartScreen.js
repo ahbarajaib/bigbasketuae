@@ -1,66 +1,74 @@
-import React, { useEffect } from 'react'
-import { Link, useParams, useNavigate, useLocation } from 'react-router-dom'
-import { useDispatch, useSelector } from 'react-redux'
-import { Row, Col, ListGroup, Image, Form, Button, Card } from 'react-bootstrap'
-import Message from '../components/Message'
-import { addToCart, removeFromCart } from '../actions/cartActions'
+import React, { useEffect } from "react";
+import { Link, useParams, useNavigate, useLocation } from "react-router-dom";
+import { useDispatch, useSelector } from "react-redux";
+import {
+  Row,
+  Col,
+  ListGroup,
+  Image,
+  Form,
+  Button,
+  Card,
+} from "react-bootstrap";
+import Message from "../components/Message";
+import { addToCart, removeFromCart } from "../actions/cartActions";
 
 const CartScreen = (history) => {
-  const { id } = useParams()
+  const { id } = useParams();
 
-  const navigate = useNavigate()
+  const navigate = useNavigate();
   //gives the details of the whole link console.log(qty and check)
-  const location = useLocation()
-  const selectedQty = new URLSearchParams(location.search).get('selectedQty')
+  const location = useLocation();
+  const selectedQty = new URLSearchParams(location.search).get("selectedQty");
 
   const selectedPrice = new URLSearchParams(location.search).get(
-    'selectedPrice'
-  )
+    "selectedPrice"
+  );
 
   //this output the qty
-  const noOfProducts = new URLSearchParams(location.search).get('noOfProducts')
+  const noOfProducts = new URLSearchParams(location.search).get("noOfProducts");
 
-  const dispatch = useDispatch()
+  const dispatch = useDispatch();
 
   //this is for checkoutHandler
-  const userLogin = useSelector((state) => state.userLogin)
-  const { userInfo } = userLogin
+  const userLogin = useSelector((state) => state.userLogin);
+  const { userInfo } = userLogin;
 
-  const cart = useSelector((state) => state.cart)
-  const { cartItems } = cart
+  const cart = useSelector((state) => state.cart);
+  const { cartItems } = cart;
 
   useEffect(() => {
     if (id) {
-      dispatch(addToCart(id, noOfProducts, selectedQty, selectedPrice))
+      dispatch(addToCart(id, noOfProducts, selectedQty, selectedPrice));
     }
-  }, [dispatch, id, noOfProducts, selectedQty, selectedPrice])
+  }, [dispatch, id, noOfProducts, selectedQty, selectedPrice]);
 
   const removeFromCartHandler = (id) => {
-    dispatch(removeFromCart(id))
-  }
+    dispatch(removeFromCart(id));
+  };
 
   const checkoutHandler = () => {
     if (!userInfo) {
-      navigate('/login')
+      navigate("/login");
     } else {
-      navigate('/shipping')
+      navigate("/shipping");
     }
 
     //instead of history.push
     //navigate('/login?redirect=shipping')
-  }
+  };
 
   const getNoOfProducts = (item, newNoOfProducts = null) => {
     if (newNoOfProducts !== null) {
-      return newNoOfProducts
+      return newNoOfProducts;
     } else {
-      return item.noOfProducts
+      return item.noOfProducts;
     }
-  }
+  };
 
   return (
     <>
-      <button className='btn btn-light my-3' onClick={() => navigate(-1)}>
+      <button className="btn btn-light my-3" onClick={() => navigate(-1)}>
         Go Back
       </button>
       <Row>
@@ -68,10 +76,10 @@ const CartScreen = (history) => {
           <h1>Shopping Cart</h1>
           {cartItems.length === 0 ? (
             <Message>
-              Your cart is empty <Link to='/'>Go Back</Link>
+              Your cart is empty <Link to="/">Go Back</Link>
             </Message>
           ) : (
-            <ListGroup variant='flush'>
+            <ListGroup variant="flush">
               {cartItems.map((item) => (
                 <ListGroup.Item key={item.product}>
                   <Row>
@@ -95,7 +103,7 @@ const CartScreen = (history) => {
                       <Form.Select
                         value={getNoOfProducts(item, item.noOfProducts)}
                         onChange={(e) => {
-                          const newNoOfProducts = Number(e.target.value)
+                          const newNoOfProducts = Number(e.target.value);
                           dispatch(
                             addToCart(
                               item.product,
@@ -103,7 +111,7 @@ const CartScreen = (history) => {
                               item.selectedQty,
                               item.selectedPrice
                             )
-                          )
+                          );
                         }}
                       >
                         {[...Array(item.countInStock).keys()].map((x) => (
@@ -116,11 +124,11 @@ const CartScreen = (history) => {
 
                     <Col md={2}>
                       <Button
-                        type='button'
-                        variant='light'
+                        type="button"
+                        variant="light"
                         onClick={() => removeFromCartHandler(item.product)}
                       >
-                        <i className='fas fa-trash'></i>
+                        <i className="fas fa-trash"></i>
                       </Button>
                     </Col>
                     <Col md={1}>
@@ -135,11 +143,11 @@ const CartScreen = (history) => {
           )}
         </Col>
         <Col md={4}>
-          <Card className='my-4 p-4'>
+          <Card className="my-4 p-4">
             <ListGroup.Item>
               <h2>Subtotal</h2>
               <h3>
-                AED{' '}
+                AED{" "}
                 {cartItems
                   .reduce(
                     (acc, item) => acc + item.noOfProducts * item.selectedPrice,
@@ -149,10 +157,10 @@ const CartScreen = (history) => {
               </h3>
             </ListGroup.Item>
             <ListGroup.Item>
-              <div className='d-grid gap-2'>
+              <div className="d-grid gap-2">
                 <Button
-                  type='button'
-                  className='button-primary btn-block'
+                  type="button"
+                  className="button-primary btn-block"
                   disabled={cartItems.length === 0}
                   onClick={checkoutHandler}
                 >
@@ -164,7 +172,7 @@ const CartScreen = (history) => {
         </Col>
       </Row>
     </>
-  )
-}
+  );
+};
 
-export default CartScreen
+export default CartScreen;

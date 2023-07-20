@@ -65,7 +65,7 @@ header {
 }
 /* all buttons */
 .button-primary {
-  background-color: #010101;
+  background-color: #4bb543;
   border-radius: 20px;
   color: #fff;
   font-size: 18px;
@@ -74,6 +74,18 @@ header {
   cursor: pointer;
   box-shadow: none;
 }
+
+.button-mini {
+  background-color: #4bb543;
+  border-radius: 20px;
+  color: #fff;
+  font-size: 14px; /* Adjust the font size to make the button smaller */
+  font-weight: bold;
+  padding: 8px 16px; /* Adjust the padding to make the button smaller */
+  cursor: pointer;
+  box-shadow: none;
+}
+
 .button-primary:hover {
   background-color: #ebeae8;
   color: #5e7f2d;
@@ -88,4 +100,9 @@ header {
   background-color: #8cc63e !important;
   border-color: #8cc63e !important;
   box-shadow: none !important;
+}
+
+.custom-navbar {
+  background-color: #fff;
+  padding-left: 20px;
 }

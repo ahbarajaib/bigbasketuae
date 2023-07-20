@@ -11,18 +11,19 @@ const ProductNav = () => {
   };
 
   return (
+
     <Navbar
       expanded={expanded}
       expand='lg'
-      className='justify-content-center'
+      className="bg-body-tertiary"
       style={{ backgroundColor: '#fff' }}
     >
       <Navbar.Toggle
-        aria-controls='responsive-navbar-nav'
+        aria-controls='navbarScroll'
         onClick={handleToggle}
         className='ml-auto'
       />
-      <Navbar.Collapse id='responsive-navbar-nav'>
+      <Navbar.Collapse id='navbarScroll'>
         <Nav className='justify-content-center'>
           <Link to='/category/spices-and-condiments' className='nav-link'>
             Spices & Condiments

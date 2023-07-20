@@ -1,12 +1,12 @@
-import { Container, Row, Col } from 'react-bootstrap'
+import { Container, Row, Col } from "react-bootstrap";
 
 const ReturnPolicy = () => {
   return (
-    <Container className='my-5'>
-      <Row className='justify-content-center'>
+    <Container className="my-5">
+      <Row className="justify-content-center">
         <Col md={8}>
           <h2>Return Policy</h2>
-          <p className='mt-3'>
+          <p className="mt-3">
             To ensure the best experience with BigBasketUAE, please carefully
             read the following Return Policy.
           </p>
@@ -35,12 +35,12 @@ const ReturnPolicy = () => {
           <p>
             If you have any queries about online matters, please contact us
             online customercare@bigbasketuae.com or via telephone: +971
-            5545710897 Monday - Saturday 8.00 AM to 6.00 PM
+            522512453 Monday - Saturday 8.00 AM to 6.00 PM
           </p>
         </Col>
       </Row>
     </Container>
-  )
-}
+  );
+};
 
-export default ReturnPolicy
+export default ReturnPolicy;
