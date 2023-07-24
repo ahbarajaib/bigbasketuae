@@ -65,9 +65,10 @@ header {
 }
 /* all buttons */
 .button-primary {
-  background-color: #4bb543;
+  background-color: #fff;
+  border: 2px solid #8cc63e; /* Green color for the outline */
   border-radius: 20px;
-  color: #fff;
+  color: #8cc63e; /* Green color for the text */
   font-size: 18px;
   font-weight: bold;
   padding: 10px 20px;
@@ -87,8 +88,9 @@ header {
 }
 
 .button-primary:hover {
-  background-color: #ebeae8;
-  color: #5e7f2d;
+  background-color: #8cc63e; /* Green color on hover */
+  color: #fff; /* White text on hover */
+  outline: none; /* Remove the outline on hover */
   box-shadow: none;
 }
 
