@@ -31,9 +31,8 @@ function Payment() {
   useEffect(() => {
     fetch(`${process.env.REACT_APP_API_URL}/api/config/stripe`).then(
       async (r) => {
-        const { publishableKey } = await r.json()
-        setStripePromise(loadStripe(publishableKey))
-        
+        const { publishableKey } = await r.json();
+        setStripePromise(loadStripe(publishableKey));
       }
     )
   }, [dispatch, id, success, successDeliver, order])
