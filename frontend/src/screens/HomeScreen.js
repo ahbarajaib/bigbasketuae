@@ -9,10 +9,11 @@ import Loader from "../components/Loader";
 import Meta from "../components/Meta";
 import CarouselContainer from "../components/CarouselContainer";
 import { listProducts } from "../actions/productActions";
+import Categories from "../components/Categories";
 
 const HomeScreen = () => {
   const dispatch = useDispatch();
-  const { keyword, pageNumber = 1 } = useParams();
+  const { keyword, pageNumber = "" } = useParams();
 
   //state of productList from store
   const productList = useSelector((state) => state.productList);
@@ -27,7 +28,7 @@ const HomeScreen = () => {
       <Meta />
 
       <CarouselContainer />
-      <h1>Latest Products</h1>
+      <h1>Categories</h1>
       {loading ? (
         <Loader />
       ) : error ? (
@@ -35,11 +36,7 @@ const HomeScreen = () => {
       ) : (
         <>
           <Row>
-            {products.map((product) => (
-              <Col key={product._id} xs={6} sm={6} md={4} lg={2} xl={2}>
-                <Product product={product} />
-              </Col>
-            ))}
+            <Categories />
           </Row>
         </>
       )}
