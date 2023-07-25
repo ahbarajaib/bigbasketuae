@@ -2,6 +2,8 @@ import React, { useState } from "react";
 import { Link } from "react-router-dom";
 import Navbar from "react-bootstrap/Navbar";
 import Nav from "react-bootstrap/Nav";
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import { faBars } from "@fortawesome/free-solid-svg-icons";
 
 const ProductNav = () => {
   const [expanded, setExpanded] = useState(false);
@@ -24,6 +26,10 @@ const ProductNav = () => {
       />
       <Navbar.Collapse id="navbarScroll">
         <Nav className="justify-content-center">
+          <Link to="/category/all" className="nav-link">
+            <FontAwesomeIcon icon={faBars} className="burger-icon" />
+            &nbsp;&nbsp;All Categories
+          </Link>
           <Link to="/category/spices-and-condiments" className="nav-link">
             Spices & Condiments
           </Link>

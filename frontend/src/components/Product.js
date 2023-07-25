@@ -57,7 +57,7 @@ const Product = ({ product }) => {
   };
 
   return (
-    <Card className="my-3 rounded">
+    <Card className="my-3 rounded product-card">
       <Link to={`/product/${product?._id}`} style={{ display: "block" }}>
         <Card.Img
           src={`${process.env.REACT_APP_API_URL}${product?.image}`}
@@ -116,7 +116,7 @@ const Product = ({ product }) => {
         </div>
         <Button
           onClick={addToCartHandler}
-          className="button-primary mt-auto"
+          className="button-primary mt-auto small-button"
           variant="primary"
         >
           Add to Cart

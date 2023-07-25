@@ -1,49 +1,57 @@
 //cart vid - qty is a part of component level state so we use useState
 
-import React, { useState, useEffect } from 'react'
-import { useParams, useNavigate } from 'react-router-dom'
-import { useDispatch, useSelector } from 'react-redux'
-import { Form, Row, Col, Image, ListGroup, Card, Button } from 'react-bootstrap'
-import Loader from '../components/Loader'
-import Message from '../components/Message'
-import Meta from '../components/Meta'
-import { listProductDetails } from '../actions/productActions'
-import { updateSelectedQtyPrice } from '../actions/cartActions'
+import React, { useState, useEffect } from "react";
+import { useParams, useNavigate } from "react-router-dom";
+import { useDispatch, useSelector } from "react-redux";
+import {
+  Form,
+  Row,
+  Col,
+  Image,
+  ListGroup,
+  Card,
+  Button,
+} from "react-bootstrap";
+import Loader from "../components/Loader";
+import Message from "../components/Message";
+import Meta from "../components/Meta";
+import { listProductDetails } from "../actions/productActions";
+import { updateSelectedQtyPrice } from "../actions/cartActions";
 
 const ProductScreen = (history) => {
   //useParams is a hook that lets you access the parameter of the current route
-  const { id } = useParams()
-  const navigate = useNavigate()
+  const { id } = useParams();
+  const navigate = useNavigate();
   //useState(1) to set state of first item is 1
 
-  const dispatch = useDispatch()
+  const dispatch = useDispatch();
 
-  const productDetails = useSelector((state) => state.productDetails)
-  const { loading, error, product } = productDetails
+  const productDetails = useSelector((state) => state.productDetails);
+  const { loading, error, product } = productDetails;
 
-  const [noOfProducts, setNoOfProducts] = useState(1)
+  const [noOfProducts, setNoOfProducts] = useState(1);
 
-  const [selectedQty, setSelectedQty] = useState('')
-  const [selectedPrice, setSelectedPrice] = useState('')
+  const [selectedQty, setSelectedQty] = useState("");
+  const [selectedPrice, setSelectedPrice] = useState("");
   // No arrow function because we can't use async
   useEffect(() => {
-    dispatch(listProductDetails(id))
-  }, [dispatch, id])
+    dispatch(listProductDetails(id));
+  }, [dispatch, id]);
 
   //Handlers
   const addToCartHandler = () => {
-    if (selectedQty === '') {
-      alert('Please select a quantity first.')
-      return
+    if (selectedQty === "") {
+      alert("Please select a quantity first.");
+      return;
     }
 
     dispatch(
       updateSelectedQtyPrice(id, noOfProducts, selectedQty, selectedPrice)
-    )
+    );
     navigate(
       `/cart/${id}?noOfProducts=${noOfProducts}&selectedQty=${selectedQty}&selectedPrice=${selectedPrice}`
-    )
-  }
+    );
+  };
 
   // all route params will always be string values
   //const product = products.find (p => String(p._id) === id)
@@ -51,13 +59,13 @@ const ProductScreen = (history) => {
 
   return (
     <>
-      <button className='btn btn-light my-3' onClick={() => navigate(-1)}>
+      <button className="btn btn-light my-3" onClick={() => navigate(-1)}>
         Go Back
       </button>
       {loading ? (
         <Loader />
       ) : error ? (
-        <Message variant='danger'>{error}</Message>
+        <Message variant="danger">{error}</Message>
       ) : (
         <>
           <Meta title={product.name} />
@@ -70,44 +78,45 @@ const ProductScreen = (history) => {
               />
             </Col>
             <Col md={3}>
-              <ListGroup variant='flush'>
+              <ListGroup variant="flush">
                 <ListGroup.Item>
                   <h3>{product.name}</h3>
                   <p>{product.category}</p>
                 </ListGroup.Item>
-                <ListGroup.Item className='text-muted'>
+                <ListGroup.Item className="text-muted">
                   Brand:&nbsp;
                   {product.brand}
                 </ListGroup.Item>
                 <ListGroup.Item>
-		<Row className="flex-wrap align-items-center">
-		  {product.prices &&
-		    product.prices.map((price) => (
-		      <Col key={price.qty} xs="auto">
-		        <Button
-		          variant={
-		            selectedQty === price.qty ? 'primary' : 'outline-primary'
-		          }
-		          className='btn-product'
-		          onClick={() => {
-		            setSelectedQty(price.qty);
-		            setSelectedPrice(price.price);
-		          }}
-		          style={{ fontSize: '0.8rem', marginRight: '5px' }} // Adjust the font size and spacing as needed
-		        >
-		          <span style={{ whiteSpace: 'nowrap' }}>
-		            {price.qty} {price.units}
-		          </span>
-		        </Button>
-		      </Col>
-		    ))}
-		</Row>
-
+                  <Row className="flex-wrap align-items-center">
+                    {product.prices &&
+                      product.prices.map((price) => (
+                        <Col key={price.qty} xs="auto">
+                          <Button
+                            variant={
+                              selectedQty === price.qty
+                                ? "primary"
+                                : "outline-primary"
+                            }
+                            className="btn-product"
+                            onClick={() => {
+                              setSelectedQty(price.qty);
+                              setSelectedPrice(price.price);
+                            }}
+                            style={{ fontSize: "0.8rem", marginRight: "5px" }} // Adjust the font size and spacing as needed
+                          >
+                            <span style={{ whiteSpace: "nowrap" }}>
+                              {price.qty} {price.units}
+                            </span>
+                          </Button>
+                        </Col>
+                      ))}
+                  </Row>
                 </ListGroup.Item>
                 <ListGroup.Item>
                   <h4>
                     <strong>
-                      AED{' '}
+                      AED{" "}
                       {selectedPrice
                         ? selectedPrice
                         : product.prices && product.prices.length > 0
@@ -121,11 +130,11 @@ const ProductScreen = (history) => {
 
             <Col md={3}>
               <Card>
-                <ListGroup variant='flush'>
+                <ListGroup variant="flush">
                   <ListGroup.Item>
                     <h4>
                       <strong>
-                        AED{' '}
+                        AED{" "}
                         {selectedPrice
                           ? (selectedPrice * noOfProducts).toFixed(2)
                           : product.prices && product.prices.length > 0
@@ -138,7 +147,7 @@ const ProductScreen = (history) => {
                     <Row>
                       <Col>Status: </Col>
                       <Col>
-                        {product.countInStock > 0 ? 'In Stock' : 'Out Of Stock'}
+                        {product.countInStock > 0 ? "In Stock" : "Out Of Stock"}
                       </Col>
                     </Row>
                   </ListGroup.Item>
@@ -165,11 +174,11 @@ const ProductScreen = (history) => {
                     </ListGroup.Item>
                   )}
 
-                  <ListGroup.Item className='d-grid gap-2'>
+                  <ListGroup.Item className="d-grid gap-2">
                     <Button
                       onClick={addToCartHandler}
-                      className='button-primary btn-block'
-                      type='button'
+                      className="button-primary btn-block"
+                      type="button"
                       disabled={product.countInStock === 0}
                     >
                       Add To Cart
@@ -179,9 +188,9 @@ const ProductScreen = (history) => {
               </Card>
             </Col>
           </Row>
-          <Row className='my-4'>
+          <Row className="my-4">
             <Col md={12}>
-              <ListGroup.Item className='description-item'>
+              <ListGroup.Item className="description-item">
                 <h5>
                   <strong>Description:</strong>
                 </h5>
@@ -192,6 +201,6 @@ const ProductScreen = (history) => {
         </>
       )}
     </>
-  )
-}
-export default ProductScreen
+  );
+};
+export default ProductScreen;

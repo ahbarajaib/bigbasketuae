@@ -63,25 +63,42 @@ const Categories = () => {
 
   return (
     <div className="container mt-4">
-      <div className="row justify-content-start">
+      <div className="row justify-content-center">
+        {" "}
+        {/* Center align the row */}
         {categories.map((category) => (
           <div key={category.id} className="col-lg-3 col-md-4 col-sm-6 mb-2">
-            <Card className="my-3" style={{ cursor: "pointer" }}>
+            <Card className="my-3 border-0 text-center">
+              {" "}
+              {/* Add "border-0" and "text-center" classes */}
               <a
                 href={`/category/${category.name}`}
                 style={{ display: "block" }}
               >
-                <Card.Img
-                  variant="top"
-                  src={category.image}
+                <div
+                  className="rounded-circle mx-auto" // Add "mx-auto" class to center the circle
                   style={{
                     objectFit: "cover",
                     height: "150px",
-                    borderRadius: "10px",
+                    width: "150px",
+                    overflow: "hidden", // To ensure images are clipped within the circle
                   }}
-                />
-                <Card.Body className="text-center">
-                  <Card.Title as="h5">{category.title}</Card.Title>
+                >
+                  <img
+                    src={category.image}
+                    alt={category.title}
+                    style={{
+                      height: "100%",
+                      width: "100%",
+                    }}
+                  />
+                </div>
+                <Card.Body>
+                  <Card.Title as="h5" className="mb-0">
+                    {" "}
+                    {/* Add "mb-0" class to remove default margin-bottom */}
+                    {category.title}
+                  </Card.Title>
                 </Card.Body>
               </a>
             </Card>

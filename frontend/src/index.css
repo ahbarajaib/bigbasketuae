@@ -108,3 +108,16 @@ header {
   background-color: #fff;
   padding-left: 20px;
 }
+.small-button {
+  font-size: 12px; /* Set the font size to your desired small size */
+}
+
+/* Product.css */
+
+.product-card {
+  transition: border 0.2s ease-in-out; /* Add transition for smooth effect */
+}
+
+.product-card:hover {
+  border: 2px solid #007bff; /* Add a strong border on hover with your desired color */
+}
