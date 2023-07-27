@@ -1,12 +1,25 @@
 import React from "react";
 import { Container, Row, Col } from "react-bootstrap";
 import { Link } from "react-router-dom";
+import visa from "../images/visa.png";
 const Footer = () => {
   return (
     <footer className="bg-dark py-5 text-light">
       <Container>
         <Row>
-          <Col lg={3}>
+          <h5>We accept all major credit and debit cards</h5>
+          <img
+            src={visa} // Replace with the actual path to your image
+            alt="Credit and debit cards"
+            style={{
+              maxWidth: "200px",
+              marginTop: "10px",
+              marginBottom: "10px",
+            }} // Add any desired styles
+          />
+        </Row>
+        <Row>
+          <Col lg={3} md={4}>
             <h4>Big Basket UAE</h4>
             <p>Montana building 304 karama, Dubai</p>
             <p>Phone: +971 522512453</p>
@@ -36,7 +49,7 @@ const Footer = () => {
             <ul className="list-unstyled text-light">
               <li>
                 <Link to="/aboutus" className="text-light">
-                  Contact Us
+                  About Us
                 </Link>
               </li>
               <li>
@@ -46,7 +59,7 @@ const Footer = () => {
               </li>
               <li>
                 <Link to="/terms" className="text-light">
-                  Returns
+                  Terms of Service
                 </Link>
               </li>
             </ul>
