@@ -255,17 +255,21 @@ const ProductEditScreen = () => {
               >
                 <option value="">Select a category</option>
                 <option value="spices-and-condiments">
-                  Spices &amp; Condiments
+                  SPICES &amp; CONDIMENTS
                 </option>
-                <option value="legumes">Legumes</option>
-                <option value="grains">Grains</option>
-                <option value="oils-and-ghees">Oils &amp; Ghees</option>
+                <option value="legumes">LEGUMES</option>
+                <option value="grains">GRAINS</option>
+                <option value="oils-and-ghees">OILS &amp; GHEES</option>
                 <option value="canned-and-jarred-goods">
-                  Canned &amp; Jarred Goods
+                  CANNED &amp; JARRED GOODS
                 </option>
-                <option value="dryfruits-and-nuts">Dryfruits &amp; Nuts</option>
-                <option value="beverages">Beverages</option>
-                <option value="wholesale">Wholesale</option>
+                <option value="dryfruits-nuts-and-chocolates">
+                  DRYFRUITS, NUTS &amp; CHOCOLATES
+                </option>
+                <option value="dairy-and-eggs">DAIRY &amp; EGGS</option>
+                <option value="bakery-and-snacks">BAKERY &amp; SNACKS</option>
+                <option value="beverages">BEVERAGES</option>
+                <option value="wholesale">WHOLESALE</option>
               </Form.Select>
             </Form.Group>
 

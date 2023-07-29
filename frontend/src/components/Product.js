@@ -4,6 +4,7 @@ import { Card, Button, Dropdown } from "react-bootstrap";
 import {
   addProductToCartFromProductComponent,
   updateSelectedQtyPrice,
+  addToCart,
 } from "../actions/cartActions";
 import { useDispatch } from "react-redux";
 import { useNavigate } from "react-router-dom";
@@ -35,25 +36,8 @@ const Product = ({ product }) => {
       alert("Please select a quantity first.");
       return;
     }
-    dispatch(
-      addProductToCartFromProductComponent(
-        product._id,
-        noOfProducts,
-        selectedQty,
-        selectedUnits,
-        selectedPrice
-      )
-    );
-    navigate(
-      `/cart/${product._id}?noOfProducts=${noOfProducts}&selectedQty=${selectedQty}&selectedPrice=${selectedPrice}`
-    );
-    // Perform any action you need when adding to cart
-    // You can dispatch an action or handle it here
-    // For demonstration, I'm just logging the selected data
-    console.log("Selected Quantity:", selectedQty);
-    console.log("Selected Units:", selectedUnits);
-    console.log("Selected Price:", selectedPrice);
-    console.log("Number of Products:", noOfProducts);
+
+    dispatch(addToCart(product._id, noOfProducts, selectedQty, selectedPrice));
   };
 
   return (

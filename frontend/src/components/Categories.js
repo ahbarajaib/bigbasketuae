@@ -2,60 +2,74 @@ import React from "react";
 import { Card } from "react-bootstrap";
 import spices from "../images/spices.jpeg";
 import legumes from "../images/legumes.jpeg";
-import grains from "../images/grains.png";
+import grains from "../images/grains.jpeg";
 import oil from "../images/oil.jpeg";
 import canned from "../images/canned.jpeg";
 import dryfruit from "../images/dryfruit.jpeg";
 import beverages from "../images/beverages.jpeg";
+import dairy from "../images/dairy.jpeg";
+import bakery from "../images/bakery.jpeg";
 import wholesale from "../images/wholesale.jpeg";
 
 const Categories = () => {
   const categories = [
     {
       id: 1,
-      title: "Spices & Condiments",
+      title: "SPICES & CONDIMENTS",
       name: "spices-and-condiments",
       image: spices, // Replace this with the actual image path
     },
     {
       id: 2,
-      title: "Legumes",
+      title: "LEGUMES",
       name: "legumes",
       image: legumes, // Replace this with the actual image path
     },
     {
       id: 3,
-      title: "Grains",
+      title: "GRAINS",
       name: "grains",
       image: grains, // Replace this with the actual image path
     },
     {
       id: 4,
-      title: "Oils & Ghees",
+      title: "OILS & GHEES",
       name: "oils-and-ghees",
       image: oil, // Replace this with the actual image path
     },
     {
       id: 5,
-      title: "Canned & Jarred Goods",
+      title: "CANNED & JARRED GOODS",
       name: "canned-and-jarred-goods",
       image: canned, // Replace this with the actual image path
     },
     {
       id: 6,
-      title: "Dryfruits & Nuts",
-      name: "dryfruits-and-nuts",
+      title: "DRYFRUITS, NUTS & CHOCOLATES",
+      name: "dryfruits-nuts-and-chocolates",
       image: dryfruit, // Replace this with the actual image path
     },
     {
       id: 7,
-      title: "Beverages",
+      title: "DAIRY & EGGS",
+      name: "dairy-and-eggs",
+      image: dairy, // Replace this with the actual image path
+    },
+    {
+      id: 8,
+      title: "BAKERY & SNACKS",
+      name: "bakery-and-snacks",
+      image: bakery, // Replace this with the actual image path
+    },
+    {
+      id: 9,
+      title: "BEVERAGES",
       name: "beverages",
       image: beverages, // Replace this with the actual image path
     },
     {
-      id: 8,
-      title: "Wholesale",
+      id: 10,
+      title: "WHOLESALE",
       name: "wholesale",
       image: wholesale, // Replace this with the actual image path
     },
@@ -67,7 +81,7 @@ const Categories = () => {
         {" "}
         {/* Center align the row */}
         {categories.map((category) => (
-          <div key={category.id} className="col-lg-3 col-md-4 col-sm-6 mb-2">
+          <div key={category.id} className="col-lg-2 col-md-3 col-sm-4 mb-2">
             <Card className="my-3 border-0 text-center">
               {" "}
               {/* Add "border-0" and "text-center" classes */}
@@ -94,7 +108,7 @@ const Categories = () => {
                   />
                 </div>
                 <Card.Body>
-                  <Card.Title as="h5" className="mb-0">
+                  <Card.Title as="h5" className="mb-0 smaller-text">
                     {" "}
                     {/* Add "mb-0" class to remove default margin-bottom */}
                     {category.title}

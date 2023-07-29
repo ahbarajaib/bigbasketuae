@@ -16,7 +16,7 @@ import Loader from "../components/Loader";
 import Message from "../components/Message";
 import Meta from "../components/Meta";
 import { listProductDetails } from "../actions/productActions";
-import { updateSelectedQtyPrice } from "../actions/cartActions";
+import { addToCart, updateSelectedQtyPrice } from "../actions/cartActions";
 
 const ProductScreen = (history) => {
   //useParams is a hook that lets you access the parameter of the current route
@@ -45,12 +45,7 @@ const ProductScreen = (history) => {
       return;
     }
 
-    dispatch(
-      updateSelectedQtyPrice(id, noOfProducts, selectedQty, selectedPrice)
-    );
-    navigate(
-      `/cart/${id}?noOfProducts=${noOfProducts}&selectedQty=${selectedQty}&selectedPrice=${selectedPrice}`
-    );
+    dispatch(addToCart(id, noOfProducts, selectedQty, selectedPrice));
   };
 
   // all route params will always be string values

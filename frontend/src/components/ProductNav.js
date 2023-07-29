@@ -26,33 +26,51 @@ const ProductNav = () => {
       />
       <Navbar.Collapse id="navbarScroll">
         <Nav className="justify-content-center">
-          <Link to="/category/all" className="nav-link">
+          <Link to="/category/all" className="nav-link smaller-text">
             <FontAwesomeIcon icon={faBars} className="burger-icon" />
-            &nbsp;&nbsp;All Categories
+            &nbsp;&nbsp;ALL CATEGORIES
           </Link>
-          <Link to="/category/spices-and-condiments" className="nav-link">
-            Spices & Condiments
+          <Link
+            to="/category/spices-and-condiments"
+            className="nav-link smaller-text"
+          >
+            SPICES & CONDIMENTS
           </Link>
-          <Link to="/category/legumes" className="nav-link">
-            Legumes
+          <Link to="/category/legumes" className="nav-link smaller-text">
+            LEGUMES
           </Link>
-          <Link to="/category/grains" className="nav-link">
-            Grains
+          <Link to="/category/grains" className="nav-link smaller-text">
+            GRAINS
           </Link>
-          <Link to="/category/oils-and-ghees" className="nav-link">
-            Oils & Ghees
+          <Link to="/category/oils-and-ghees" className="nav-link smaller-text">
+            OILS & GHEES
           </Link>
-          <Link to="/category/canned-and-jarred-goods" className="nav-link">
-            Canned & Jarred Goods
+          <Link
+            to="/category/canned-and-jarred-goods"
+            className="nav-link smaller-text"
+          >
+            CANNED & JARRED GOODS
           </Link>
-          <Link to="/category/dryfruits-and-nuts" className="nav-link">
-            Dryfruits & Nuts
+          <Link
+            to="/category/dryfruits-nuts-and-chocolates"
+            className="nav-link smaller-text"
+          >
+            DRYFRUITS, NUTS & CHOCOLATES
           </Link>
-          <Link to="/category/beverages" className="nav-link">
-            Beverages
+          <Link to="/category/dairy-and-eggs" className="nav-link smaller-text">
+            DAIRY & EGGS
           </Link>
-          <Link to="/category/wholesale" className="nav-link">
-            Wholesale
+          <Link
+            to="/category/bakery-and-snacks"
+            className="nav-link smaller-text"
+          >
+            BAKERY & SNACKS
+          </Link>
+          <Link to="/category/beverages" className="nav-link smaller-text">
+            BEVERAGES
+          </Link>
+          <Link to="/category/wholesale" className="nav-link smaller-text">
+            WHOLESALE
           </Link>
         </Nav>
       </Navbar.Collapse>
