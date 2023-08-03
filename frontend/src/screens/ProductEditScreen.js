@@ -81,10 +81,23 @@ const ProductEditScreen = () => {
 
   const handlePriceChange = (index, field, value) => {
     const updatedPrices = [...prices];
-    updatedPrices[index] = {
-      ...updatedPrices[index],
-      [field]: value,
-    };
+    const priceEntry = updatedPrices[index];
+
+    // Update the specific field in the price entry
+    priceEntry[field] = value;
+
+    // Calculate the discounted price based on price and discount
+    if (priceEntry.price && priceEntry.discount) {
+      const discountedPrice =
+        priceEntry.price * (1 - priceEntry.discount / 100);
+      priceEntry.discountedPrice = discountedPrice;
+    } else {
+      priceEntry.discountedPrice = 0; // Set a default value if price or discount is missing
+    }
+
+    // Update the state with the modified price entry
+    updatedPrices[index] = priceEntry;
+
     setPrices(updatedPrices);
   };
 
@@ -100,7 +113,13 @@ const ProductEditScreen = () => {
   const handleQuantityChange = (quantity) => {
     const updatedPrices = [];
     for (let i = 0; i < quantity; i++) {
-      updatedPrices.push({ qty: 1, units: "gm", price: 1 });
+      updatedPrices.push({
+        qty: 1,
+        units: "gm",
+        price: 1,
+        discountedPrice: 0,
+        discount: 0,
+      });
     }
     setPrices(updatedPrices);
   };
@@ -164,7 +183,7 @@ const ProductEditScreen = () => {
 
             {prices.map((price, index) => (
               <Row key={index}>
-                <Col xs={4} sm={4} md={4} lg={4}>
+                <Col xs={3} sm={3} md={3} lg={3}>
                   <Form.Group controlId={`qty${index}`}>
                     <Form.Label>Qty {index + 1}</Form.Label>
                     <Form.Control
@@ -177,7 +196,7 @@ const ProductEditScreen = () => {
                     />
                   </Form.Group>
                 </Col>
-                <Col xs={4} sm={4} md={4} lg={4}>
+                <Col xs={3} sm={3} md={3} lg={3}>
                   <Form.Group controlId={`units${index}`}>
                     <Form.Label>Gm/Ml/Kg/Ltr</Form.Label>
 
@@ -194,7 +213,7 @@ const ProductEditScreen = () => {
                     </Form.Select>
                   </Form.Group>
                 </Col>
-                <Col xs={4} sm={4} md={4} lg={4}>
+                <Col xs={3} sm={3} md={3} lg={3}>
                   <Form.Group controlId={`price${index}`}>
                     <Form.Label>Price {index + 1}</Form.Label>
                     <Form.Control
@@ -203,6 +222,19 @@ const ProductEditScreen = () => {
                       value={price.price}
                       onChange={(e) =>
                         handlePriceChange(index, "price", e.target.value)
+                      }
+                    />
+                  </Form.Group>
+                </Col>
+                <Col xs={3} sm={3} md={3} lg={3}>
+                  <Form.Group controlId={`discount${index}`}>
+                    <Form.Label>Discount {index + 1}</Form.Label>
+                    <Form.Control
+                      type="number"
+                      placeholder="%"
+                      value={price.discount}
+                      onChange={(e) =>
+                        handlePriceChange(index, "discount", e.target.value)
                       }
                     />
                   </Form.Group>

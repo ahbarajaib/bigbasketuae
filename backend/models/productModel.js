@@ -1,4 +1,4 @@
-import mongoose from 'mongoose'
+import mongoose from "mongoose";
 
 const productSchema = mongoose.Schema(
   {
@@ -6,7 +6,7 @@ const productSchema = mongoose.Schema(
       // Relationship between user and product model to show which admin added the product
       type: mongoose.Schema.Types.ObjectId,
       required: true,
-      ref: 'User',
+      ref: "User",
     },
     name: {
       type: String,
@@ -15,8 +15,6 @@ const productSchema = mongoose.Schema(
     image: {
       type: String,
       required: true,
-     
-      
     },
     brand: {
       type: String,
@@ -40,6 +38,14 @@ const productSchema = mongoose.Schema(
           type: Number,
           required: true,
         },
+        discountedPrice: {
+          type: Number,
+          required: true,
+        },
+        discount: {
+          type: Number,
+          required: true,
+        },
         units: {
           type: String,
           required: true,
@@ -60,7 +66,7 @@ const productSchema = mongoose.Schema(
   {
     timestamps: true,
   }
-)
+);
 
-const Product = mongoose.model('Product', productSchema)
-export default Product
+const Product = mongoose.model("Product", productSchema);
+export default Product;

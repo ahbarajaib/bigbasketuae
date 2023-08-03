@@ -13,6 +13,7 @@ const Product = ({ product }) => {
   const [selectedQty, setSelectedQty] = useState("");
   const [selectedUnits, setSelectedUnits] = useState("");
   const [selectedPrice, setSelectedPrice] = useState("");
+  const [disocountedPrice, setDiscountedPrice] = useState("");
   const [noOfProducts, setNoOfProducts] = useState(1);
 
   const dispatch = useDispatch();
@@ -42,6 +43,12 @@ const Product = ({ product }) => {
 
   return (
     <Card className="my-3 rounded product-card">
+      <span
+        className="discount-badge"
+        style={{ backgroundColor: "#B22222", padding: "4px", color: "white" }}
+      >
+        {product?.prices[0]?.discount}% OFF
+      </span>
       <Link to={`/product/${product?._id}`} style={{ display: "block" }}>
         <Card.Img
           src={`${process.env.REACT_APP_API_URL}${product?.image}`}
@@ -87,15 +94,36 @@ const Product = ({ product }) => {
             </Dropdown>
           </div>
           <div className="w-100 text-right">
-            <Card.Text as="h2" style={{ marginBottom: "0" }}>
-              AED{" "}
-              {selectedQty
-                ? (selectedPrice * noOfProducts).toFixed(2)
-                : (product?.prices && product.prices.length > 0
-                    ? product.prices[0].price
-                    : 0
-                  ).toFixed(2)}
-            </Card.Text>
+            <div className="price-container d-flex justify-content-center">
+              <Card.Text as="h4" className="mr-2" style={{ marginBottom: "0" }}>
+                AED{" "}
+                {selectedQty
+                  ? (
+                      selectedPrice *
+                      (1 - product.prices[0].discount / 100) *
+                      noOfProducts
+                    ).toFixed(2)
+                  : (product?.prices && product.prices.length > 0
+                      ? product.prices[0].discountedPrice !== undefined
+                        ? product.prices[0].discountedPrice
+                        : product.prices[0].price
+                      : 0
+                    ).toFixed(2)}
+              </Card.Text>
+              <Card.Text
+                as="h6"
+                className="original-price"
+                style={{ marginBottom: "0" }}
+              >
+                &nbsp;{" "}
+                {selectedQty
+                  ? (selectedPrice * noOfProducts).toFixed(2)
+                  : (product?.prices && product.prices.length > 0
+                      ? product.prices[0].price
+                      : 0
+                    ).toFixed(2)}
+              </Card.Text>
+            </div>
           </div>
         </div>
         <Button

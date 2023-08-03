@@ -171,3 +171,15 @@ header {
 .cart {
   margin-left: 10px; /* Adjust the margin value to add the desired space */
 }
+
+.discount-badge {
+  position: absolute;
+  top: 0;
+  left: 0;
+  border-top-right-radius: 5px;
+  padding: 2px 6px;
+  font-size: 12px;
+}
+.original-price {
+  text-decoration: line-through;
+}

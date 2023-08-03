@@ -36,7 +36,7 @@ const Header = () => {
           </LinkContainer>
           {/* WhatsApp Link */}
           <a
-            href="https://api.whatsapp.com/send?phone=00971522512453"
+            href="wa.link/btn1kf"
             target="_blank"
             rel="noopener noreferrer"
             className="whatsapp-link"
