@@ -110,7 +110,6 @@ const createProduct = asyncHandler(async (req, res) => {
 const updateProduct = asyncHandler(async (req, res) => {
   const { name, prices, description, image, brand, category, countInStock } =
     req.body;
-  console.log("Received request body:", req.body);
   const product = await Product.findById(req.params.id);
   if (product) {
     product.name = name;
@@ -120,6 +119,11 @@ const updateProduct = asyncHandler(async (req, res) => {
     product.brand = brand;
     product.category = category;
     product.countInStock = countInStock;
+
+    // Log the values of discount and discountedPrice
+    console.log("Discount:", req.body.prices[0].discount);
+    console.log("Discounted Price:", req.body.prices[0].discountedPrice);
+
     const updatedProduct = await product.save();
     res.json(updatedProduct);
   } else {
