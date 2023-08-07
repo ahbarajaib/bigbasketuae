@@ -88,10 +88,10 @@ const createProduct = asyncHandler(async (req, res) => {
   const product = new Product({
     name: "Sample name",
     prices: [
-      { qty: 1, units: "gm", price: 1 },
-      { qty: 1, units: "gm", price: 1 },
-      { qty: 1, units: "gm", price: 1 },
-      { qty: 1, units: "gm", price: 1 },
+      { qty: 1, units: "gm", price: 1, discountedPrice: 1, discount: 1 },
+      { qty: 1, units: "gm", price: 1, discountedPrice: 1, discount: 1 },
+      { qty: 1, units: "gm", price: 1, discountedPrice: 1, discount: 1 },
+      { qty: 1, units: "gm", price: 1, discountedPrice: 1, discount: 1 },
     ],
     user: req.user._id,
     image: "/images/sample.jpg",

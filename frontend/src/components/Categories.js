@@ -15,61 +15,61 @@ const Categories = () => {
   const categories = [
     {
       id: 1,
-      title: "SPICES & CONDIMENTS",
+      title: "Spices & Condiments",
       name: "spices-and-condiments",
       image: spices, // Replace this with the actual image path
     },
     {
       id: 2,
-      title: "LEGUMES",
+      title: "Legumes",
       name: "legumes",
       image: legumes, // Replace this with the actual image path
     },
     {
       id: 3,
-      title: "GRAINS",
+      title: "Grains",
       name: "grains",
       image: grains, // Replace this with the actual image path
     },
     {
       id: 4,
-      title: "OILS & GHEES",
+      title: "Oils & Ghees",
       name: "oils-and-ghees",
       image: oil, // Replace this with the actual image path
     },
     {
       id: 5,
-      title: "CANNED & JARRED GOODS",
+      title: "Canned & Jarred Goods",
       name: "canned-and-jarred-goods",
       image: canned, // Replace this with the actual image path
     },
     {
       id: 6,
-      title: "DRYFRUITS, NUTS & CHOCOLATES",
+      title: "Dryfruits, Nuts & Chocolates",
       name: "dryfruits-nuts-and-chocolates",
       image: dryfruit, // Replace this with the actual image path
     },
     {
       id: 7,
-      title: "DAIRY & EGGS",
+      title: "Dairy & Eggs",
       name: "dairy-and-eggs",
       image: dairy, // Replace this with the actual image path
     },
     {
       id: 8,
-      title: "BAKERY & SNACKS",
+      title: "Bakery & Snacks",
       name: "bakery-and-snacks",
       image: bakery, // Replace this with the actual image path
     },
     {
       id: 9,
-      title: "BEVERAGES",
+      title: "Beverages",
       name: "beverages",
       image: beverages, // Replace this with the actual image path
     },
     {
       id: 10,
-      title: "WHOLESALE",
+      title: "Wholesale",
       name: "wholesale",
       image: wholesale, // Replace this with the actual image path
     },
