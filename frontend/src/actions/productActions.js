@@ -1,4 +1,4 @@
-import axios from 'axios'
+import axios from "axios";
 import {
   PRODUCT_LIST_REQUEST,
   PRODUCT_LIST_SUCCESS,
@@ -18,24 +18,23 @@ import {
   PRODUCT_CATEGORY_REQUEST,
   PRODUCT_CATEGORY_SUCCESS,
   PRODUCT_CATEGORY_FAIL,
-} from '../constants/productConstants'
+} from "../constants/productConstants";
 
-
-const axiosInstance = axios.create({baseURL:process.env.REACT_APP_API_URL})
+const axiosInstance = axios.create({ baseURL: process.env.REACT_APP_API_URL });
 
 export const listProducts =
-  (keyword = '', pageNumber = '') =>
+  (keyword = "", pageNumber = "") =>
   async (dispatch) => {
     try {
-      dispatch({ type: PRODUCT_LIST_REQUEST })
+      dispatch({ type: PRODUCT_LIST_REQUEST });
 
       const { data } = await axiosInstance.get(
         `/api/products?keyword=${keyword}&pageNumber=${pageNumber}`
-      )
+      );
       dispatch({
         type: PRODUCT_LIST_SUCCESS,
         payload: data,
-      })
+      });
     } catch (error) {
       dispatch({
         type: PRODUCT_LIST_FAIL,
@@ -43,23 +42,23 @@ export const listProducts =
           error.response && error.response.data.message
             ? error.response.data.message
             : error.message,
-      })
+      });
     }
-  }
+  };
 
 export const categoryProducts =
-  (keyword = '', pageNumber = '', category = '') =>
+  (keyword = "", pageNumber = "", category = "") =>
   async (dispatch) => {
     try {
-      dispatch({ type: PRODUCT_CATEGORY_REQUEST })
+      dispatch({ type: PRODUCT_CATEGORY_REQUEST });
 
       const { data } = await axiosInstance.get(
         `/api/products?keyword=${keyword}&pageNumber=${pageNumber}&category=${category}`
-      )
+      );
       dispatch({
         type: PRODUCT_CATEGORY_SUCCESS,
         payload: data,
-      })
+      });
     } catch (error) {
       dispatch({
         type: PRODUCT_CATEGORY_FAIL,
@@ -67,19 +66,19 @@ export const categoryProducts =
           error.response && error.response.data.message
             ? error.response.data.message
             : error.message,
-      })
+      });
     }
-  }
+  };
 
 export const listProductDetails = (id) => async (dispatch) => {
   try {
-    dispatch({ type: PRODUCT_DETAILS_REQUEST })
+    dispatch({ type: PRODUCT_DETAILS_REQUEST });
 
-    const { data } = await axiosInstance.get(`/api/products/${id}`)
+    const { data } = await axiosInstance.get(`/api/products/${id}`);
     dispatch({
       type: PRODUCT_DETAILS_SUCCESS,
       payload: data,
-    })
+    });
   } catch (error) {
     dispatch({
       type: PRODUCT_DETAILS_FAIL,
@@ -87,19 +86,21 @@ export const listProductDetails = (id) => async (dispatch) => {
         error.response && error.response.data.message
           ? error.response.data.message
           : error.message,
-    })
+    });
   }
-}
+};
 
 export const listProductsByCategory = (category) => async (dispatch) => {
   try {
-    dispatch({ type: PRODUCT_CATEGORY_REQUEST })
+    dispatch({ type: PRODUCT_CATEGORY_REQUEST });
 
-    const { data } = await axiosInstance.get(`/api/products/category/${category}`)
+    const { data } = await axiosInstance.get(
+      `/api/products/category/${category}`
+    );
     dispatch({
       type: PRODUCT_CATEGORY_SUCCESS,
       payload: data,
-    })
+    });
   } catch (error) {
     dispatch({
       type: PRODUCT_CATEGORY_FAIL,
@@ -107,115 +108,117 @@ export const listProductsByCategory = (category) => async (dispatch) => {
         error.response && error.response.data.message
           ? error.response.data.message
           : error.message,
-    })
+    });
   }
-}
+};
 
 export const deleteProduct = (id) => async (dispatch, getState) => {
   try {
     dispatch({
       type: PRODUCT_DELETE_REQUEST,
-    })
+    });
 
     const {
       userLogin: { userInfo },
-    } = getState()
+    } = getState();
 
     const config = {
       headers: {
         Authorization: `Bearer ${userInfo.token}`,
       },
-    }
+    };
 
-    await axiosInstance.delete(`/api/products/${id}`, config)
+    await axiosInstance.delete(`/api/products/${id}`, config);
 
     dispatch({
       type: PRODUCT_DELETE_SUCCESS,
-    })
+    });
   } catch (error) {
     const message =
       error.response && error.response.data.message
         ? error.response.data.message
-        : error.message
+        : error.message;
 
     dispatch({
       type: PRODUCT_DELETE_FAIL,
       payload: message,
-    })
+    });
   }
-}
+};
 
 export const createProduct = () => async (dispatch, getState) => {
   try {
     dispatch({
       type: PRODUCT_CREATE_REQUEST,
-    })
+    });
 
     const {
       userLogin: { userInfo },
-    } = getState()
+    } = getState();
 
     const config = {
       headers: {
         Authorization: `Bearer ${userInfo.token}`,
       },
-    }
+    };
     //{} because we are making a post request but not sending any data
-    const { data } = await axiosInstance.post(`/api/products`, {}, config)
+    const { data } = await axiosInstance.post(`/api/products`, {}, config);
 
     dispatch({
       type: PRODUCT_CREATE_SUCCESS,
       payload: data,
-    })
+    });
   } catch (error) {
     const message =
       error.response && error.response.data.message
         ? error.response.data.message
-        : error.message
+        : error.message;
 
     dispatch({
       type: PRODUCT_CREATE_FAIL,
       payload: message,
-    })
+    });
   }
-}
+};
 
 export const updateProduct = (product) => async (dispatch, getState) => {
   try {
     dispatch({
       type: PRODUCT_UPDATE_REQUEST,
-    })
+    });
 
     const {
       userLogin: { userInfo },
-    } = getState()
+    } = getState();
 
     const config = {
       headers: {
-        'Content-Type': 'application/json',
+        "Content-Type": "application/json",
         Authorization: `Bearer ${userInfo.token}`,
       },
-    }
+    };
     //{} because we are making a post request but not sending any data
+    console.log("Updating product with data:", product);
     const { data } = await axiosInstance.put(
       `/api/products/${product._id}`,
       product,
       config
-    )
+    );
+    console.log("API response data:", data);
 
     dispatch({
       type: PRODUCT_UPDATE_SUCCESS,
       payload: data,
-    })
+    });
   } catch (error) {
     const message =
       error.response && error.response.data.message
         ? error.response.data.message
-        : error.message
+        : error.message;
 
     dispatch({
       type: PRODUCT_UPDATE_FAIL,
       payload: message,
-    })
+    });
   }
-}
+};

@@ -28,49 +28,49 @@ const ProductNav = () => {
         <Nav className="justify-content-center">
           <Link to="/category/all" className="nav-link smaller-text">
             <FontAwesomeIcon icon={faBars} className="burger-icon" />
-            &nbsp;&nbsp;ALL CATEGORIES
+            &nbsp;&nbsp;All Categories
           </Link>
           <Link
             to="/category/spices-and-condiments"
             className="nav-link smaller-text"
           >
-            SPICES & CONDIMENTS
+            Spices & Condiments
           </Link>
           <Link to="/category/legumes" className="nav-link smaller-text">
-            LEGUMES
+            Legumes
           </Link>
           <Link to="/category/grains" className="nav-link smaller-text">
-            GRAINS
+            Grains
           </Link>
           <Link to="/category/oils-and-ghees" className="nav-link smaller-text">
-            OILS & GHEES
+            Oils & Ghees
           </Link>
           <Link
             to="/category/canned-and-jarred-goods"
             className="nav-link smaller-text"
           >
-            CANNED & JARRED GOODS
+            Canned & Jarred Goods
           </Link>
           <Link
             to="/category/dryfruits-nuts-and-chocolates"
             className="nav-link smaller-text"
           >
-            DRYFRUITS, NUTS & CHOCOLATES
+            Dryfruits, Nuts & Chocolates
           </Link>
           <Link to="/category/dairy-and-eggs" className="nav-link smaller-text">
-            DAIRY & EGGS
+            Dairy & Eggs
           </Link>
           <Link
             to="/category/bakery-and-snacks"
             className="nav-link smaller-text"
           >
-            BAKERY & SNACKS
+            Bakery & Snacks
           </Link>
           <Link to="/category/beverages" className="nav-link smaller-text">
-            BEVERAGES
+            Beverages
           </Link>
           <Link to="/category/wholesale" className="nav-link smaller-text">
-            WHOLESALE
+            Wholesale
           </Link>
         </Nav>
       </Navbar.Collapse>

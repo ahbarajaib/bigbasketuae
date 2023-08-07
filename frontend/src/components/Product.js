@@ -45,7 +45,7 @@ const Product = ({ product }) => {
     <Card className="my-3 rounded product-card">
       <span
         className="discount-badge"
-        style={{ backgroundColor: "#B22222", padding: "4px", color: "white" }}
+        style={{ backgroundColor: "#feb9b9", padding: "4px", color: "#610000" }}
       >
         {product?.prices[0]?.discount}% OFF
       </span>
