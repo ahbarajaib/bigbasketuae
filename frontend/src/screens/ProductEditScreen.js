@@ -128,7 +128,9 @@ const ProductEditScreen = () => {
 
   const submitHandler = (e) => {
     e.preventDefault();
-    const newPrice = prices.filter((p) => p.qty && p.units && p.price);
+    const newPrice = prices.filter(
+      (p) => p.qty && p.units && p.price && p.discount && p.discountedPrice
+    );
     dispatch(
       updateProduct({
         _id: id,
