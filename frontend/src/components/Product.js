@@ -13,7 +13,6 @@ const Product = ({ product }) => {
   const [selectedQty, setSelectedQty] = useState("");
   const [selectedUnits, setSelectedUnits] = useState("");
   const [selectedPrice, setSelectedPrice] = useState("");
-  const [disocountedPrice, setDiscountedPrice] = useState("");
   const [noOfProducts, setNoOfProducts] = useState(1);
 
   const dispatch = useDispatch();
@@ -43,12 +42,18 @@ const Product = ({ product }) => {
 
   return (
     <Card className="my-3 rounded product-card">
-      <span
-        className="discount-badge"
-        style={{ backgroundColor: "#feb9b9", padding: "4px", color: "#610000" }}
-      >
-        {product?.prices[0]?.discount}% OFF
-      </span>
+      {product?.prices[0]?.discount > 0 && (
+        <span
+          className="discount-badge"
+          style={{
+            backgroundColor: "#feb9b9",
+            padding: "4px",
+            color: "#610000",
+          }}
+        >
+          {product?.prices[0]?.discount}% OFF
+        </span>
+      )}
       <Link to={`/product/${product?._id}`} style={{ display: "block" }}>
         <Card.Img
           src={`${process.env.REACT_APP_API_URL}${product?.image}`}
@@ -72,12 +77,19 @@ const Product = ({ product }) => {
         <div className="d-flex flex-column">
           <div className="w-100 mb-3">
             <Dropdown size="sm">
-              <Dropdown.Toggle variant="secondary" id="quantity-dropdown">
-                {selectedQty
-                  ? `${selectedQty} ${selectedUnits}`
-                  : "Select Quantity"}
+              <Dropdown.Toggle
+                style={{
+                  fontSize: "0.75rem",
+                  backgroundColor: "white",
+                  color: "black",
+                  marginTop: "0.25rem",
+                }}
+                variant="secondary"
+                id="quantity-dropdown"
+              >
+                {selectedQty ? `${selectedQty} ${selectedUnits}` : "Select Qty"}
               </Dropdown.Toggle>
-              <Dropdown.Menu>
+              <Dropdown.Menu style={{ fontSize: "0.75rem" }}>
                 {product?.prices &&
                   product.prices.map((price) => (
                     <Dropdown.Item
@@ -110,19 +122,21 @@ const Product = ({ product }) => {
                       : 0
                     ).toFixed(2)}
               </Card.Text>
-              <Card.Text
-                as="h6"
-                className="original-price"
-                style={{ marginBottom: "0" }}
-              >
-                &nbsp;{" "}
-                {selectedQty
-                  ? (selectedPrice * noOfProducts).toFixed(2)
-                  : (product?.prices && product.prices.length > 0
-                      ? product.prices[0].price
-                      : 0
-                    ).toFixed(2)}
-              </Card.Text>
+              {product?.prices[0]?.discount > 0 ? (
+                <Card.Text
+                  as="h6"
+                  className="original-price"
+                  style={{ marginBottom: "0" }}
+                >
+                  &nbsp;{" "}
+                  {selectedQty
+                    ? (selectedPrice * noOfProducts).toFixed(2)
+                    : (product?.prices && product.prices.length > 0
+                        ? product.prices[0].price
+                        : 0
+                      ).toFixed(2)}
+                </Card.Text>
+              ) : null}
             </div>
           </div>
         </div>
