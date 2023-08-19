@@ -1,31 +1,31 @@
-import React, { useEffect } from 'react'
-import { useNavigate } from 'react-router-dom'
-import { Table, Button } from 'react-bootstrap'
-import { LinkContainer } from 'react-router-bootstrap'
-import { useDispatch, useSelector } from 'react-redux'
-import Message from '../components/Message'
-import Loader from '../components/Loader'
-import { listOrders } from '../actions/orderActions'
-import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
-import { faXmark } from '@fortawesome/free-solid-svg-icons'
+import React, { useEffect } from "react";
+import { useNavigate } from "react-router-dom";
+import { Table, Button } from "react-bootstrap";
+import { LinkContainer } from "react-router-bootstrap";
+import { useDispatch, useSelector } from "react-redux";
+import Message from "../components/Message";
+import Loader from "../components/Loader";
+import { listOrders } from "../actions/orderActions";
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import { faXmark } from "@fortawesome/free-solid-svg-icons";
 
 const OrderListScreen = () => {
-  const navigate = useNavigate()
-  const dispatch = useDispatch()
+  const navigate = useNavigate();
+  const dispatch = useDispatch();
 
-  const orderList = useSelector((state) => state.orderList)
-  const { loading, error, orders } = orderList
+  const orderList = useSelector((state) => state.orderList);
+  const { loading, error, orders } = orderList;
 
-  const userLogin = useSelector((state) => state.userLogin)
-  const { userInfo } = userLogin
+  const userLogin = useSelector((state) => state.userLogin);
+  const { userInfo } = userLogin;
 
   useEffect(() => {
     if (userInfo && userInfo.isAdmin) {
-      dispatch(listOrders())
+      dispatch(listOrders());
     } else {
-      navigate('/login')
+      navigate("/login");
     }
-  }, [dispatch, navigate, userInfo])
+  }, [dispatch, navigate, userInfo]);
 
   return (
     <>
@@ -33,9 +33,9 @@ const OrderListScreen = () => {
       {loading ? (
         <Loader />
       ) : error ? (
-        <Message variant='danger'>{error}</Message>
+        <Message variant="danger">{error}</Message>
       ) : (
-        <Table striped bordered hover responsive className='table-sm'>
+        <Table striped bordered hover responsive className="table-sm">
           <thead>
             <tr>
               <th>ID</th>
@@ -53,29 +53,29 @@ const OrderListScreen = () => {
                 <td>{order._id}</td>
                 <td>{order.user && order.user.name}</td>
                 <td>{order.createdAt}</td>
-                <td>AED {order.totalPrice}</td>
+                <td>AED {order.totalPrice.toFixed(2)}</td>
 
                 <td>
                   {order.isPaid ? (
-                    new Date(order.paidAt).toLocaleDateString('en-GB', {
-                      day: '2-digit',
-                      month: '2-digit',
-                      year: 'numeric',
+                    new Date(order.paidAt).toLocaleDateString("en-GB", {
+                      day: "2-digit",
+                      month: "2-digit",
+                      year: "numeric",
                     })
                   ) : (
-                    <FontAwesomeIcon icon={faXmark} style={{ color: 'red' }} />
+                    <FontAwesomeIcon icon={faXmark} style={{ color: "red" }} />
                   )}
                 </td>
                 <td>
                   {order.isDelivered ? (
                     order.deliveredAt.substring(0, 10)
                   ) : (
-                    <FontAwesomeIcon icon={faXmark} style={{ color: 'red' }} />
+                    <FontAwesomeIcon icon={faXmark} style={{ color: "red" }} />
                   )}
                 </td>
                 <td>
                   <LinkContainer to={`/orders/${order._id}`}>
-                    <Button variant='light' className='btn-sm'>
+                    <Button variant="light" className="btn-sm">
                       Details
                     </Button>
                   </LinkContainer>
@@ -86,7 +86,7 @@ const OrderListScreen = () => {
         </Table>
       )}
     </>
-  )
-}
+  );
+};
 
-export default OrderListScreen
+export default OrderListScreen;

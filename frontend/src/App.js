@@ -23,7 +23,7 @@ import UserEditScreen from "./screens/UserEditScreen";
 import ProductListScreen from "./screens/ProductListScreen";
 import ProductEditScreen from "./screens/ProductEditScreen";
 import OrderListScreen from "./screens/OrderListScreen";
-
+import CodSuccessScreen from "./screens/CodSuccessScreen";
 import ContactUsScreen from "./screens/ContactUsScreen";
 import DeliveryFaqScreen from "./screens/DeliveryFaqScreen";
 import ReturnScreen from "./screens/ReturnScreen";
@@ -36,6 +36,7 @@ import ResetPasswordScreen from "./screens/ResetPasswordScreen";
 
 import Payment from "./screens/Payment";
 import Completion from "./screens/Completion";
+import SelectPaymentScreen from "./screens/SelectPaymentScreen";
 
 function App() {
   return (
@@ -56,6 +57,8 @@ function App() {
 
             <Route path="/placeorder" element={<PlaceOrderScreen />} />
             <Route path="/shipping" element={<ShippingScreen />} />
+            <Route path="/selectpayment" element={<SelectPaymentScreen />} />
+            <Route path="/orders/:id/cod" element={<CodSuccessScreen />} />
             <Route path="/register" element={<RegisterScreen />} />
             <Route path="/profile" element={<ProfileScreen />} />
             <Route path="/contactus" element={<ContactUsScreen />} />

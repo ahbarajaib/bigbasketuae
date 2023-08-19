@@ -1,5 +1,5 @@
 import React, { useEffect } from "react";
-import { Link, useNavigate } from "react-router-dom";
+import { Link, useNavigate, useLocation } from "react-router-dom";
 import { ListGroup, Image, Card, Button, Row, Col } from "react-bootstrap";
 import { useDispatch, useSelector } from "react-redux";
 import Message from "../components/Message";
@@ -9,9 +9,10 @@ import { createOrder } from "../actions/orderActions";
 const PlaceOrderScreen = () => {
   const dispatch = useDispatch();
   const navigate = useNavigate();
-
+  const location = useLocation();
+  const { paymentMethod } = location.state || {};
   const cart = useSelector((state) => state.cart);
-
+  console.log(paymentMethod);
   const { shippingAddress } = cart;
   if (!shippingAddress) {
     navigate("/shipping");
@@ -36,7 +37,7 @@ const PlaceOrderScreen = () => {
     Number(cart.itemsPrice) +
     Number(cart.shippingPrice) +
     Number(cart.taxPrice);
-
+  cart.paymentMethod = paymentMethod;
   const orderCreate = useSelector((state) => state.orderCreate);
   const { order, success, error } = orderCreate;
 
@@ -45,7 +46,7 @@ const PlaceOrderScreen = () => {
       navigate(`/orders/${order._id}`);
     }
     // eslint-disable-next-line
-  }, [success, navigate]);
+  }, [success, navigate, cart, paymentMethod, dispatch]);
 
   const placeOrderHandler = () => {
     const orderItems = cart.cartItems.map((item) => ({
@@ -62,7 +63,7 @@ const PlaceOrderScreen = () => {
       createOrder({
         orderItems,
         shippingAddress: cart.shippingAddress,
-        paymentMethod: cart.paymentMethod,
+        paymentMethod: paymentMethod, // Use the selected payment method
         itemsPrice: cart.itemsPrice,
         shippingPrice: cart.shippingPrice,
         taxPrice: cart.taxPrice,
@@ -91,8 +92,8 @@ const PlaceOrderScreen = () => {
             </ListGroup.Item>
 
             <ListGroup.Item>
-              <h2>Payment Method</h2>
-              <strong>Method: </strong>
+              <h2>Payment Method: {paymentMethod}</h2>
+
               {cart.paymentMethod}
             </ListGroup.Item>
             <ListGroup.Item>
