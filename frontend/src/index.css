@@ -183,3 +183,8 @@ header {
 .original-price {
   text-decoration: line-through;
 }
+.product-name {
+  min-height: 50px; /* Adjust this value as needed */
+  display: flex;
+  align-items: center;
+}
