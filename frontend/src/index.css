@@ -188,3 +188,33 @@ header {
   display: flex;
   align-items: center;
 }
+
+/* Add these styles to your CSS */
+.quantity-container {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.qty-btn {
+  border: none;
+  background-color: transparent;
+  cursor: pointer;
+  font-size: 1.2rem;
+}
+
+.qty-number {
+  font-size: 1.2rem;
+  margin: 0 10px;
+}
+.responsive-button {
+  overflow: hidden; /* Hide text overflow */
+  text-overflow: ellipsis; /* Show ellipsis (...) for truncated text */
+  white-space: nowrap; /* Prevent line breaks */
+  font-size: 0.8rem; /* Initial font size */
+
+  /* Media query for smaller screen sizes */
+  @media (max-width: 768px) {
+    font-size: 0.7rem; /* Reduce font size for smaller screens */
+  }
+}

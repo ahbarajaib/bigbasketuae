@@ -43,6 +43,23 @@ const CartScreen = (history) => {
     }
   }, [dispatch, id, noOfProducts, selectedQty, selectedPrice]);
 
+  const handleDecreaseQty = (item) => {
+    if (item.noOfProducts > 1) {
+      updateQtyHandler(item, item.noOfProducts - 1);
+    }
+  };
+
+  const handleIncreaseQty = (item) => {
+    if (item.noOfProducts < item.countInStock) {
+      updateQtyHandler(item, item.noOfProducts + 1);
+    }
+  };
+  const updateQtyHandler = (item, newQty) => {
+    dispatch(
+      addToCart(item.product, newQty, item.selectedQty, item.selectedPrice)
+    );
+  };
+
   const removeFromCartHandler = (id) => {
     dispatch(removeFromCart(id));
   };
@@ -96,30 +113,23 @@ const CartScreen = (history) => {
                       <Col md={3}>{item.selectedQty}</Col>
                     </Col>
 
+                    <Col md={2}>AED {item.selectedPrice}</Col>
                     <Col md={2}>
-                      <strong>AED {item.selectedPrice}</strong>
-                    </Col>
-                    <Col md={2}>
-                      <Form.Select
-                        value={getNoOfProducts(item, item.noOfProducts)}
-                        onChange={(e) => {
-                          const newNoOfProducts = Number(e.target.value);
-                          dispatch(
-                            addToCart(
-                              item.product,
-                              newNoOfProducts,
-                              item.selectedQty,
-                              item.selectedPrice
-                            )
-                          );
-                        }}
-                      >
-                        {[...Array(item.countInStock).keys()].map((x) => (
-                          <option key={x + 1} value={x + 1}>
-                            {x + 1}
-                          </option>
-                        ))}
-                      </Form.Select>
+                      <div className="quantity-container">
+                        <button
+                          className="qty-btn"
+                          onClick={() => handleDecreaseQty(item)}
+                        >
+                          -
+                        </button>
+                        <div className="qty-number">{item.noOfProducts}</div>
+                        <button
+                          className="qty-btn"
+                          onClick={() => handleIncreaseQty(item)}
+                        >
+                          +
+                        </button>
+                      </div>
                     </Col>
 
                     <Col md={2}>

@@ -1,5 +1,3 @@
-//cart vid - qty is a part of component level state so we use useState
-
 import React, { useState, useEffect } from "react";
 import { useParams, useNavigate } from "react-router-dom";
 import { useDispatch, useSelector } from "react-redux";
@@ -18,39 +16,55 @@ import Meta from "../components/Meta";
 import { listProductDetails } from "../actions/productActions";
 import { addToCart, updateSelectedQtyPrice } from "../actions/cartActions";
 
-const ProductScreen = (history) => {
-  //useParams is a hook that lets you access the parameter of the current route
+const ProductScreen = () => {
   const { id } = useParams();
   const navigate = useNavigate();
-  //useState(1) to set state of first item is 1
-
   const dispatch = useDispatch();
 
   const productDetails = useSelector((state) => state.productDetails);
   const { loading, error, product } = productDetails;
 
   const [noOfProducts, setNoOfProducts] = useState(1);
-
   const [selectedQty, setSelectedQty] = useState("");
   const [selectedPrice, setSelectedPrice] = useState("");
-  // No arrow function because we can't use async
+  const [selectedDiscount, setSelectedDiscount] = useState(0);
+
   useEffect(() => {
     dispatch(listProductDetails(id));
   }, [dispatch, id]);
 
-  //Handlers
+  useEffect(() => {
+    if (product.prices && product.prices.length > 0 && selectedQty === "") {
+      setSelectedQty(product.prices[0].qty);
+      setSelectedPrice(product.prices[0].price);
+      setSelectedDiscount(product.prices[0].discount);
+    }
+  }, [product.prices, selectedQty]);
+
   const addToCartHandler = () => {
     if (selectedQty === "") {
       alert("Please select a quantity first.");
       return;
     }
-
     dispatch(addToCart(id, noOfProducts, selectedQty, selectedPrice));
   };
 
-  // all route params will always be string values
-  //const product = products.find (p => String(p._id) === id)
-  //to='' is used to define where it will go after the click
+  const handleDecreaseQty = () => {
+    if (noOfProducts > 1) {
+      setNoOfProducts(noOfProducts - 1);
+    }
+  };
+
+  const handleIncreaseQty = () => {
+    if (noOfProducts < product.countInStock) {
+      setNoOfProducts(noOfProducts + 1);
+    }
+  };
+
+  const selectedQtyPrice =
+    selectedQty && product.prices
+      ? product.prices.find((price) => price.qty === selectedQty)
+      : null;
 
   return (
     <>
@@ -65,13 +79,31 @@ const ProductScreen = (history) => {
         <>
           <Meta title={product.name} />
           <Row>
-            <Col md={6}>
+            <Col md={6} style={{ position: "relative" }}>
               <Image
                 src={process.env.REACT_APP_API_URL + product.image}
                 alt={product.name}
                 fluid
               />
+              {selectedDiscount > 0 && (
+                <span
+                  className="discount-badge"
+                  style={{
+                    backgroundColor: "#feb9b9",
+                    padding: "4px",
+                    color: "#610000",
+                    position: "absolute",
+                    top: 0,
+                    left: 0,
+                    textAlign: "right",
+                    paddingRight: "4px",
+                  }}
+                >
+                  {selectedDiscount}% OFF
+                </span>
+              )}
             </Col>
+
             <Col md={3}>
               <ListGroup variant="flush">
                 <ListGroup.Item>
@@ -85,40 +117,87 @@ const ProductScreen = (history) => {
                 <ListGroup.Item>
                   <Row className="flex-wrap align-items-center">
                     {product.prices &&
-                      product.prices.map((price) => (
-                        <Col key={price.qty} xs="auto">
+                      product.prices.map((price, index) => (
+                        <Col key={price.qty} xs={6} className="mb-2">
                           <Button
                             variant={
-                              selectedQty === price.qty
+                              selectedQty === price.qty ||
+                              (index === 0 && selectedQty === "")
                                 ? "primary"
                                 : "outline-primary"
                             }
-                            className="btn-product"
+                            className="btn-product responsive-button"
                             onClick={() => {
                               setSelectedQty(price.qty);
                               setSelectedPrice(price.price);
+                              setSelectedDiscount(price.discount);
                             }}
-                            style={{ fontSize: "0.8rem", marginRight: "5px" }} // Adjust the font size and spacing as needed
+                            style={{
+                              width: "100%",
+                              position: "relative",
+                              textAlign: "left",
+                            }}
                           >
-                            <span style={{ whiteSpace: "nowrap" }}>
-                              {price.qty} {price.units}
-                            </span>
+                            <div
+                              style={{
+                                display: "flex",
+                                justifyContent: "space-between",
+                                alignItems: "center",
+                              }}
+                            >
+                              <span style={{ whiteSpace: "nowrap" }}>
+                                {price.qty} {price.units}
+                              </span>
+                              {price.discount > 0 && (
+                                <span
+                                  className="discount-badge-on-button"
+                                  style={{
+                                    backgroundColor: "#feb9b9",
+                                    padding: "2px 4px",
+                                    color: "#610000",
+                                    position: "relative",
+                                    right: "-10px",
+                                  }}
+                                >
+                                  {price.discount}%
+                                </span>
+                              )}
+                            </div>
                           </Button>
                         </Col>
                       ))}
                   </Row>
                 </ListGroup.Item>
+
                 <ListGroup.Item>
-                  <h4>
-                    <strong>
+                  <div className="price-container d-flex justify-content-center">
+                    <Card.Text
+                      as="h4"
+                      className="mr-2"
+                      style={{ marginBottom: "0" }}
+                    >
                       AED{" "}
-                      {selectedPrice
-                        ? selectedPrice
-                        : product.prices && product.prices.length > 0
-                        ? product.prices[0].price
-                        : 500}
-                    </strong>
-                  </h4>
+                      {selectedQty && selectedQtyPrice?.discount > 0
+                        ? (
+                            selectedQtyPrice.discountedPrice * noOfProducts
+                          ).toFixed(2)
+                        : (selectedQtyPrice?.price * noOfProducts).toFixed(2)}
+                    </Card.Text>
+                    {selectedQtyPrice?.discount > 0 && (
+                      <Card.Text
+                        as="h6"
+                        className="original-price"
+                        style={{
+                          marginBottom: "0",
+
+                          textDecoration: "line-through",
+                        }}
+                      >
+                        &nbsp;{" "}
+                        {(selectedQtyPrice?.price * noOfProducts).toFixed(2)}
+                      </Card.Text>
+                    )}
+                  </div>
                 </ListGroup.Item>
               </ListGroup>
             </Col>
@@ -127,16 +206,34 @@ const ProductScreen = (history) => {
               <Card>
                 <ListGroup variant="flush">
                   <ListGroup.Item>
-                    <h4>
-                      <strong>
+                    <div className="price-container d-flex justify-content-center">
+                      <Card.Text
+                        as="h6"
+                        className="mr-2"
+                        style={{ marginBottom: "0" }}
+                      >
                         AED{" "}
-                        {selectedPrice
-                          ? (selectedPrice * noOfProducts).toFixed(2)
-                          : product.prices && product.prices.length > 0
-                          ? (product.prices[0].price * noOfProducts).toFixed(2)
-                          : (product.price * noOfProducts).toFixed(2)}
-                      </strong>
-                    </h4>
+                        {selectedQty && selectedQtyPrice?.discount > 0
+                          ? (
+                              selectedQtyPrice.discountedPrice * noOfProducts
+                            ).toFixed(2)
+                          : (selectedQtyPrice?.price * noOfProducts).toFixed(2)}
+                      </Card.Text>
+                      {selectedQtyPrice?.discount > 0 && (
+                        <Card.Text
+                          as="p"
+                          className="original-price"
+                          style={{
+                            marginBottom: "0",
+                            fontSize: "0.8em",
+                            textDecoration: "line-through",
+                          }}
+                        >
+                          &nbsp;{" "}
+                          {(selectedQtyPrice?.price * noOfProducts).toFixed(2)}
+                        </Card.Text>
+                      )}
+                    </div>
                   </ListGroup.Item>
                   <ListGroup.Item>
                     <Row>
@@ -152,18 +249,21 @@ const ProductScreen = (history) => {
                       <Row>
                         <Col>Qty</Col>
                         <Col>
-                          <Form.Select
-                            value={noOfProducts}
-                            onChange={(e) => setNoOfProducts(e.target.value)}
-                          >
-                            {[...Array(product.countInStock).keys()].map(
-                              (x) => (
-                                <option key={x + 1} value={x + 1}>
-                                  {x + 1}
-                                </option>
-                              )
-                            )}
-                          </Form.Select>
+                          <div className="quantity-container">
+                            <button
+                              className="qty-btn"
+                              onClick={handleDecreaseQty}
+                            >
+                              -
+                            </button>
+                            <div className="qty-number">{noOfProducts}</div>
+                            <button
+                              className="qty-btn"
+                              onClick={handleIncreaseQty}
+                            >
+                              +
+                            </button>
+                          </div>
                         </Col>
                       </Row>
                     </ListGroup.Item>
@@ -183,19 +283,10 @@ const ProductScreen = (history) => {
               </Card>
             </Col>
           </Row>
-          <Row className="my-4">
-            <Col md={12}>
-              <ListGroup.Item className="description-item">
-                <h5>
-                  <strong>Description:</strong>
-                </h5>
-                <p>{product.description}</p>
-              </ListGroup.Item>
-            </Col>
-          </Row>
         </>
       )}
     </>
   );
 };
+
 export default ProductScreen;

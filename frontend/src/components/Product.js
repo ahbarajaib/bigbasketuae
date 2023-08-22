@@ -13,6 +13,8 @@ const Product = ({ product }) => {
   const [selectedQty, setSelectedQty] = useState("");
   const [selectedUnits, setSelectedUnits] = useState("");
   const [selectedPrice, setSelectedPrice] = useState("");
+  const [discountedPrice, setDiscountedPrice] = useState("");
+  const [discount, setDiscount] = useState("");
   const [noOfProducts, setNoOfProducts] = useState(1);
 
   const dispatch = useDispatch();
@@ -22,6 +24,8 @@ const Product = ({ product }) => {
       setSelectedQty(product.prices[0].qty);
       setSelectedUnits(product.prices[0].units);
       setSelectedPrice(product.prices[0].price);
+      setDiscountedPrice(product.prices[0].discountedPrice);
+      setDiscount(product.prices[0].discount);
     }
   }, [product]);
 
@@ -37,12 +41,28 @@ const Product = ({ product }) => {
       return;
     }
 
-    dispatch(addToCart(product._id, noOfProducts, selectedQty, selectedPrice));
+    dispatch(
+      addToCart(
+        product._id,
+        noOfProducts,
+        selectedQty,
+        selectedPrice,
+        discountedPrice,
+        discount
+      )
+    );
   };
+
+  const selectedQuantityPrice = product.prices.find(
+    (price) => price.qty === selectedQty
+  );
+  const selectedDiscount = selectedQuantityPrice
+    ? selectedQuantityPrice.discount
+    : 0;
 
   return (
     <Card className="my-3 rounded product-card">
-      {product?.prices[0]?.discount > 0 && (
+      {selectedDiscount > 0 && (
         <span
           className="discount-badge"
           style={{
@@ -51,7 +71,7 @@ const Product = ({ product }) => {
             color: "#610000",
           }}
         >
-          {product?.prices[0]?.discount}% OFF
+          {selectedDiscount}% OFF
         </span>
       )}
       <Link to={`/product/${product?._id}`} style={{ display: "block" }}>
