@@ -86,29 +86,26 @@ const HomeScreen = () => {
       <Row>
         <Col>
           {categories.map((category) => (
-            <div key={category._id}>
+            <div key={category.id}>
               <h1 className="text-center">{category.title}</h1>
               <Row>
-                {products
-                  .filter((product) => product.category === category.name)
-                  .slice(0, 6)
-                  .map((product) => (
-                    <Col key={product._id} xs={6} sm={6} md={4} lg={3} xl={2}>
-                      <Product product={product} />
-                    </Col>
-                  ))}
+                {loading ? (
+                  <Loader /> // Show loading indicator while fetching products
+                ) : (
+                  products
+                    .filter((product) => product.category === category.name)
+                    .slice(0, 6)
+                    .map((product) => (
+                      <Col key={product._id} xs={6} sm={6} md={4} lg={3} xl={2}>
+                        <Product product={product} />
+                      </Col>
+                    ))
+                )}
               </Row>
             </div>
           ))}
         </Col>
       </Row>
-      {loading ? (
-        <Loader />
-      ) : error ? (
-        <Message variant="danger">{error}</Message>
-      ) : (
-        <>{/* Display the featured products */}</>
-      )}
     </>
   );
 };
