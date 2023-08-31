@@ -8,19 +8,15 @@ function AllCollapseExample() {
         <Accordion.Header>In which areas do you deliver?</Accordion.Header>
         <Accordion.Body>
           We deliver to any area/building that is within the serviced area in
-          Dubai, Abu Dhabi, Sharjah, Ajman, and Umm Al Quwain, Ras Al Khaimah
-          and Fujairah. We are expanding our delivery area in order to provide
-          the best service and we will keep you updated!
+          Dubai. We are expanding our delivery area in order to provide the best
+          service and we will keep you updated!
         </Accordion.Body>
       </Accordion.Item>
       <Accordion.Item eventKey="1">
         <Accordion.Header>
           Is it possible to set a specific delivery time?
         </Accordion.Header>
-        <Accordion.Body>
-          We offer same day delivery to Dubai. For other Emirates you can expect
-          your orders to arrive next day.
-        </Accordion.Body>
+        <Accordion.Body>We offer same day delivery to Dubai.</Accordion.Body>
       </Accordion.Item>
       <Accordion.Item eventKey="2">
         <Accordion.Header>
@@ -37,9 +33,9 @@ function AllCollapseExample() {
         </Accordion.Header>
         <Accordion.Body>
           Yes. If you do not want to accept the order, you can contact our
-          Customer Service at +971 522512453 and tell them your reasons for
-          refusing the order. If you want to refuse your order, we request that
-          you do not open the items.
+          Customer Service at <a href="tel:+971-522-512-2453">+971 522512453</a>{" "}
+          and tell them your reasons for refusing the order. If you want to
+          refuse your order, we request that you do not open the items.
         </Accordion.Body>
       </Accordion.Item>
       <Accordion.Item eventKey="4">
@@ -56,10 +52,9 @@ function AllCollapseExample() {
           I can not find my delivery area, What should I do?
         </Accordion.Header>
         <Accordion.Body>
-          In case you didn't find your location in the form/Google map, please
-          send us a location request at customercare@bigbasketuae.com through
-          the website from the area selection screen. We will update you once
-          the service is available in the requested area.
+          In case you didn't find your location, please call{" "}
+          <a href="tel:+971-522-512-2453">+971 522512453</a> or chat with us
+          though WhatsApp chat support.
         </Accordion.Body>
       </Accordion.Item>
       <Accordion.Item eventKey="6">

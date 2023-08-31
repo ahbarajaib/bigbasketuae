@@ -12,7 +12,7 @@ const PlaceOrderScreen = () => {
   const location = useLocation();
   const { paymentMethod } = location.state || {};
   const cart = useSelector((state) => state.cart);
-  console.log(paymentMethod);
+  console.log(cart);
   const { shippingAddress } = cart;
   if (!shippingAddress) {
     navigate("/shipping");
@@ -23,20 +23,33 @@ const PlaceOrderScreen = () => {
   const addDecimals = (num) => {
     return (Math.round(num * 100) / 100).toFixed(2);
   };
-
+  //total price of all items
   cart.itemsPrice = addDecimals(
     cart.cartItems.reduce(
       (acc, item) => acc + item.selectedPrice * item.noOfProducts,
       0
     )
   );
+  //total discountedPrice of all items
+  cart.discountedItemsPrice = addDecimals(
+    cart.cartItems.reduce((acc, item) => {
+      const price =
+        item.selectedDiscount > 0
+          ? item.selectedDiscountedPrice
+          : item.selectedPrice;
+      const itemTotal = item.noOfProducts * price;
+      return acc + itemTotal;
+    }, 0)
+  );
 
-  cart.shippingPrice = addDecimals(cart.itemsPrice > 50 ? 0 : 10);
-  cart.taxPrice = addDecimals(Number((0.05 * cart.itemsPrice).toFixed(2)));
+  // Calculate the shipping price based on cart.itemsPrice and cart.discountedItemsPrice
+  const smallerPrice = Math.min(cart.itemsPrice, cart.discountedItemsPrice);
+  cart.itemsPrice = smallerPrice.toFixed(2);
+  cart.shippingPrice = addDecimals(smallerPrice > 50 ? 0 : 10);
+
+  cart.taxPrice = addDecimals(Number((0.05 * smallerPrice).toFixed(2)));
   cart.totalPrice =
-    Number(cart.itemsPrice) +
-    Number(cart.shippingPrice) +
-    Number(cart.taxPrice);
+    Number(smallerPrice) + Number(cart.shippingPrice) + Number(cart.taxPrice);
   cart.paymentMethod = paymentMethod;
   const orderCreate = useSelector((state) => state.orderCreate);
   const { order, success, error } = orderCreate;
@@ -47,7 +60,6 @@ const PlaceOrderScreen = () => {
     }
     // eslint-disable-next-line
   }, [success, navigate, cart, paymentMethod, dispatch]);
-
   const placeOrderHandler = () => {
     const orderItems = cart.cartItems.map((item) => ({
       name: item.name,
@@ -57,7 +69,11 @@ const PlaceOrderScreen = () => {
       price: item.price,
       selectedPrice: item.selectedPrice,
       selectedQty: item.selectedQty,
+      selectedDiscountedPrice: item.selectedDiscountedPrice, // Add this field
+      selectedDiscount: item.selectedDiscount, // Add this field
+      selectedUnits: item.selectedUnits, // Add this field
     }));
+    console.log("orderItems:", orderItems);
 
     dispatch(
       createOrder({
@@ -85,8 +101,11 @@ const PlaceOrderScreen = () => {
               <h2>Shipping</h2>
               <p>
                 <strong>Address: </strong>
-                {cart.shippingAddress.address}, {cart.shippingAddress.city},
-                {cart.shippingAddress.postalCode},{" "}
+                <br />
+                {cart.shippingAddress.address}
+                &nbsp;PO Box&nbsp;{cart.shippingAddress.postalCode}&nbsp;
+                {cart.shippingAddress.city}
+                <br />
                 {cart.shippingAddress.country}
               </p>
             </ListGroup.Item>
@@ -119,9 +138,30 @@ const PlaceOrderScreen = () => {
                           </Link>
                         </Col>
                         <Col md={4}>
-                          {item.noOfProducts} x AED{" "}
-                          {Number(item.selectedPrice).toFixed(2)} = AED{" "}
-                          {(item.noOfProducts * item.selectedPrice).toFixed(2)}
+                          {item.selectedDiscount > 0 ? (
+                            <>
+                              <div>
+                                {item.noOfProducts} x AED{" "}
+                                {(
+                                  item.noOfProducts *
+                                  item.selectedDiscountedPrice
+                                ).toFixed(2)}
+                              </div>
+                              <div style={{ textDecoration: "line-through" }}>
+                                {" "}
+                                {(
+                                  item.noOfProducts * item.selectedPrice
+                                ).toFixed(2)}
+                              </div>
+                            </>
+                          ) : (
+                            <div>
+                              {item.noOfProducts} x AED{" "}
+                              {(item.noOfProducts * item.selectedPrice).toFixed(
+                                2
+                              )}
+                            </div>
+                          )}
                         </Col>
                       </Row>
                     </ListGroup.Item>
@@ -140,7 +180,7 @@ const PlaceOrderScreen = () => {
               <ListGroup.Item>
                 <Row>
                   <Col>Items</Col>
-                  <Col>AED {cart.itemsPrice}</Col>
+                  <Col>AED {smallerPrice}</Col>
                 </Row>
               </ListGroup.Item>
               <ListGroup.Item>

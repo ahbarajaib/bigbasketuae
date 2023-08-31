@@ -27,28 +27,58 @@ const ProductScreen = () => {
   const [noOfProducts, setNoOfProducts] = useState(1);
   const [selectedQty, setSelectedQty] = useState("");
   const [selectedPrice, setSelectedPrice] = useState("");
-  const [selectedDiscount, setSelectedDiscount] = useState(0);
+  const [selectedDiscount, setSelectedDiscount] = useState("");
+  const [selectedDiscountedPrice, setSelectedDiscountedPrice] = useState("");
+  const [selectedUnits, setSelectedUnits] = useState("");
 
   useEffect(() => {
     dispatch(listProductDetails(id));
   }, [dispatch, id]);
-
+  console.log(product);
   useEffect(() => {
-    if (product.prices && product.prices.length > 0 && selectedQty === "") {
+    if (product.prices && product.prices.length > 0) {
       setSelectedQty(product.prices[0].qty);
       setSelectedPrice(product.prices[0].price);
+      setSelectedDiscountedPrice(product.prices[0].discountedPrice);
       setSelectedDiscount(product.prices[0].discount);
+      setSelectedUnits(product.prices[0].units);
     }
-  }, [product.prices, selectedQty]);
+  }, [product.prices]);
 
   const addToCartHandler = () => {
+    // if (selectedQty === "") {
+    //   alert("Please select a quantity first.");
+    //   return;
+    // }
     if (selectedQty === "") {
-      alert("Please select a quantity first.");
-      return;
+      setSelectedQty(product.prices[0].qty);
+      setSelectedPrice(product.prices[0].price);
+      setSelectedDiscountedPrice(product.prices[0].discountedPrice);
+      setSelectedDiscount(product.prices[0].discount);
+      setSelectedUnits(product.prices[0].units);
     }
-    dispatch(addToCart(id, noOfProducts, selectedQty, selectedPrice));
-  };
 
+    dispatch(
+      addToCart(
+        id,
+        noOfProducts,
+        selectedQty,
+        selectedPrice,
+        selectedDiscount,
+        selectedDiscountedPrice,
+        selectedUnits
+      )
+    );
+  };
+  console.log(
+    id,
+    noOfProducts,
+    selectedQty,
+    selectedPrice,
+    selectedDiscount,
+    selectedDiscountedPrice,
+    selectedUnits
+  );
   const handleDecreaseQty = () => {
     if (noOfProducts > 1) {
       setNoOfProducts(noOfProducts - 1);
@@ -131,6 +161,8 @@ const ProductScreen = () => {
                               setSelectedQty(price.qty);
                               setSelectedPrice(price.price);
                               setSelectedDiscount(price.discount);
+                              setSelectedDiscountedPrice(price.discountedPrice);
+                              setSelectedUnits(price.units);
                             }}
                             style={{
                               width: "100%",

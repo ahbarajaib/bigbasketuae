@@ -13,9 +13,13 @@ const orderSchema = mongoose.Schema(
         noOfProducts: { type: Number, required: true },
         image: { type: String, required: true },
         selectedQty: { type: Number, required: true },
-
         selectedPrice: { type: Number, required: true },
-
+        selectedDiscount: { type: Number, required: true },
+        selectedDiscountedPrice: { type: Number },
+        selectedUnits: {
+          type: String,
+          required: true,
+        },
         product: {
           type: mongoose.Schema.Types.ObjectId,
           required: true,

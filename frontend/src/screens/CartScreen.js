@@ -27,6 +27,15 @@ const CartScreen = (history) => {
 
   //this output the qty
   const noOfProducts = new URLSearchParams(location.search).get("noOfProducts");
+  const selectedDiscount = new URLSearchParams(location.search).get(
+    "selectedDiscount"
+  );
+  const selectedDiscountedPrice = new URLSearchParams(location.search).get(
+    "selectedDiscountedPrice"
+  );
+  const selectedUnits = new URLSearchParams(location.search).get(
+    "selectedUnits"
+  );
 
   const dispatch = useDispatch();
 
@@ -39,9 +48,28 @@ const CartScreen = (history) => {
 
   useEffect(() => {
     if (id) {
-      dispatch(addToCart(id, noOfProducts, selectedQty, selectedPrice));
+      dispatch(
+        addToCart(
+          id,
+          noOfProducts,
+          selectedQty,
+          selectedPrice,
+          selectedDiscount,
+          selectedDiscountedPrice,
+          selectedUnits
+        )
+      );
     }
-  }, [dispatch, id, noOfProducts, selectedQty, selectedPrice]);
+  }, [
+    dispatch,
+    id,
+    noOfProducts,
+    selectedQty,
+    selectedPrice,
+    selectedDiscount,
+    selectedDiscountedPrice,
+    selectedUnits,
+  ]);
 
   const handleDecreaseQty = (item) => {
     if (item.noOfProducts > 1) {
@@ -56,7 +84,15 @@ const CartScreen = (history) => {
   };
   const updateQtyHandler = (item, newQty) => {
     dispatch(
-      addToCart(item.product, newQty, item.selectedQty, item.selectedPrice)
+      addToCart(
+        item.product,
+        newQty,
+        item.selectedQty,
+        item.selectedPrice,
+        item.selectedDiscount,
+        item.selectedDiscountedPrice,
+        item.selectedUnits
+      )
     );
   };
 
@@ -75,14 +111,24 @@ const CartScreen = (history) => {
     //navigate('/login?redirect=shipping')
   };
 
-  const getNoOfProducts = (item, newNoOfProducts = null) => {
-    if (newNoOfProducts !== null) {
-      return newNoOfProducts;
-    } else {
-      return item.noOfProducts;
-    }
-  };
+  const grossTotal = cartItems
+    .reduce((acc, item) => {
+      const itemTotal = item.noOfProducts * item.selectedPrice;
+      return acc + itemTotal;
+    }, 0)
+    .toFixed(2);
 
+  const total = cartItems
+    .reduce((acc, item) => {
+      const price =
+        item.selectedDiscount > 0
+          ? item.selectedDiscountedPrice
+          : item.selectedPrice;
+      const itemTotal = item.noOfProducts * price;
+      return acc + itemTotal;
+    }, 0)
+    .toFixed(2);
+  const youSaved = (grossTotal - total).toFixed(2);
   return (
     <>
       <button className="btn btn-light my-3" onClick={() => navigate(-1)}>
@@ -100,7 +146,7 @@ const CartScreen = (history) => {
               {cartItems.map((item) => (
                 <ListGroup.Item key={item.product}>
                   <Row>
-                    <Col md={2}>
+                    <Col md={1}>
                       <Image
                         src={process.env.REACT_APP_API_URL + item.image}
                         alt={item.name}
@@ -108,16 +154,31 @@ const CartScreen = (history) => {
                         rounded
                       />
                     </Col>
-                    <Col md={3}>
+                    <Col md={3} style={{ fontSize: "0.8em" }}>
                       <Link to={`/product/${item.product}`}>{item.name}</Link>
-                      <Col md={3}>{item.selectedQty}</Col>
+                      <Col md={3}>
+                        {item.selectedQty}
+                        {item.selectedUnits}
+                      </Col>
                     </Col>
 
-                    <Col md={2}>AED {item.selectedPrice}</Col>
-                    <Col md={2}>
+                    <Col md={2} style={{ fontSize: "0.8em" }}>
+                      {item.selectedDiscount > 0 ? (
+                        <>
+                          <div>AED {item.selectedDiscountedPrice}</div>
+                          <div style={{ textDecoration: "line-through" }}>
+                            {item.selectedPrice.toFixed(2)}
+                          </div>
+                        </>
+                      ) : (
+                        <div>AED {item.selectedPrice.toFixed(2)}</div>
+                      )}
+                    </Col>
+                    <Col md={1}>
                       <div className="quantity-container">
                         <button
                           className="qty-btn"
+                          style={{ fontSize: "0.9em" }}
                           onClick={() => handleDecreaseQty(item)}
                         >
                           -
@@ -125,6 +186,7 @@ const CartScreen = (history) => {
                         <div className="qty-number">{item.noOfProducts}</div>
                         <button
                           className="qty-btn"
+                          style={{ fontSize: "0.9em" }}
                           onClick={() => handleIncreaseQty(item)}
                         >
                           +
@@ -132,19 +194,38 @@ const CartScreen = (history) => {
                       </div>
                     </Col>
 
-                    <Col md={2}>
+                    <Col md={1}>
                       <Button
                         type="button"
                         variant="light"
                         onClick={() => removeFromCartHandler(item.product)}
+                        style={{ fontSize: "0.8em" }}
                       >
                         <i className="fas fa-trash"></i>
                       </Button>
                     </Col>
-                    <Col md={1}>
-                      <div>{`AED ${(
-                        item.noOfProducts * item.selectedPrice
-                      ).toFixed(2)}`}</div>
+                    <Col md={2} style={{ fontSize: "0.8em" }}>
+                      {item.selectedDiscount > 0 ? (
+                        <>
+                          <div>
+                            AED{" "}
+                            {(
+                              item.noOfProducts * item.selectedDiscountedPrice
+                            ).toFixed(2)}
+                          </div>
+                          <div style={{ textDecoration: "line-through" }}>
+                            {" "}
+                            {(item.noOfProducts * item.selectedPrice).toFixed(
+                              2
+                            )}
+                          </div>
+                        </>
+                      ) : (
+                        <div>
+                          AED{" "}
+                          {(item.noOfProducts * item.selectedPrice).toFixed(2)}
+                        </div>
+                      )}
                     </Col>
                   </Row>
                 </ListGroup.Item>
@@ -152,22 +233,29 @@ const CartScreen = (history) => {
             </ListGroup>
           )}
         </Col>
-        <Col md={4}>
+        <Col md={3}>
           <Card className="my-4 p-4">
             <ListGroup.Item>
-              <h2>Subtotal</h2>
-              <h3>
-                AED{" "}
-                {cartItems
-                  .reduce(
-                    (acc, item) => acc + item.noOfProducts * item.selectedPrice,
-                    0
-                  )
-                  .toFixed(2)}
-              </h3>
+              <h6
+                style={{
+                  textAlign: "center",
+                  color: "#007bff",
+                }}
+              >
+                You saved AED {youSaved}
+              </h6>
+              <h5
+                style={{
+                  textAlign: "center",
+                  marginBottom: "10px",
+                }}
+              >
+                Subtotal &nbsp;AED {total}
+                &nbsp;&nbsp;<del>{grossTotal}</del>
+              </h5>
             </ListGroup.Item>
             <ListGroup.Item>
-              <div className="d-grid gap-2">
+              <div className="d-grid gap-4">
                 <Button
                   type="button"
                   className="button-primary btn-block"

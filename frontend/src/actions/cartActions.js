@@ -10,25 +10,39 @@ import {
 const axiosInstance = axios.create({ baseURL: process.env.REACT_APP_API_URL });
 
 //get id and qty from the url
+// cartActions.js
+
 export const addToCart =
-  (id, noOfProducts, selectedQty, selectedPrice, totalCartPrice) =>
+  (
+    id,
+    noOfProducts,
+    selectedQty,
+    selectedPrice,
+    selectedDiscount,
+    selectedDiscountedPrice,
+    selectedUnits
+  ) =>
   async (dispatch, getState) => {
     const { data } = await axiosInstance.get(`/api/products/${id}`);
+    //this works
+    const cartItem = {
+      product: data._id,
+      name: data.name,
+      image: data.image,
+      noOfProducts,
+      selectedQty,
+      selectedPrice,
+      selectedDiscount,
+      selectedDiscountedPrice,
+      selectedUnits,
+      countInStock: data.countInStock,
+    };
 
     dispatch({
       type: CART_ADD_ITEM,
-      payload: {
-        product: data._id,
-        name: data.name,
-        image: data.image,
-        noOfProducts,
-        selectedQty: selectedQty,
-        selectedPrice: selectedPrice,
-        totalCartPrice: totalCartPrice,
-
-        countInStock: data.countInStock,
-      },
+      payload: cartItem,
     });
+
     localStorage.setItem(
       "cartItems",
       JSON.stringify(getState().cart.cartItems)

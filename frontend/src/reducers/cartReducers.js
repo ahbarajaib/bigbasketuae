@@ -4,7 +4,7 @@ import {
   CART_SAVE_PAYMENT_METHOD,
   CART_SAVE_SHIPPING_ADDRESS,
   CART_UPDATE_ITEM,
-} from '../constants/cartConstants'
+} from "../constants/cartConstants";
 
 export const cartReducer = (
   state = { cartItems: [], shippingAddress: {} },
@@ -12,10 +12,9 @@ export const cartReducer = (
 ) => {
   switch (action.type) {
     case CART_ADD_ITEM:
-      const item = action.payload
+      const item = action.payload;
 
-      //product is a id below x.product
-      const existItem = state.cartItems.find((x) => x.product === item.product)
+      const existItem = state.cartItems.find((x) => x.product === item.product);
 
       if (existItem) {
         return {
@@ -23,39 +22,55 @@ export const cartReducer = (
           cartItems: state.cartItems.map((x) =>
             x.product === existItem.product ? item : x
           ),
-        }
+        };
       } else {
         return {
           ...state,
           cartItems: [...state.cartItems, item],
-        }
+        };
       }
 
     case CART_UPDATE_ITEM:
-      const { productId, selectedQty, selectedPrice } = action.payload
+      const {
+        productId,
+        selectedQty,
+        selectedPrice,
+        selectedDiscount,
+        selectedDiscountedPrice,
+        selectedUnits,
+      } = action.payload;
       return {
         ...state,
         cartItems: state.cartItems.map((x) =>
-          x.product._id === productId ? { ...x, selectedQty, selectedPrice } : x
+          x.product._id === productId
+            ? {
+                ...x,
+                selectedQty,
+                selectedPrice,
+                selectedDiscount,
+                selectedDiscountedPrice,
+                selectedUnits,
+              }
+            : x
         ),
-      }
+      };
     case CART_REMOVE_ITEM:
       return {
         ...state,
         cartItems: state.cartItems.filter((x) => x.product !== action.payload),
-      }
+      };
     case CART_SAVE_SHIPPING_ADDRESS:
       return {
         ...state,
         shippingAddress: action.payload,
-      }
+      };
     case CART_SAVE_PAYMENT_METHOD:
       return {
         ...state,
         paymentMethod: action.payload,
-      }
+      };
 
     default:
-      return state
+      return state;
   }
-}
+};

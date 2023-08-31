@@ -36,7 +36,7 @@ const Header = () => {
           </LinkContainer>
           {/* WhatsApp Link */}
           <a
-            href="wa.link/btn1kf"
+            href="https://wa.link/btn1kf" // Make sure to include the complete URL with 'https://'
             target="_blank"
             rel="noopener noreferrer"
             className="whatsapp-link"
@@ -57,8 +57,9 @@ const Header = () => {
                 <Nav.Link>
                   <div className="cart">
                     <i className="fas fa-shopping-cart"></i> Cart
-                    <div className="badge">{cartItems.length}</div>{" "}
-                    {/* Updated badge */}
+                    {cartItems.length > 0 && (
+                      <sup className="badge">{cartItems.length}</sup>
+                    )}
                   </div>
                 </Nav.Link>
               </LinkContainer>
