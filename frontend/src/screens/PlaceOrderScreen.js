@@ -80,7 +80,7 @@ const PlaceOrderScreen = () => {
         orderItems,
         shippingAddress: cart.shippingAddress,
         paymentMethod: paymentMethod, // Use the selected payment method
-        itemsPrice: cart.itemsPrice,
+        itemsPrice: cart.items,
         shippingPrice: cart.shippingPrice,
         taxPrice: cart.taxPrice,
         totalPrice: cart.totalPrice,

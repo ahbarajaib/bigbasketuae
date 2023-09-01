@@ -66,8 +66,11 @@ const OrderScreen = (history) => {
   }, [id, dispatch, successPay, successDeliver, order, navigate, userInfo]);
 
   const successPaymentHandler = async () => {
-    if (order.paymentMethod === "Cash on Delivery") {
-      navigate(`/orders/${id}/cod`);
+    if (
+      order.paymentMethod === "Cash on Delivery" ||
+      order.paymentMethod === "Bring Swiping Machine"
+    ) {
+      navigate(`/orders/${id}/`);
     } else {
       navigate(`/orders/${id}/payment`);
     }
@@ -123,19 +126,25 @@ const OrderScreen = (history) => {
                 <strong>Method: </strong>
                 {order.paymentMethod}
               </p>
-              {order.paymentMethod !== "Cash on Delivery" && (
-                <div>
-                  {!order.isPaid ? (
-                    <Message variant="danger">Not paid</Message>
-                  ) : (
-                    <Message variant="success">Paid on {order.paidAt}</Message>
-                  )}
-                </div>
-              )}
-              {/* Conditional rendering of info message for Cash on Delivery */}
+              {order.paymentMethod !== "Cash on Delivery" &&
+                order.paymentMethod !== "Bring Swiping Machine" && (
+                  <div>
+                    {!order.isPaid ? (
+                      <Message variant="danger">Not paid</Message>
+                    ) : (
+                      <Message variant="success">
+                        Paid on {order.paidAt}
+                      </Message>
+                    )}
+                  </div>
+                )}
               {/* Conditional rendering of info message for Cash on Delivery */}
               {order.paymentMethod === "Cash on Delivery" && (
                 <Message variant="info">Cash on Delivery</Message>
+              )}
+              {/* Conditional rendering of info message for Bring Swiping Machine */}
+              {order.paymentMethod === "Bring Swiping Machine" && (
+                <Message variant="info">Bring Swiping Machine</Message>
               )}
             </ListGroup.Item>
 
@@ -204,26 +213,28 @@ const OrderScreen = (history) => {
                   <Col>AED {order.totalPrice}</Col>
                 </Row>
               </ListGroup.Item>
-              {!order.isPaid && order.paymentMethod != "Cash on Delivery" && (
-                <div>
-                  {loadingPay && <Loader />}
-                  {!sdkReady ? (
-                    <Loader />
-                  ) : (
-                    <div>
-                      <div className="d-grid gap-2">
-                        <Button
-                          type="button"
-                          className="button-primary btn-block"
-                          onClick={successPaymentHandler}
-                        >
-                          Place Order
-                        </Button>
+              {!order.isPaid &&
+                order.paymentMethod !== "Cash on Delivery" &&
+                order.paymentMethod !== "Bring Swiping Machine" && (
+                  <div>
+                    {loadingPay && <Loader />}
+                    {!sdkReady ? (
+                      <Loader />
+                    ) : (
+                      <div>
+                        <div className="d-grid gap-2">
+                          <Button
+                            type="button"
+                            className="button-primary btn-block"
+                            onClick={successPaymentHandler}
+                          >
+                            Place Order
+                          </Button>
+                        </div>
                       </div>
-                    </div>
-                  )}
-                </div>
-              )}
+                    )}
+                  </div>
+                )}
               {loadingDeliver && <Loader />}
               {/* Mark As Delivered button */}
               {userInfo.isAdmin &&
