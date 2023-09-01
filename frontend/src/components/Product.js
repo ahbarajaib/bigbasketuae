@@ -13,21 +13,21 @@ const Product = ({ product }) => {
   const [selectedQty, setSelectedQty] = useState("");
   const [selectedUnits, setSelectedUnits] = useState("");
   const [selectedPrice, setSelectedPrice] = useState("");
-  const [discountedPrice, setDiscountedPrice] = useState("");
-  const [discount, setDiscount] = useState("");
+  const [selectedDiscount, setSelectedDiscount] = useState("");
+  const [selectedDiscountedPrice, setSelectedDiscountedPrice] = useState("");
   const [noOfProducts, setNoOfProducts] = useState(1);
 
   const dispatch = useDispatch();
   const navigate = useNavigate();
   useEffect(() => {
-    if (product && product.prices && product.prices.length > 0) {
+    if (product.prices && product.prices.length > 0) {
       setSelectedQty(product.prices[0].qty);
-      setSelectedUnits(product.prices[0].units);
       setSelectedPrice(product.prices[0].price);
-      setDiscountedPrice(product.prices[0].discountedPrice);
-      setDiscount(product.prices[0].discount);
+      setSelectedDiscountedPrice(product.prices[0].discountedPrice);
+      setSelectedDiscount(product.prices[0].discount);
+      setSelectedUnits(product.prices[0].units);
     }
-  }, [product]);
+  }, [product.prices]);
 
   const handleQtySelect = (qty, units, price) => {
     setSelectedQty(qty);
@@ -37,8 +37,11 @@ const Product = ({ product }) => {
 
   const addToCartHandler = () => {
     if (selectedQty === "") {
-      alert("Please select a quantity first.");
-      return;
+      setSelectedQty(product.prices[0].qty);
+      setSelectedPrice(product.prices[0].price);
+      setSelectedDiscountedPrice(product.prices[0].discountedPrice);
+      setSelectedDiscount(product.prices[0].discount);
+      setSelectedUnits(product.prices[0].units);
     }
 
     dispatch(
@@ -47,8 +50,9 @@ const Product = ({ product }) => {
         noOfProducts,
         selectedQty,
         selectedPrice,
-        discountedPrice,
-        discount
+        selectedDiscount,
+        selectedDiscountedPrice,
+        selectedUnits
       )
     );
   };
@@ -56,9 +60,6 @@ const Product = ({ product }) => {
   const selectedQuantityPrice = product.prices.find(
     (price) => price.qty === selectedQty
   );
-  const selectedDiscount = selectedQuantityPrice
-    ? selectedQuantityPrice.discount
-    : 0;
 
   return (
     <Card className="my-3 rounded product-card">
