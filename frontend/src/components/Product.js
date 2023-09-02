@@ -1,12 +1,14 @@
 import React, { useState, useEffect } from "react";
 import { Link } from "react-router-dom";
-import { Card, Button, Dropdown } from "react-bootstrap";
+import { Card, Button, Dropdown, Col } from "react-bootstrap";
 import {
   addProductToCartFromProductComponent,
   updateSelectedQtyPrice,
   addToCart,
+  removeFromCart,
+  updateCartQuantity,
 } from "../actions/cartActions";
-import { useDispatch } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 import { useNavigate } from "react-router-dom";
 
 const Product = ({ product }) => {
@@ -15,10 +17,11 @@ const Product = ({ product }) => {
   const [selectedPrice, setSelectedPrice] = useState("");
   const [selectedDiscount, setSelectedDiscount] = useState("");
   const [selectedDiscountedPrice, setSelectedDiscountedPrice] = useState("");
-  const [noOfProducts, setNoOfProducts] = useState(1);
-
+  const [noOfProducts, setNoOfProducts] = useState(0); // Initialize to 0
+  const cartItems = useSelector((state) => state.cart.cartItems);
   const dispatch = useDispatch();
   const navigate = useNavigate();
+
   useEffect(() => {
     if (product.prices && product.prices.length > 0) {
       setSelectedQty(product.prices[0].qty);
@@ -27,7 +30,11 @@ const Product = ({ product }) => {
       setSelectedDiscount(product.prices[0].discount);
       setSelectedUnits(product.prices[0].units);
     }
-  }, [product.prices]);
+    const cartItem = cartItems.find((item) => item.product === product._id);
+    if (cartItem) {
+      setNoOfProducts(cartItem.noOfProducts);
+    }
+  }, [product.prices, cartItems]);
 
   const handleQtySelect = (qty, units, price) => {
     setSelectedQty(qty);
@@ -44,22 +51,53 @@ const Product = ({ product }) => {
       setSelectedUnits(product.prices[0].units);
     }
 
-    dispatch(
-      addToCart(
-        product._id,
-        noOfProducts,
-        selectedQty,
-        selectedPrice,
-        selectedDiscount,
-        selectedDiscountedPrice,
-        selectedUnits
-      )
-    );
+    if (noOfProducts === 0) {
+      // If quantity is 0, add to cart with quantity 1
+      dispatch(
+        addToCart(
+          product._id,
+          1,
+          selectedQty,
+          selectedPrice,
+          selectedDiscount,
+          selectedDiscountedPrice,
+          selectedUnits
+        )
+      );
+      setNoOfProducts(1);
+    } else {
+      // If quantity is not 0, remove from cart
+      dispatch(removeFromCart(product._id));
+      setNoOfProducts(0);
+    }
   };
 
   const selectedQuantityPrice = product.prices.find(
     (price) => price.qty === selectedQty
   );
+
+  const removeFromCartHandler = (id) => {
+    dispatch(removeFromCart(id));
+    setNoOfProducts(0);
+  };
+
+  const handleDecreaseQty = () => {
+    if (noOfProducts > 1) {
+      setNoOfProducts(noOfProducts - 1);
+      dispatch(updateCartQuantity(product._id, noOfProducts - 1));
+    } else if (noOfProducts === 1) {
+      // If quantity is 1 and we click "-", remove from cart
+      dispatch(removeFromCart(product._id));
+      setNoOfProducts(0);
+    }
+  };
+  const handleIncreaseQty = () => {
+    if (noOfProducts < product.countInStock) {
+      setNoOfProducts(noOfProducts + 1);
+      // Update the cart quantity after updating the component's state
+      dispatch(updateCartQuantity(product._id, noOfProducts + 1));
+    }
+  };
 
   return (
     <Card className="my-3 rounded product-card">
@@ -136,11 +174,16 @@ const Product = ({ product }) => {
               </Dropdown.Menu>
             </Dropdown>
           </div>
+
           <div className="w-100 text-right">
             <div className="price-container d-flex justify-content-center">
-              <Card.Text as="h6" className="mr-2" style={{ marginBottom: "0" }}>
+              <Card.Text
+                as="p"
+                className="mr-2"
+                style={{ marginBottom: "0", fontSize: "1em" }}
+              >
                 AED{" "}
-                {selectedQty && product?.prices?.length > 0
+                {noOfProducts > 0
                   ? (
                       selectedPrice *
                       (1 -
@@ -150,31 +193,56 @@ const Product = ({ product }) => {
                           100) *
                       noOfProducts
                     ).toFixed(2)
-                  : "Calculation Error"}
+                  : product?.prices?.length > 0
+                  ? product.prices[0].price.toFixed(2)
+                  : "Select Qty"}{" "}
+                {/* Display product.prices[0].price when noOfProducts is 0 */}
               </Card.Text>
-
               {product?.prices[0]?.discount > 0 ? (
                 <Card.Text
                   as="p"
                   className="original-price"
-                  style={{ marginBottom: "0", fontSize: "0.8em" }}
+                  style={{ marginBottom: "0", fontSize: "0.7em" }}
                 >
                   &nbsp;{" "}
-                  {selectedQty && product?.prices?.length > 0
+                  {noOfProducts > 0
                     ? (selectedPrice * noOfProducts).toFixed(2)
-                    : "Calculation Error"}
+                    : product?.prices?.length > 0
+                    ? (product.prices[0].price * noOfProducts).toFixed(2)
+                    : "Select Qty"}{" "}
+                  {/* Display product.prices[0].price when noOfProducts is 0 */}
                 </Card.Text>
               ) : null}
             </div>
           </div>
         </div>
-        <Button
-          onClick={addToCartHandler}
-          className="button-primary mt-1 small-button"
-          variant="primary"
-        >
-          Add to Cart
-        </Button>
+        {noOfProducts === 0 ? (
+          <Button
+            onClick={addToCartHandler}
+            className="button-primary mt-1 small-button"
+            variant="primary"
+          >
+            Add to Cart
+          </Button>
+        ) : (
+          <div className="d-flex justify-content-around mt-1">
+            <Button
+              onClick={handleDecreaseQty}
+              className="qty-button"
+              variant="primary"
+            >
+              -
+            </Button>
+            <div className="qty-number">{noOfProducts}</div>
+            <Button
+              onClick={handleIncreaseQty}
+              className="qty-button"
+              variant="primary"
+            >
+              +
+            </Button>
+          </div>
+        )}
       </Card.Body>
     </Card>
   );

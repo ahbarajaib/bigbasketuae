@@ -78,24 +78,23 @@ const Categories = () => {
   return (
     <div className="container mt-4">
       <div className="row justify-content-center">
-        {" "}
-        {/* Center align the row */}
         {categories.map((category) => (
-          <div key={category.id} className="col-lg-2 col-md-3 col-sm-4 mb-2">
+          <div
+            key={category.id}
+            className="col-xl-2 col-lg-3 col-md-4 col-sm-6 col-12 mb-2"
+          >
             <Card className="my-3 border-0 text-center">
-              {" "}
-              {/* Add "border-0" and "text-center" classes */}
               <a
                 href={`/category/${category.name}`}
                 style={{ display: "block" }}
               >
                 <div
-                  className="rounded-circle mx-auto" // Add "mx-auto" class to center the circle
+                  className="rounded-circle mx-auto circle-category" // Add a class to target circles with CSS
                   style={{
                     objectFit: "cover",
                     height: "150px",
                     width: "150px",
-                    overflow: "hidden", // To ensure images are clipped within the circle
+                    overflow: "hidden",
                   }}
                 >
                   <img
@@ -109,8 +108,6 @@ const Categories = () => {
                 </div>
                 <Card.Body>
                   <Card.Title as="h5" className="mb-0 smaller-text">
-                    {" "}
-                    {/* Add "mb-0" class to remove default margin-bottom */}
                     {category.title}
                   </Card.Title>
                 </Card.Body>
@@ -119,6 +116,34 @@ const Categories = () => {
           </div>
         ))}
       </div>
+      <style>
+        {`
+          @media (max-width: 1199.98px) {
+            .col-lg-3, .col-md-4 {
+              flex: 0 0 25%;
+              max-width: 25%;
+            }
+          }
+
+          @media (max-width: 991.98px) {
+            .col-sm-6 {
+              flex: 0 0 50%;
+              max-width: 50%;
+            }
+          }
+
+          @media (max-width: 575.98px) {
+            .col-12 {
+              flex: 0 0 33.33%;
+              max-width: 33.33%;
+            }
+            .circle-category {
+              width: 50px; /* Adjust the size as needed */
+              height: 50px; /* Adjust the size as needed */
+            }
+          }
+        `}
+      </style>
     </div>
   );
 };

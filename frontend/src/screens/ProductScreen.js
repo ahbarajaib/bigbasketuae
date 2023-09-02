@@ -79,6 +79,7 @@ const ProductScreen = () => {
     selectedDiscountedPrice,
     selectedUnits
   );
+  console.log(noOfProducts);
   const handleDecreaseQty = () => {
     if (noOfProducts > 1) {
       setNoOfProducts(noOfProducts - 1);

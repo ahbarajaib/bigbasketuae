@@ -24,7 +24,7 @@ export const addToCart =
   ) =>
   async (dispatch, getState) => {
     const { data } = await axiosInstance.get(`/api/products/${id}`);
-    //this works
+
     const cartItem = {
       product: data._id,
       name: data.name,
@@ -49,53 +49,13 @@ export const addToCart =
     );
   };
 
-export const updateSelectedQtyPrice = (
-  productId,
-  noOfProducts,
-  selectedQty,
-  selectedPrice
-) => {
-  return {
-    type: CART_UPDATE_ITEM,
-    payload: {
-      productId,
-      noOfProducts,
-      selectedQty,
-      selectedPrice,
-    },
-  };
-};
-
-export const addProductToCartFromProductComponent = (
-  productId,
-  noOfProducts,
-  selectedQty,
-  selectedUnits,
-  selectedPrice
-) => {
-  return {
-    type: CART_UPDATE_ITEM,
-    payload: {
-      productId,
-      noOfProducts,
-      selectedQty,
-      selectedUnits,
-      selectedPrice,
-    },
-  };
-};
-
-export const updateCart =
-  (noOfProducts, selectedQty, selectedPrice) => async (dispatch, getState) => {
+export const updateCartQuantity =
+  (productId, quantity) => (dispatch, getState) => {
     dispatch({
       type: CART_UPDATE_ITEM,
-      payload: {
-        selectedPrice,
-        selectedQty,
-
-        noOfProducts,
-      },
+      payload: { productId, quantity },
     });
+
     localStorage.setItem(
       "cartItems",
       JSON.stringify(getState().cart.cartItems)

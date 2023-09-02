@@ -31,28 +31,14 @@ export const cartReducer = (
       }
 
     case CART_UPDATE_ITEM:
-      const {
-        productId,
-        selectedQty,
-        selectedPrice,
-        selectedDiscount,
-        selectedDiscountedPrice,
-        selectedUnits,
-      } = action.payload;
+      const { productId, quantity } = action.payload;
+      const updatedCartItems = state.cartItems.map((item) =>
+        item.product === productId ? { ...item, noOfProducts: quantity } : item
+      );
+
       return {
         ...state,
-        cartItems: state.cartItems.map((x) =>
-          x.product._id === productId
-            ? {
-                ...x,
-                selectedQty,
-                selectedPrice,
-                selectedDiscount,
-                selectedDiscountedPrice,
-                selectedUnits,
-              }
-            : x
-        ),
+        cartItems: updatedCartItems,
       };
     case CART_REMOVE_ITEM:
       return {

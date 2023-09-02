@@ -111,7 +111,10 @@ header {
 .small-button {
   font-size: 12px; /* Set the font size to your desired small size */
 }
-
+.qty-button {
+  background-color: #8cc63e;
+  border: none;
+}
 /* Product.css */
 
 .product-card {
