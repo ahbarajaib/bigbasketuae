@@ -231,3 +231,9 @@ header {
     font-size: 0.7rem; /* Reduce font size for smaller screens */
   }
 }
+
+.clickable {
+  color: rgb(37, 37, 197); /* Change the color to indicate a link */
+  text-decoration: underline; /* Add an underline to indicate a link */
+  cursor: pointer; /* Change the cursor to a pointer to indicate interactivity */
+}

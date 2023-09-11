@@ -1,32 +1,27 @@
 import React, { useEffect } from "react";
 import { Link, useParams, useNavigate, useLocation } from "react-router-dom";
 import { useDispatch, useSelector } from "react-redux";
-import {
-  Row,
-  Col,
-  ListGroup,
-  Image,
-  Form,
-  Button,
-  Card,
-} from "react-bootstrap";
+import { Row, Col, ListGroup, Image, Button, Card } from "react-bootstrap";
 import Message from "../components/Message";
-import { addToCart, removeFromCart } from "../actions/cartActions";
+import {
+  addToCart,
+  removeFromCart,
+  updateCartQuantity,
+} from "../actions/cartActions";
 
-const CartScreen = (history) => {
+const CartScreen = () => {
   const { id } = useParams();
-
   const navigate = useNavigate();
-  //gives the details of the whole link console.log(qty and check)
   const location = useLocation();
-  const selectedQty = new URLSearchParams(location.search).get("selectedQty");
 
+  // Extract variant data from the URL query parameters
+  const selectedQty = new URLSearchParams(location.search).get("selectedQty");
   const selectedPrice = new URLSearchParams(location.search).get(
     "selectedPrice"
   );
-
-  //this output the qty
-  const noOfProducts = new URLSearchParams(location.search).get("noOfProducts");
+  const selectedNoOfProducts = new URLSearchParams(location.search).get(
+    "selectedNoOfProducts"
+  );
   const selectedDiscount = new URLSearchParams(location.search).get(
     "selectedDiscount"
   );
@@ -39,31 +34,30 @@ const CartScreen = (history) => {
 
   const dispatch = useDispatch();
 
-  //this is for checkoutHandler
   const userLogin = useSelector((state) => state.userLogin);
   const { userInfo } = userLogin;
 
   const cart = useSelector((state) => state.cart);
   const { cartItems } = cart;
-
+  console.log(cartItems);
   useEffect(() => {
     if (id) {
-      dispatch(
-        addToCart(
-          id,
-          noOfProducts,
-          selectedQty,
-          selectedPrice,
-          selectedDiscount,
-          selectedDiscountedPrice,
-          selectedUnits
-        )
-      );
+      // Create a variant object to pass to addToCart
+      const variant = {
+        selectedNoOfProducts,
+        selectedQty,
+        selectedPrice,
+        selectedDiscount,
+        selectedDiscountedPrice,
+        selectedUnits,
+      };
+
+      dispatch(addToCart(id, variant));
     }
   }, [
     dispatch,
     id,
-    noOfProducts,
+    selectedNoOfProducts,
     selectedQty,
     selectedPrice,
     selectedDiscount,
@@ -71,29 +65,20 @@ const CartScreen = (history) => {
     selectedUnits,
   ]);
 
-  const handleDecreaseQty = (item) => {
-    if (item.noOfProducts > 1) {
-      updateQtyHandler(item, item.noOfProducts - 1);
+  const handleDecreaseQty = (cartItem) => {
+    if (cartItem.variant.selectedNoOfProducts > 1) {
+      updateQtyHandler(cartItem, cartItem.variant.selectedNoOfProducts - 1);
     }
   };
 
-  const handleIncreaseQty = (item) => {
-    if (item.noOfProducts < item.countInStock) {
-      updateQtyHandler(item, item.noOfProducts + 1);
+  const handleIncreaseQty = (cartItem) => {
+    if (cartItem.variant.selectedNoOfProducts < cartItem.countInStock) {
+      updateQtyHandler(cartItem, cartItem.variant.selectedNoOfProducts + 1);
     }
   };
-  const updateQtyHandler = (item, newQty) => {
-    dispatch(
-      addToCart(
-        item.product,
-        newQty,
-        item.selectedQty,
-        item.selectedPrice,
-        item.selectedDiscount,
-        item.selectedDiscountedPrice,
-        item.selectedUnits
-      )
-    );
+
+  const updateQtyHandler = (cartItem, newQty) => {
+    dispatch(updateCartQuantity(cartItem, newQty));
   };
 
   const removeFromCartHandler = (id) => {
@@ -106,14 +91,12 @@ const CartScreen = (history) => {
     } else {
       navigate("/shipping");
     }
-
-    //instead of history.push
-    //navigate('/login?redirect=shipping')
   };
 
   const grossTotal = cartItems
     .reduce((acc, item) => {
-      const itemTotal = item.noOfProducts * item.selectedPrice;
+      const itemTotal =
+        item.variant.selectedNoOfProducts * item.variant.selectedPrice;
       return acc + itemTotal;
     }, 0)
     .toFixed(2);
@@ -121,14 +104,16 @@ const CartScreen = (history) => {
   const total = cartItems
     .reduce((acc, item) => {
       const price =
-        item.selectedDiscount > 0
-          ? item.selectedDiscountedPrice
-          : item.selectedPrice;
-      const itemTotal = item.noOfProducts * price;
+        item.variant.selectedDiscount > 0
+          ? item.variant.selectedDiscountedPrice
+          : item.variant.selectedPrice;
+      const itemTotal = item.variant.selectedNoOfProducts * price;
       return acc + itemTotal;
     }, 0)
     .toFixed(2);
+
   const youSaved = (grossTotal - total).toFixed(2);
+
   return (
     <>
       <button className="btn btn-light my-3" onClick={() => navigate(-1)}>
@@ -143,51 +128,67 @@ const CartScreen = (history) => {
             </Message>
           ) : (
             <ListGroup variant="flush">
-              {cartItems.map((item) => (
-                <ListGroup.Item key={item.product}>
+              {cartItems.map((cartItem) => (
+                <ListGroup.Item key={cartItem.id}>
                   <Row>
                     <Col md={1}>
                       <Image
-                        src={process.env.REACT_APP_API_URL + item.image}
-                        alt={item.name}
+                        src={process.env.REACT_APP_API_URL + cartItem.image}
+                        alt={cartItem.name}
                         fluid
                         rounded
                       />
                     </Col>
                     <Col md={3} style={{ fontSize: "0.8em" }}>
-                      <Link to={`/product/${item.product}`}>{item.name}</Link>
+                      <Link to={`/product/${cartItem.product}`}>
+                        {cartItem.name}
+                      </Link>
+
                       <Col md={3}>
-                        {item.selectedQty}
-                        {item.selectedUnits}
+                        {cartItem.variant.selectedQty}
+                        {cartItem.variant.selectedUnits}
                       </Col>
                     </Col>
 
                     <Col md={2} style={{ fontSize: "0.8em" }}>
-                      {item.selectedDiscount > 0 ? (
+                      {cartItem.variant.selectedDiscount > 0 ? (
                         <>
-                          <div>AED {item.selectedDiscountedPrice}</div>
+                          <div>
+                            AED{" "}
+                            {cartItem.variant.selectedDiscountedPrice.toFixed(
+                              2
+                            )}
+                          </div>
                           <div style={{ textDecoration: "line-through" }}>
-                            {item.selectedPrice.toFixed(2)}
+                            {cartItem.variant.selectedPrice
+                              ? ` ${cartItem.variant.selectedPrice.toFixed(2)}`
+                              : ""}
                           </div>
                         </>
                       ) : (
-                        <div>AED {item.selectedPrice.toFixed(2)}</div>
+                        <div>
+                          AED{" "}
+                          {cartItem.variant.selectedPrice
+                            ? ` ${cartItem.variant.selectedPrice.toFixed(2)}`
+                            : ""}
+                        </div>
                       )}
                     </Col>
+
                     <Col md={1}>
                       <div className="quantity-container">
                         <button
                           className="qty-btn"
-                          style={{ fontSize: "0.9em" }}
-                          onClick={() => handleDecreaseQty(item)}
+                          onClick={() => handleDecreaseQty(cartItem)}
                         >
                           -
                         </button>
-                        <div className="qty-number">{item.noOfProducts}</div>
+                        <div className="qty-number">
+                          {cartItem.variant.selectedNoOfProducts}
+                        </div>
                         <button
                           className="qty-btn"
-                          style={{ fontSize: "0.9em" }}
-                          onClick={() => handleIncreaseQty(item)}
+                          onClick={() => handleIncreaseQty(cartItem)}
                         >
                           +
                         </button>
@@ -198,32 +199,37 @@ const CartScreen = (history) => {
                       <Button
                         type="button"
                         variant="light"
-                        onClick={() => removeFromCartHandler(item.product)}
+                        onClick={() => removeFromCartHandler(cartItem.id)}
                         style={{ fontSize: "0.8em" }}
                       >
                         <i className="fas fa-trash"></i>
                       </Button>
                     </Col>
                     <Col md={2} style={{ fontSize: "0.8em" }}>
-                      {item.selectedDiscount > 0 ? (
+                      {cartItem.variant.selectedDiscount > 0 ? (
                         <>
                           <div>
                             AED{" "}
                             {(
-                              item.noOfProducts * item.selectedDiscountedPrice
+                              cartItem.variant.selectedNoOfProducts *
+                              cartItem.variant.selectedDiscountedPrice
                             ).toFixed(2)}
                           </div>
                           <div style={{ textDecoration: "line-through" }}>
                             {" "}
-                            {(item.noOfProducts * item.selectedPrice).toFixed(
-                              2
-                            )}
+                            {(
+                              cartItem.variant.selectedNoOfProducts *
+                              cartItem.variant.selectedPrice
+                            ).toFixed(2)}
                           </div>
                         </>
                       ) : (
                         <div>
                           AED{" "}
-                          {(item.noOfProducts * item.selectedPrice).toFixed(2)}
+                          {(
+                            cartItem.variant.selectedNoOfProducts *
+                            cartItem.variant.selectedPrice
+                          ).toFixed(2)}
                         </div>
                       )}
                     </Col>
@@ -236,33 +242,53 @@ const CartScreen = (history) => {
         <Col md={3}>
           <Card className="my-4 p-4">
             <ListGroup.Item>
-              <h6
-                style={{
-                  textAlign: "center",
-                  color: "#007bff",
-                }}
-              >
-                You saved AED {youSaved}
-              </h6>
-              <h5
-                style={{
-                  textAlign: "center",
-                  marginBottom: "10px",
-                }}
-              >
-                Subtotal &nbsp;AED {total}
-                &nbsp;&nbsp;<del>{grossTotal}</del>
-              </h5>
+              {youSaved > 0 && (
+                <strong>
+                  <p
+                    style={{
+                      textAlign: "center",
+                      color: "#007bff",
+                    }}
+                  >
+                    You saved AED {youSaved}
+                  </p>
+                </strong>
+              )}
+
+              {grossTotal > total ? (
+                <strong>
+                  <h6
+                    style={{
+                      textAlign: "center",
+                      marginBottom: "10px",
+                    }}
+                  >
+                    &nbsp;AED {total}
+                    &nbsp;&nbsp;<del>{grossTotal}</del>
+                  </h6>
+                </strong>
+              ) : (
+                <strong>
+                  <h6
+                    style={{
+                      textAlign: "center",
+                      marginBottom: "10px",
+                    }}
+                  >
+                    &nbsp;AED {total}
+                  </h6>
+                </strong>
+              )}
             </ListGroup.Item>
             <ListGroup.Item>
               <div className="d-grid gap-4">
                 <Button
                   type="button"
-                  className="button-primary btn-block"
+                  className="button-primary"
                   disabled={cartItems.length === 0}
                   onClick={checkoutHandler}
                 >
-                  Proceed To Checkout
+                  Proceed
                 </Button>
               </div>
             </ListGroup.Item>

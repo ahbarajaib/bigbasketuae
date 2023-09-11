@@ -9,6 +9,11 @@ const orderSchema = mongoose.Schema(
     },
     orderItems: [
       {
+        product: {
+          type: mongoose.Schema.Types.ObjectId,
+          required: true,
+          ref: "Product",
+        },
         name: { type: String, required: true },
         noOfProducts: { type: Number, required: true },
         image: { type: String, required: true },
@@ -19,11 +24,6 @@ const orderSchema = mongoose.Schema(
         selectedUnits: {
           type: String,
           required: true,
-        },
-        product: {
-          type: mongoose.Schema.Types.ObjectId,
-          required: true,
-          ref: "Product",
         },
       },
     ],

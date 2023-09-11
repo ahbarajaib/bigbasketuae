@@ -2,8 +2,6 @@ import React, { useState, useEffect } from "react";
 import { Link } from "react-router-dom";
 import { Card, Button, Dropdown, Col } from "react-bootstrap";
 import {
-  addProductToCartFromProductComponent,
-  updateSelectedQtyPrice,
   addToCart,
   removeFromCart,
   updateCartQuantity,
@@ -12,90 +10,99 @@ import { useDispatch, useSelector } from "react-redux";
 import { useNavigate } from "react-router-dom";
 
 const Product = ({ product }) => {
-  const [selectedQty, setSelectedQty] = useState("");
-  const [selectedUnits, setSelectedUnits] = useState("");
-  const [selectedPrice, setSelectedPrice] = useState("");
-  const [selectedDiscount, setSelectedDiscount] = useState("");
-  const [selectedDiscountedPrice, setSelectedDiscountedPrice] = useState("");
-  const [noOfProducts, setNoOfProducts] = useState(0); // Initialize to 0
-  const cartItems = useSelector((state) => state.cart.cartItems);
-  const dispatch = useDispatch();
-  const navigate = useNavigate();
-
-  useEffect(() => {
-    if (product.prices && product.prices.length > 0) {
-      setSelectedQty(product.prices[0].qty);
-      setSelectedPrice(product.prices[0].price);
-      setSelectedDiscountedPrice(product.prices[0].discountedPrice);
-      setSelectedDiscount(product.prices[0].discount);
-      setSelectedUnits(product.prices[0].units);
-    }
-    const cartItem = cartItems.find((item) => item.product === product._id);
-    if (cartItem) {
-      setNoOfProducts(cartItem.noOfProducts);
-    }
-  }, [product.prices, cartItems]);
-
-  const handleQtySelect = (qty, units, price) => {
-    setSelectedQty(qty);
-    setSelectedUnits(units);
-    setSelectedPrice(price);
-  };
-
-  const addToCartHandler = () => {
-    if (selectedQty === "") {
-      setSelectedQty(product.prices[0].qty);
-      setSelectedPrice(product.prices[0].price);
-      setSelectedDiscountedPrice(product.prices[0].discountedPrice);
-      setSelectedDiscount(product.prices[0].discount);
-      setSelectedUnits(product.prices[0].units);
-    }
-
-    if (noOfProducts === 0) {
-      // If quantity is 0, add to cart with quantity 1
-      dispatch(
-        addToCart(
-          product._id,
-          1,
-          selectedQty,
-          selectedPrice,
-          selectedDiscount,
-          selectedDiscountedPrice,
-          selectedUnits
-        )
-      );
-      setNoOfProducts(1);
-    } else {
-      // If quantity is not 0, remove from cart
-      dispatch(removeFromCart(product._id));
-      setNoOfProducts(0);
-    }
-  };
-
-  const selectedQuantityPrice = product.prices.find(
-    (price) => price.qty === selectedQty
+  const [selectedQty, setSelectedQty] = useState(
+    product.prices && product.prices.length > 0 ? product.prices[0].qty : ""
   );
 
-  const removeFromCartHandler = (id) => {
-    dispatch(removeFromCart(id));
-    setNoOfProducts(0);
+  const [selectedUnits, setSelectedUnits] = useState(
+    product.prices && product.prices.length > 0 ? product.prices[0].units : ""
+  );
+  const [selectedPrice, setSelectedPrice] = useState(
+    product.prices && product.prices.length > 0 ? product.prices[0].price : ""
+  );
+  const [selectedDiscount, setSelectedDiscount] = useState(
+    product.prices && product.prices.length > 0
+      ? product.prices[0].discount
+      : ""
+  );
+  const [selectedDiscountedPrice, setSelectedDiscountedPrice] = useState(
+    product.prices && product.prices.length > 0
+      ? product.prices[0].discountedPrice
+      : ""
+  );
+  const [selectedNoOfProducts, setSelectedNoOfProducts] = useState(1); // Initialize to 0
+  const [cartItemId, setCartItemId] = useState("");
+
+  const cartItems = useSelector((state) => state.cart.cartItems);
+  const dispatch = useDispatch();
+  const cartItem = cartItems.find((item) => item.cartItemId === cartItemId);
+  useEffect(() => {
+    // const cartItem = cartItems.find((item) => item.product === product._id);
+    const cartItem = cartItems.find((item) => item.cartItemId === cartItemId);
+    if (cartItem) {
+      setSelectedNoOfProducts(cartItem.variant.selectedNoOfProducts);
+    }
+  }, [product.prices, cartItems, product._id, selectedQty]);
+  //console.log(cartItems);
+
+  const isProductInCart = cartItems.some(
+    (item) => item.cartItemId === `${product._id}-${selectedQty}`
+  );
+
+  const addToCartHandler = () => {
+    const cartItemId = `${product._id}-${selectedQty}`;
+    console.log("cartItems:", cartItems);
+    console.log("product._id:", product._id);
+    console.log("selectedQty:", selectedQty);
+
+    // If quantity is 0, add to cart with quantity 1
+    const variant = {
+      selectedQty,
+      selectedPrice,
+      selectedDiscount,
+      selectedDiscountedPrice,
+      selectedUnits,
+      selectedNoOfProducts,
+    };
+    if (isProductInCart) {
+      // If the product is in the cart, remove it
+      dispatch(removeFromCart(cartItemId));
+    } else {
+      // If the product is not in the cart, add it
+      dispatch(addToCart(product, variant, cartItemId));
+    }
+  };
+  const handleQtySelect = (
+    qty,
+    noOfProducts,
+    units,
+    price,
+    discount,
+    discountedPrice
+  ) => {
+    setSelectedQty(qty);
+    setSelectedNoOfProducts(noOfProducts);
+    setSelectedUnits(units);
+    setSelectedPrice(price);
+    setSelectedDiscount(discount);
+    setSelectedDiscountedPrice(discountedPrice);
+    const newCartItemId = `${product._id}-${qty}`;
+    setCartItemId(newCartItemId);
+    console.log(newCartItemId);
   };
 
   const handleDecreaseQty = () => {
-    if (noOfProducts > 1) {
-      setNoOfProducts(noOfProducts - 1);
-      dispatch(updateCartQuantity(product._id, noOfProducts - 1));
-    } else if (noOfProducts === 1) {
-      // If quantity is 1 and we click "-", remove from cart
-      dispatch(removeFromCart(product._id));
-      setNoOfProducts(0);
+    if (selectedNoOfProducts > 1) {
+      setSelectedNoOfProducts(selectedNoOfProducts - 1);
+
+      // Update the cart quantity using the cartItemId
+      //dispatch(updateCartQuantity(cartItemId, selectedNoOfProducts - 1));
     }
   };
+
   const handleIncreaseQty = () => {
-    if (noOfProducts < product.countInStock) {
-      setNoOfProducts(noOfProducts + 1);
-      // Update the cart quantity after updating the component's state
-      dispatch(updateCartQuantity(product._id, noOfProducts + 1));
+    if (selectedNoOfProducts < product.countInStock) {
+      setSelectedNoOfProducts(selectedNoOfProducts + 1);
     }
   };
 
@@ -158,13 +165,15 @@ const Product = ({ product }) => {
                   product.prices.map((price) => (
                     <Dropdown.Item
                       key={price.qty}
-                      active={selectedQty === price.qty}
+                      active={selectedQty === price.qty} // Set 'active' based on selectedQty
                       onClick={() =>
                         handleQtySelect(
                           price.qty,
+                          price.noOfProducts,
                           price.units,
                           price.price,
-                          price.discount
+                          price.discount,
+                          price.discountedPrice
                         )
                       }
                     >
@@ -183,48 +192,100 @@ const Product = ({ product }) => {
                 style={{ marginBottom: "0", fontSize: "1em" }}
               >
                 AED{" "}
-                {noOfProducts > 0
-                  ? (
-                      selectedPrice *
-                      (1 -
-                        (product.prices.find(
-                          (price) => price.qty === selectedQty
-                        )?.discount || 0) /
-                          100) *
-                      noOfProducts
-                    ).toFixed(2)
-                  : product?.prices?.length > 0
-                  ? product.prices[0].price.toFixed(2)
-                  : "Select Qty"}{" "}
-                {/* Display product.prices[0].price when noOfProducts is 0 */}
+                {(
+                  (selectedDiscount > 0
+                    ? selectedDiscountedPrice
+                    : selectedPrice) *
+                  (selectedNoOfProducts > 0 ? selectedNoOfProducts : 1)
+                ).toFixed(2)}
               </Card.Text>
+
               {product?.prices[0]?.discount > 0 ? (
                 <Card.Text
                   as="p"
                   className="original-price"
                   style={{ marginBottom: "0", fontSize: "0.7em" }}
                 >
-                  &nbsp;{" "}
-                  {noOfProducts > 0
-                    ? (selectedPrice * noOfProducts).toFixed(2)
-                    : product?.prices?.length > 0
-                    ? (product.prices[0].price * noOfProducts).toFixed(2)
-                    : "Select Qty"}{" "}
-                  {/* Display product.prices[0].price when noOfProducts is 0 */}
+                  &nbsp;
+                  {typeof selectedPrice === "number"
+                    ? (
+                        selectedPrice *
+                        (selectedNoOfProducts > 0 ? selectedNoOfProducts : 1)
+                      ).toFixed(2)
+                    : ""}
                 </Card.Text>
               ) : null}
             </div>
           </div>
         </div>
-        {noOfProducts === 0 ? (
-          <Button
-            onClick={addToCartHandler}
-            className="button-primary mt-1 small-button"
-            variant="primary"
-          >
-            Add to Cart
-          </Button>
-        ) : (
+        <div className="d-flex justify-content-between align-items-center mt-2">
+          {/* - button */}
+          <div className="d-flex align-items-center">
+            {/* - button */}
+            <Button
+              onClick={handleDecreaseQty}
+              variant="primary"
+              style={{
+                width: "30px",
+                height: "30px",
+                fontSize: "1rem", // Adjust font size as needed
+                backgroundColor: "transparent",
+                border: "none",
+                color: "black",
+                marginRight: "2px", // Adjust the margin as needed
+              }}
+            >
+              -
+            </Button>
+
+            {/* Quantity display */}
+            <div className="qty-number" style={{ fontSize: "1rem" }}>
+              {selectedNoOfProducts}
+            </div>
+
+            {/* + button */}
+            <Button
+              onClick={handleIncreaseQty}
+              variant="primary"
+              style={{
+                width: "30px",
+                height: "30px",
+                fontSize: "1rem", // Adjust font size as needed
+                backgroundColor: "transparent",
+                border: "none",
+                color: "black",
+                marginLeft: "2px", // Adjust the margin as needed
+              }}
+            >
+              +
+            </Button>
+          </div>
+
+          {/* "Add" button */}
+          {isProductInCart ? (
+            // Display the trash can icon if the product is in the cart
+            <Button
+              onClick={addToCartHandler}
+              className="button-primary small-button"
+              variant="primary"
+              style={{ fontSize: "1rem", padding: "5px 10px" }}
+            >
+              <i className="fas fa-trash"></i>
+            </Button>
+          ) : (
+            // Display the "Add" button if the product is not in the cart
+            <Button
+              onClick={addToCartHandler}
+              className="button-primary small-button"
+              variant="primary"
+              style={{ fontSize: "1rem", padding: "5px 10px" }}
+            >
+              Add
+            </Button>
+          )}
+        </div>
+        {/* {cartItem && cartItem.id === cartItemId ? (
+          // If a cart item with the same cartItemId exists, display +/- buttons
           <div className="d-flex justify-content-around mt-1">
             <Button
               onClick={handleDecreaseQty}
@@ -233,7 +294,7 @@ const Product = ({ product }) => {
             >
               -
             </Button>
-            <div className="qty-number">{noOfProducts}</div>
+            <div className="qty-number">{selectedNoOfProducts}</div>
             <Button
               onClick={handleIncreaseQty}
               className="qty-button"
@@ -242,7 +303,16 @@ const Product = ({ product }) => {
               +
             </Button>
           </div>
-        )}
+        ) : (
+          // If the item is not in the cart, display the "Add to Cart" button
+          <Button
+            onClick={addToCartHandler}
+            className="button-primary mt-1 small-button"
+            variant="primary"
+          >
+            Add to Cart
+          </Button>
+        )} */}
       </Card.Body>
     </Card>
   );

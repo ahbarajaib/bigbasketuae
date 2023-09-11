@@ -12,30 +12,18 @@ const axiosInstance = axios.create({ baseURL: process.env.REACT_APP_API_URL });
 //get id and qty from the url
 // cartActions.js
 
-export const addToCart =
-  (
-    id,
-    noOfProducts,
-    selectedQty,
-    selectedPrice,
-    selectedDiscount,
-    selectedDiscountedPrice,
-    selectedUnits
-  ) =>
-  async (dispatch, getState) => {
-    const { data } = await axiosInstance.get(`/api/products/${id}`);
+// Modify addToCart action
+// cartActions.js
 
+export const addToCart =
+  (product, variant, cartItemId) => (dispatch, getState) => {
     const cartItem = {
-      product: data._id,
-      name: data.name,
-      image: data.image,
-      noOfProducts,
-      selectedQty,
-      selectedPrice,
-      selectedDiscount,
-      selectedDiscountedPrice,
-      selectedUnits,
-      countInStock: data.countInStock,
+      id: cartItemId, // Use cartItemId as the cart item's ID
+      product: product._id,
+      name: product.name,
+      image: product.image,
+      variant, // Pass the variant object
+      countInStock: product.countInStock,
     };
 
     dispatch({
@@ -49,11 +37,13 @@ export const addToCart =
     );
   };
 
+// Modify updateCartQuantity action
+// Modify updateCartQuantity action
 export const updateCartQuantity =
-  (productId, quantity) => (dispatch, getState) => {
+  (cartItem, selectedNoOfProducts) => (dispatch, getState) => {
     dispatch({
       type: CART_UPDATE_ITEM,
-      payload: { productId, quantity },
+      payload: { cartItem, selectedNoOfProducts },
     });
 
     localStorage.setItem(
@@ -62,10 +52,45 @@ export const updateCartQuantity =
     );
   };
 
-export const removeFromCart = (id) => (dispatch, getState) => {
+// export const addToCart =
+//   (product, selectedQty, variant) => (dispatch, getState) => {
+//     const cartItem = {
+//       product: product._id,
+//       name: product.name,
+//       image: product.image,
+//       selectedQty,
+//       variant, // Pass the variant object
+//       countInStock: product.countInStock,
+//     };
+
+//     dispatch({
+//       type: CART_ADD_ITEM,
+//       payload: cartItem,
+//     });
+
+//     localStorage.setItem(
+//       "cartItems",
+//       JSON.stringify(getState().cart.cartItems)
+//     );
+//   };
+
+// export const updateCartQuantity =
+//   (productId, selectedQty, selectedNoOfProducts) => (dispatch, getState) => {
+//     dispatch({
+//       type: CART_UPDATE_ITEM,
+//       payload: { productId, selectedQty, selectedNoOfProducts },
+//     });
+
+//     localStorage.setItem(
+//       "cartItems",
+//       JSON.stringify(getState().cart.cartItems)
+//     );
+//   };
+
+export const removeFromCart = (cartItemId) => (dispatch, getState) => {
   dispatch({
     type: CART_REMOVE_ITEM,
-    payload: id,
+    payload: cartItemId,
   });
 
   localStorage.setItem("cartItems", JSON.stringify(getState().cart.cartItems));
