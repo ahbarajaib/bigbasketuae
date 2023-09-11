@@ -41,7 +41,7 @@ const CartScreen = () => {
   const { cartItems } = cart;
   console.log(cartItems);
   useEffect(() => {
-    if (id) {
+    if (id && selectedNoOfProducts && selectedQty && selectedPrice) {
       // Create a variant object to pass to addToCart
       const variant = {
         selectedNoOfProducts,
@@ -184,7 +184,8 @@ const CartScreen = () => {
                           -
                         </button>
                         <div className="qty-number">
-                          {cartItem.variant.selectedNoOfProducts}
+                          {cartItem.variant &&
+                            cartItem.variant.selectedNoOfProducts}
                         </div>
                         <button
                           className="qty-btn"
