@@ -34,17 +34,17 @@ const CodSuccessScreen = () => {
 
   // Automatically navigate to the order screen after the countdown
   useEffect(() => {
-    if (countdown === 0) {
+    if (countdown <= 0) {
       navigate(`/orders/${id}`);
       return;
     }
 
-    const timer = setTimeout(() => {
-      setCountdown(countdown - 1);
-    }, 10000);
+    const timer = setInterval(() => {
+      setCountdown((prevCountdown) => prevCountdown - 1);
+    }, 1000);
 
     return () => {
-      clearTimeout(timer);
+      clearInterval(timer);
     };
   }, [countdown, navigate, id]);
 

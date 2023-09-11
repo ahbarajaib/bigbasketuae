@@ -256,7 +256,8 @@ const OrderScreen = (history) => {
               {userInfo.isAdmin &&
                 ((order.isPaid && !order.isDelivered) ||
                   (!order.isPaid &&
-                    order.paymentMethod === "Cash on Delivery")) && (
+                    (order.paymentMethod === "Cash on Delivery" ||
+                      order.paymentMethod === "Bring Swiping Machine"))) && (
                   <ListGroup.Item>
                     <Button
                       type="button"

@@ -14,7 +14,7 @@ import Loader from "../components/Loader";
 import Message from "../components/Message";
 import Meta from "../components/Meta";
 import { listProductDetails } from "../actions/productActions";
-import { addToCart, updateSelectedQtyPrice } from "../actions/cartActions";
+import { addToCart, removeFromCart } from "../actions/cartActions";
 
 const ProductScreen = () => {
   const { id } = useParams();
@@ -24,78 +24,86 @@ const ProductScreen = () => {
   const productDetails = useSelector((state) => state.productDetails);
   const { loading, error, product } = productDetails;
 
-  const [noOfProducts, setNoOfProducts] = useState(1);
-  const [selectedQty, setSelectedQty] = useState("");
-  const [selectedPrice, setSelectedPrice] = useState("");
-  const [selectedDiscount, setSelectedDiscount] = useState("");
-  const [selectedDiscountedPrice, setSelectedDiscountedPrice] = useState("");
-  const [selectedUnits, setSelectedUnits] = useState("");
+  const [selectedQty, setSelectedQty] = useState(
+    product.prices && product.prices.length > 0 ? product.prices[0].qty : ""
+  );
+
+  const [selectedUnits, setSelectedUnits] = useState(
+    product.prices && product.prices.length > 0 ? product.prices[0].units : ""
+  );
+  const [selectedPrice, setSelectedPrice] = useState(
+    product.prices && product.prices.length > 0 ? product.prices[0].price : ""
+  );
+  const [selectedDiscount, setSelectedDiscount] = useState(
+    product.prices && product.prices.length > 0
+      ? product.prices[0].discount
+      : ""
+  );
+  const [selectedDiscountedPrice, setSelectedDiscountedPrice] = useState(
+    product.prices && product.prices.length > 0
+      ? product.prices[0].discountedPrice
+      : ""
+  );
+  const [selectedNoOfProducts, setSelectedNoOfProducts] = useState(1); // Initialize to 0
+  const [cartItemId, setCartItemId] = useState("");
+
+  const cartItems = useSelector((state) => state.cart.cartItems);
+  useEffect(() => {
+    const cartItem = cartItems.find((item) => item.cartItemId === cartItemId);
+    if (cartItem) {
+      setSelectedNoOfProducts(cartItem.variant.selectedNoOfProducts);
+    }
+  }, [product.prices, cartItems, cartItemId]);
 
   useEffect(() => {
     dispatch(listProductDetails(id));
   }, [dispatch, id]);
-  console.log(product);
-  useEffect(() => {
-    if (product.prices && product.prices.length > 0) {
-      setSelectedQty(product.prices[0].qty);
-      setSelectedPrice(product.prices[0].price);
-      setSelectedDiscountedPrice(product.prices[0].discountedPrice);
-      setSelectedDiscount(product.prices[0].discount);
-      setSelectedUnits(product.prices[0].units);
-    }
-  }, [product.prices]);
+
+  const isProductInCart = cartItems.some(
+    (item) => item.cartItemId === `${product._id}-${selectedQty}`
+  );
 
   const addToCartHandler = () => {
-    // if (selectedQty === "") {
-    //   alert("Please select a quantity first.");
-    //   return;
-    // }
-    if (selectedQty === "") {
-      setSelectedQty(product.prices[0].qty);
-      setSelectedPrice(product.prices[0].price);
-      setSelectedDiscountedPrice(product.prices[0].discountedPrice);
-      setSelectedDiscount(product.prices[0].discount);
-      setSelectedUnits(product.prices[0].units);
+    const cartItemId = `${product._id}-${selectedQty}`;
+    // If quantity is 0, add to cart with quantity 1
+    const variant = {
+      selectedQty,
+      selectedPrice,
+      selectedDiscount,
+      selectedDiscountedPrice,
+      selectedUnits,
+      selectedNoOfProducts,
+    };
+    if (isProductInCart) {
+      // If the product is in the cart, remove it
+      dispatch(removeFromCart(cartItemId));
+    } else {
+      // If the product is not in the cart, add it
+      dispatch(addToCart(product, variant, cartItemId));
     }
-
-    dispatch(
-      addToCart(
-        id,
-        noOfProducts,
-        selectedQty,
-        selectedPrice,
-        selectedDiscount,
-        selectedDiscountedPrice,
-        selectedUnits
-      )
-    );
   };
-  console.log(
-    id,
-    noOfProducts,
-    selectedQty,
-    selectedPrice,
-    selectedDiscount,
-    selectedDiscountedPrice,
-    selectedUnits
-  );
-  console.log(noOfProducts);
+
+  const handleQtySelect = (qty, units, price, discount, discountedPrice) => {
+    setSelectedQty(qty);
+    setSelectedUnits(units);
+    setSelectedPrice(price);
+    setSelectedDiscount(discount);
+    setSelectedDiscountedPrice(discountedPrice);
+    const newCartItemId = `${product._id}-${qty}`;
+    setCartItemId(newCartItemId);
+  };
+
   const handleDecreaseQty = () => {
-    if (noOfProducts > 1) {
-      setNoOfProducts(noOfProducts - 1);
+    if (selectedNoOfProducts > 1) {
+      setSelectedNoOfProducts(selectedNoOfProducts - 1);
     }
   };
 
   const handleIncreaseQty = () => {
-    if (noOfProducts < product.countInStock) {
-      setNoOfProducts(noOfProducts + 1);
+    if (selectedNoOfProducts < product.countInStock) {
+      setSelectedNoOfProducts(selectedNoOfProducts + 1);
     }
   };
-
-  const selectedQtyPrice =
-    selectedQty && product.prices
-      ? product.prices.find((price) => price.qty === selectedQty)
-      : null;
 
   return (
     <>
@@ -148,23 +156,24 @@ const ProductScreen = () => {
                 <ListGroup.Item>
                   <Row className="flex-wrap align-items-center">
                     {product.prices &&
-                      product.prices.map((price, index) => (
+                      product.prices.map((price) => (
                         <Col key={price.qty} xs={6} className="mb-2">
                           <Button
                             variant={
-                              selectedQty === price.qty ||
-                              (index === 0 && selectedQty === "")
+                              selectedQty === price.qty
                                 ? "primary"
                                 : "outline-primary"
                             }
                             className="btn-product responsive-button"
-                            onClick={() => {
-                              setSelectedQty(price.qty);
-                              setSelectedPrice(price.price);
-                              setSelectedDiscount(price.discount);
-                              setSelectedDiscountedPrice(price.discountedPrice);
-                              setSelectedUnits(price.units);
-                            }}
+                            onClick={() =>
+                              handleQtySelect(
+                                price.qty,
+                                price.units,
+                                price.price,
+                                price.discount,
+                                price.discountedPrice
+                              )
+                            }
                             style={{
                               width: "100%",
                               position: "relative",
@@ -210,24 +219,28 @@ const ProductScreen = () => {
                       style={{ marginBottom: "0" }}
                     >
                       AED{" "}
-                      {selectedQty && selectedQtyPrice?.discount > 0
-                        ? (
-                            selectedQtyPrice.discountedPrice * noOfProducts
-                          ).toFixed(2)
-                        : (selectedQtyPrice?.price * noOfProducts).toFixed(2)}
+                      {(
+                        (selectedDiscount > 0
+                          ? selectedDiscountedPrice
+                          : selectedPrice) *
+                        (selectedNoOfProducts > 0 ? selectedNoOfProducts : 1)
+                      ).toFixed(2)}
                     </Card.Text>
-                    {selectedQtyPrice?.discount > 0 && (
+                    {selectedDiscount > 0 && (
                       <Card.Text
-                        as="h6"
+                        as="p"
                         className="original-price"
-                        style={{
-                          marginBottom: "0",
-
-                          textDecoration: "line-through",
-                        }}
+                        style={{ marginBottom: "0", fontSize: "0.7em" }}
                       >
-                        &nbsp;{" "}
-                        {(selectedQtyPrice?.price * noOfProducts).toFixed(2)}
+                        &nbsp;
+                        {typeof selectedPrice === "number"
+                          ? (
+                              selectedPrice *
+                              (selectedNoOfProducts > 0
+                                ? selectedNoOfProducts
+                                : 1)
+                            ).toFixed(2)
+                          : ""}
                       </Card.Text>
                     )}
                   </div>
@@ -246,24 +259,28 @@ const ProductScreen = () => {
                         style={{ marginBottom: "0" }}
                       >
                         AED{" "}
-                        {selectedQty && selectedQtyPrice?.discount > 0
-                          ? (
-                              selectedQtyPrice.discountedPrice * noOfProducts
-                            ).toFixed(2)
-                          : (selectedQtyPrice?.price * noOfProducts).toFixed(2)}
+                        {(
+                          (selectedDiscount > 0
+                            ? selectedDiscountedPrice
+                            : selectedPrice) *
+                          (selectedNoOfProducts > 0 ? selectedNoOfProducts : 1)
+                        ).toFixed(2)}
                       </Card.Text>
-                      {selectedQtyPrice?.discount > 0 && (
+                      {selectedDiscount > 0 && (
                         <Card.Text
                           as="p"
                           className="original-price"
-                          style={{
-                            marginBottom: "0",
-                            fontSize: "0.8em",
-                            textDecoration: "line-through",
-                          }}
+                          style={{ marginBottom: "0", fontSize: "0.7em" }}
                         >
-                          &nbsp;{" "}
-                          {(selectedQtyPrice?.price * noOfProducts).toFixed(2)}
+                          &nbsp;
+                          {typeof selectedPrice === "number"
+                            ? (
+                                selectedPrice *
+                                (selectedNoOfProducts > 0
+                                  ? selectedNoOfProducts
+                                  : 1)
+                              ).toFixed(2)
+                            : ""}
                         </Card.Text>
                       )}
                     </div>
@@ -289,7 +306,9 @@ const ProductScreen = () => {
                             >
                               -
                             </button>
-                            <div className="qty-number">{noOfProducts}</div>
+                            <div className="qty-number">
+                              {selectedNoOfProducts}
+                            </div>
                             <button
                               className="qty-btn"
                               onClick={handleIncreaseQty}
@@ -309,7 +328,7 @@ const ProductScreen = () => {
                       type="button"
                       disabled={product.countInStock === 0}
                     >
-                      Add To Cart
+                      {isProductInCart ? "Remove from Cart" : "Add To Cart"}
                     </Button>
                   </ListGroup.Item>
                 </ListGroup>

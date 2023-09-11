@@ -161,9 +161,7 @@ const CartScreen = () => {
                           </div>
                           <div style={{ textDecoration: "line-through" }}>
                             {cartItem.variant.selectedPrice
-                              ? `AED ${cartItem.variant.selectedPrice.toFixed(
-                                  2
-                                )}`
+                              ? ` ${cartItem.variant.selectedPrice.toFixed(2)}`
                               : ""}
                           </div>
                         </>
@@ -171,7 +169,7 @@ const CartScreen = () => {
                         <div>
                           AED{" "}
                           {cartItem.variant.selectedPrice
-                            ? `AED ${cartItem.variant.selectedPrice.toFixed(2)}`
+                            ? ` ${cartItem.variant.selectedPrice.toFixed(2)}`
                             : ""}
                         </div>
                       )}

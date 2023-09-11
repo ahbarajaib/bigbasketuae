@@ -81,8 +81,14 @@ const Product = ({ product }) => {
     discountedPrice
   ) => {
     setSelectedQty(qty);
+    setSelectedNoOfProducts(noOfProducts);
+    setSelectedUnits(units);
+    setSelectedPrice(price);
+    setSelectedDiscount(discount);
+    setSelectedDiscountedPrice(discountedPrice);
     const newCartItemId = `${product._id}-${qty}`;
     setCartItemId(newCartItemId);
+    console.log(newCartItemId);
   };
 
   const handleDecreaseQty = () => {
