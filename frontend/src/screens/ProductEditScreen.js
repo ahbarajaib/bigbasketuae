@@ -214,6 +214,9 @@ const ProductEditScreen = () => {
                       <option value="kg">kg</option>
                       <option value="ml">ml</option>
                       <option value="ltr">ltr</option>
+                      <option value="tray">Tray</option>
+                      <option value="ltr">Pack</option>
+                      <option value="ltr">Piece/s</option>
                     </Form.Select>
                   </Form.Group>
                 </Col>

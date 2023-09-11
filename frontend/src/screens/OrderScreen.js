@@ -48,7 +48,7 @@ const OrderScreen = (history) => {
     order.taxPrice = addDecimals(order.taxPrice);
     order.totalPrice = addDecimals(order.totalPrice);
   }
-
+  console.log(order);
   useEffect(() => {
     if (!userInfo) {
       navigate("/login");
@@ -103,8 +103,24 @@ const OrderScreen = (history) => {
               </p>
               <p>
                 <strong>Email: </strong>
-                <a href={`mailto:${order.user.email}`}>{order.user.email}</a>
+                <a href={`mailto:${order.user.email}`} className="clickable">
+                  {order.user.email}
+                </a>
               </p>
+              <p>
+                <strong>Phone: </strong>
+                {order.user.phoneNumber ? (
+                  <a
+                    href={`tel:${order.user.phoneNumber}`}
+                    className="clickable"
+                  >
+                    {order.user.phoneNumber}
+                  </a>
+                ) : (
+                  <span>{order.user.phoneNumber}</span>
+                )}
+              </p>
+
               <p>
                 <strong>Address: </strong>
                 {order.shippingAddress.address}, {order.shippingAddress.city},
@@ -173,7 +189,7 @@ const OrderScreen = (history) => {
                         <Col md={4}>
                           {item.noOfProducts} x AED{" "}
                           {item.selectedPrice.toFixed(2)} = AED{" "}
-                          {item.noOfProducts * item.selectedPrice.toFixed(2)}
+                          {(item.noOfProducts * item.selectedPrice).toFixed(2)}
                         </Col>
                       </Row>
                     </ListGroup.Item>
@@ -203,7 +219,7 @@ const OrderScreen = (history) => {
               </ListGroup.Item>
               <ListGroup.Item>
                 <Row>
-                  <Col>Tax</Col>
+                  <Col>VAT</Col>
                   <Col>AED {order.taxPrice}</Col>
                 </Row>
               </ListGroup.Item>
@@ -213,28 +229,28 @@ const OrderScreen = (history) => {
                   <Col>AED {order.totalPrice}</Col>
                 </Row>
               </ListGroup.Item>
-              {!order.isPaid &&
-                order.paymentMethod !== "Cash on Delivery" &&
-                order.paymentMethod !== "Bring Swiping Machine" && (
-                  <div>
-                    {loadingPay && <Loader />}
-                    {!sdkReady ? (
-                      <Loader />
-                    ) : (
-                      <div>
+              <ListGroup.Item>
+                {!order.isPaid &&
+                  order.paymentMethod !== "Cash on Delivery" &&
+                  order.paymentMethod !== "Bring Swiping Machine" && (
+                    <div>
+                      {loadingPay && <Loader />}
+                      {!sdkReady ? (
+                        <Loader />
+                      ) : (
                         <div className="d-grid gap-2">
                           <Button
                             type="button"
-                            className="button-primary btn-block"
+                            className="button-primary"
                             onClick={successPaymentHandler}
                           >
                             Place Order
                           </Button>
                         </div>
-                      </div>
-                    )}
-                  </div>
-                )}
+                      )}
+                    </div>
+                  )}
+              </ListGroup.Item>
               {loadingDeliver && <Loader />}
               {/* Mark As Delivered button */}
               {userInfo.isAdmin &&

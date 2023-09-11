@@ -13,8 +13,24 @@ const ProductCategoryScreen = () => {
   const { keyword, pageNumber = 1, category } = useParams();
 
   const productCategory = useSelector((state) => state.productCategory);
-  const { loading, error, products, page, pages } = productCategory;
+  function formatCategoryName(category) {
+    // List of words to exclude from capitalization
+    const excludedWords = ["and"];
 
+    return category
+      .split("-")
+      .map((word) => {
+        if (excludedWords.includes(word.toLowerCase())) {
+          return word.toLowerCase(); // Keep excluded words in lowercase
+        } else {
+          return word.charAt(0).toUpperCase() + word.slice(1);
+        }
+      })
+      .join(" ");
+  }
+
+  const { loading, error, products, page, pages } = productCategory;
+  console.log(productCategory);
   useEffect(() => {
     // Check if the category is 'all' and conditionally dispatch the action
     //all displays all the product related code is in getProductByCategory in productController
@@ -28,8 +44,8 @@ const ProductCategoryScreen = () => {
   return (
     <>
       <Meta />
+      <h3>{formatCategoryName(category)}</h3>
 
-      <h1>{category}</h1>
       {loading ? (
         <Loader />
       ) : error ? (

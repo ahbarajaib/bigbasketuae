@@ -12,6 +12,7 @@ const PlaceOrderScreen = () => {
   const location = useLocation();
   const { paymentMethod } = location.state || {};
   const cart = useSelector((state) => state.cart);
+  const cartItems = useSelector((state) => state.cart.cartItems);
   console.log(cart);
   const { shippingAddress } = cart;
   if (!shippingAddress) {
@@ -24,30 +25,53 @@ const PlaceOrderScreen = () => {
     return (Math.round(num * 100) / 100).toFixed(2);
   };
   //total price of all items
+  // Assuming that cartItems is an array of items in the cart
   cart.itemsPrice = addDecimals(
     cart.cartItems.reduce(
-      (acc, item) => acc + item.selectedPrice * item.noOfProducts,
+      (acc, item) =>
+        acc + item.variant.selectedPrice * item.variant.selectedNoOfProducts,
       0
     )
   );
+
   //total discountedPrice of all items
   cart.discountedItemsPrice = addDecimals(
     cart.cartItems.reduce((acc, item) => {
       const price =
-        item.selectedDiscount > 0
-          ? item.selectedDiscountedPrice
-          : item.selectedPrice;
-      const itemTotal = item.noOfProducts * price;
+        item.variant.selectedDiscount > 0
+          ? typeof item.variant.selectedDiscountedPrice === "number"
+            ? item.variant.selectedDiscountedPrice
+            : item.variant.selectedPrice
+          : typeof item.variant.selectedPrice === "number"
+          ? item.variant.selectedPrice
+          : 0;
+
+      const noOfProducts =
+        typeof item.variant.selectedNoOfProducts === "number"
+          ? item.variant.selectedNoOfProducts
+          : 0;
+      console.log(
+        "Item details:",
+        item.variant.selectedDiscountedPrice,
+        item.variant.selectedPrice,
+        item.variant.selectedNoOfProducts
+      );
+
+      const itemTotal = noOfProducts * price;
       return acc + itemTotal;
     }, 0)
   );
 
   // Calculate the shipping price based on cart.itemsPrice and cart.discountedItemsPrice
   const smallerPrice = Math.min(cart.itemsPrice, cart.discountedItemsPrice);
+
+  console.log(cart.itemsPrice);
+  console.log(cart.discountedItemsPrice);
   cart.itemsPrice = smallerPrice.toFixed(2);
   cart.shippingPrice = addDecimals(smallerPrice > 50 ? 0 : 10);
 
   cart.taxPrice = addDecimals(Number((0.05 * smallerPrice).toFixed(2)));
+  console.log(cart.taxPrice);
   cart.totalPrice =
     Number(smallerPrice) + Number(cart.shippingPrice) + Number(cart.taxPrice);
   cart.paymentMethod = paymentMethod;
@@ -56,22 +80,28 @@ const PlaceOrderScreen = () => {
 
   useEffect(() => {
     if (success) {
-      navigate(`/orders/${order._id}`);
+      if (
+        paymentMethod === "Cash on Delivery" ||
+        paymentMethod === "Bring Swiping Machine"
+      ) {
+        navigate(`/orders/${order._id}/cod`);
+      } else if (paymentMethod === "Card Payment") {
+        navigate(`/orders/${order._id}`);
+      }
     }
-    // eslint-disable-next-line
-  }, [success, navigate, cart, paymentMethod, dispatch]);
+  }, [success, navigate, order, paymentMethod]);
+
   const placeOrderHandler = () => {
     const orderItems = cart.cartItems.map((item) => ({
       name: item.name,
-      noOfProducts: item.noOfProducts,
+      noOfProducts: item.variant.selectedNoOfProducts,
       image: item.image,
       product: item.product,
-      price: item.price,
-      selectedPrice: item.selectedPrice,
-      selectedQty: item.selectedQty,
-      selectedDiscountedPrice: item.selectedDiscountedPrice, // Add this field
-      selectedDiscount: item.selectedDiscount, // Add this field
-      selectedUnits: item.selectedUnits, // Add this field
+      selectedPrice: item.variant.selectedPrice,
+      selectedQty: item.variant.selectedQty,
+      selectedDiscountedPrice: item.variant.selectedDiscountedPrice, // Add this field
+      selectedDiscount: item.variant.selectedDiscount, // Add this field
+      selectedUnits: item.variant.selectedUnits, // Add this field
     }));
     console.log("orderItems:", orderItems);
 
@@ -138,28 +168,49 @@ const PlaceOrderScreen = () => {
                           </Link>
                         </Col>
                         <Col md={4}>
-                          {item.selectedDiscount > 0 ? (
+                          {item.variant.selectedDiscount > 0 ? (
                             <>
                               <div>
-                                {item.noOfProducts} x AED{" "}
+                                {item.variant.selectedNoOfProducts} x{" "}
+                                {item.variant.selectedDiscountedPrice.toFixed(
+                                  2
+                                )}
+                              </div>
+                              <div style={{ textDecoration: "line-through" }}>
+                                {" "}
+                                {item.variant.selectedPrice.toFixed(2)}
+                              </div>
+                            </>
+                          ) : (
+                            <div>
+                              {item.variant.selectedNoOfProducts} x{" "}
+                              {item.variant.selectedPrice.toFixed(2)}
+                            </div>
+                          )}
+                        </Col>
+                        <Col md={3}>
+                          {item.variant.selectedDiscount > 0 ? (
+                            <>
+                              <div>
                                 {(
-                                  item.noOfProducts *
-                                  item.selectedDiscountedPrice
+                                  item.variant.selectedNoOfProducts *
+                                  item.variant.selectedDiscountedPrice
                                 ).toFixed(2)}
                               </div>
                               <div style={{ textDecoration: "line-through" }}>
                                 {" "}
                                 {(
-                                  item.noOfProducts * item.selectedPrice
+                                  item.variant.selectedNoOfProducts *
+                                  item.variant.selectedPrice
                                 ).toFixed(2)}
                               </div>
                             </>
                           ) : (
                             <div>
-                              {item.noOfProducts} x AED{" "}
-                              {(item.noOfProducts * item.selectedPrice).toFixed(
-                                2
-                              )}
+                              {(
+                                item.variant.selectedNoOfProducts *
+                                item.variant.selectedPrice
+                              ).toFixed(2)}
                             </div>
                           )}
                         </Col>
