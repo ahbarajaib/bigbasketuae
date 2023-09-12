@@ -171,7 +171,8 @@ const ProductScreen = () => {
                                 price.units,
                                 price.price,
                                 price.discount,
-                                price.discountedPrice
+                                price.discountedPrice,
+                                price.noOfProducts
                               )
                             }
                             style={{
