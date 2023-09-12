@@ -110,10 +110,11 @@ const CartScreen = () => {
   };
 
   const grossTotal = cartItems
-    .filter((item) =>
-      item.variant &&
-      item.variant.selectedNoOfProducts !== undefined &&
-      item.variant.selectedPrice !== undefined
+    .filter(
+      (item) =>
+        item.variant &&
+        item.variant.selectedNoOfProducts !== undefined &&
+        item.variant.selectedPrice !== undefined
     )
     .reduce((acc, item) => {
       const itemTotal =
@@ -123,9 +124,13 @@ const CartScreen = () => {
     .toFixed(2);
 
   const total = cartItems
-    .filter((item) =>
-      item.variant &&
-      item.variant.selectedDiscount !== undefined
+    .filter(
+      (item) =>
+        item.variant &&
+        item.variant.selectedDiscount !== undefined &&
+        item.variant.selectedNoOfProducts !== undefined && // Add this check
+        item.variant.selectedPrice !== undefined && // Add this check
+        item.variant.selectedDiscountedPrice !== undefined // Add this check
     )
     .reduce((acc, item) => {
       const price =
@@ -172,32 +177,35 @@ const CartScreen = () => {
                         {cartItem.name}
                       </Link>
                       <Col md={3}>
-                        {cartItem.variant &&
-                          cartItem.variant.selectedQty && (
-                            <div>
-                              {cartItem.variant.selectedQty}
-                              {cartItem.variant.selectedUnits}
-                            </div>
-                          )}
+                        {cartItem.variant && cartItem.variant.selectedQty && (
+                          <div>
+                            {cartItem.variant.selectedQty}
+                            {cartItem.variant.selectedUnits}
+                          </div>
+                        )}
                       </Col>
                     </Col>
                     <Col md={2} style={{ fontSize: "0.8em" }}>
                       {cartItem.variant &&
                       cartItem.variant.selectedDiscount !== undefined ? (
                         <>
-                          <div>
-                            AED{" "}
-                            {cartItem.variant.selectedDiscountedPrice.toFixed(
-                              2
-                            )}
-                          </div>
-                          <div style={{ textDecoration: "line-through" }}>
-                            {cartItem.variant.selectedPrice
-                              ? `AED ${cartItem.variant.selectedPrice.toFixed(
+                          {cartItem.variant.selectedDiscount > 0 ? (
+                            <>
+                              <div>
+                                AED{" "}
+                                {cartItem.variant.selectedDiscountedPrice.toFixed(
                                   2
-                                )}`
-                              : ""}
-                          </div>
+                                )}
+                              </div>
+                              <div style={{ textDecoration: "line-through" }}>
+                                AED {cartItem.variant.selectedPrice.toFixed(2)}
+                              </div>
+                            </>
+                          ) : (
+                            <div>
+                              AED {cartItem.variant.selectedPrice.toFixed(2)}
+                            </div>
+                          )}
                         </>
                       ) : (
                         <div>
@@ -209,6 +217,7 @@ const CartScreen = () => {
                         </div>
                       )}
                     </Col>
+
                     <Col md={1}>
                       <div className="quantity-container">
                         <button
@@ -244,28 +253,40 @@ const CartScreen = () => {
                       {cartItem.variant &&
                       cartItem.variant.selectedDiscount !== undefined ? (
                         <>
-                          <div>
-                            AED{" "}
-                            {(
-                              cartItem.variant.selectedNoOfProducts *
-                              cartItem.variant.selectedDiscountedPrice
-                            ).toFixed(2)}
-                          </div>
-                          <div style={{ textDecoration: "line-through" }}>
-                            {" "}
-                            {(
-                              cartItem.variant.selectedNoOfProducts *
-                              cartItem.variant.selectedPrice
-                            ).toFixed(2)}
-                          </div>
+                          {cartItem.variant.selectedDiscount > 0 ? (
+                            <>
+                              <div>
+                                AED{" "}
+                                {(
+                                  cartItem.variant.selectedNoOfProducts *
+                                  cartItem.variant.selectedDiscountedPrice
+                                ).toFixed(2)}
+                              </div>
+                              <div style={{ textDecoration: "line-through" }}>
+                                AED{" "}
+                                {(
+                                  cartItem.variant.selectedNoOfProducts *
+                                  cartItem.variant.selectedPrice
+                                ).toFixed(2)}
+                              </div>
+                            </>
+                          ) : (
+                            <div>
+                              AED{" "}
+                              {(
+                                cartItem.variant.selectedNoOfProducts *
+                                cartItem.variant.selectedPrice
+                              ).toFixed(2)}
+                            </div>
+                          )}
                         </>
                       ) : (
                         <div>
                           AED{" "}
-                          {(
-                            cartItem.variant.selectedNoOfProducts *
-                            cartItem.variant.selectedPrice
-                          ).toFixed(2)}
+                          {cartItem.variant &&
+                          cartItem.variant.selectedPrice !== undefined
+                            ? ` ${cartItem.variant.selectedPrice.toFixed(2)}`
+                            : ""}
                         </div>
                       )}
                     </Col>
