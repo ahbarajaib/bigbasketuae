@@ -39,9 +39,17 @@ const CartScreen = () => {
 
   const cart = useSelector((state) => state.cart);
   const { cartItems } = cart;
-  console.log(cartItems);
+
   useEffect(() => {
-    if (id && selectedNoOfProducts && selectedQty && selectedPrice) {
+    if (
+      id &&
+      selectedNoOfProducts &&
+      selectedQty &&
+      selectedPrice &&
+      selectedDiscount &&
+      selectedDiscountedPrice &&
+      selectedUnits
+    ) {
       // Create a variant object to pass to addToCart
       const variant = {
         selectedNoOfProducts,
@@ -66,13 +74,21 @@ const CartScreen = () => {
   ]);
 
   const handleDecreaseQty = (cartItem) => {
-    if (cartItem.variant.selectedNoOfProducts > 1) {
+    if (
+      cartItem.variant &&
+      cartItem.variant.selectedNoOfProducts &&
+      cartItem.variant.selectedNoOfProducts > 1
+    ) {
       updateQtyHandler(cartItem, cartItem.variant.selectedNoOfProducts - 1);
     }
   };
 
   const handleIncreaseQty = (cartItem) => {
-    if (cartItem.variant.selectedNoOfProducts < cartItem.countInStock) {
+    if (
+      cartItem.variant &&
+      cartItem.variant.selectedNoOfProducts &&
+      cartItem.variant.selectedNoOfProducts < cartItem.countInStock
+    ) {
       updateQtyHandler(cartItem, cartItem.variant.selectedNoOfProducts + 1);
     }
   };
@@ -94,6 +110,11 @@ const CartScreen = () => {
   };
 
   const grossTotal = cartItems
+    .filter((item) =>
+      item.variant &&
+      item.variant.selectedNoOfProducts !== undefined &&
+      item.variant.selectedPrice !== undefined
+    )
     .reduce((acc, item) => {
       const itemTotal =
         item.variant.selectedNoOfProducts * item.variant.selectedPrice;
@@ -102,12 +123,19 @@ const CartScreen = () => {
     .toFixed(2);
 
   const total = cartItems
+    .filter((item) =>
+      item.variant &&
+      item.variant.selectedDiscount !== undefined
+    )
     .reduce((acc, item) => {
       const price =
         item.variant.selectedDiscount > 0
           ? item.variant.selectedDiscountedPrice
           : item.variant.selectedPrice;
-      const itemTotal = item.variant.selectedNoOfProducts * price;
+      const itemTotal =
+        item.variant.selectedNoOfProducts !== undefined
+          ? item.variant.selectedNoOfProducts * price
+          : 0;
       return acc + itemTotal;
     }, 0)
     .toFixed(2);
@@ -143,15 +171,19 @@ const CartScreen = () => {
                       <Link to={`/product/${cartItem.product}`}>
                         {cartItem.name}
                       </Link>
-
                       <Col md={3}>
-                        {cartItem.variant.selectedQty}
-                        {cartItem.variant.selectedUnits}
+                        {cartItem.variant &&
+                          cartItem.variant.selectedQty && (
+                            <div>
+                              {cartItem.variant.selectedQty}
+                              {cartItem.variant.selectedUnits}
+                            </div>
+                          )}
                       </Col>
                     </Col>
-
                     <Col md={2} style={{ fontSize: "0.8em" }}>
-                      {cartItem.variant.selectedDiscount > 0 ? (
+                      {cartItem.variant &&
+                      cartItem.variant.selectedDiscount !== undefined ? (
                         <>
                           <div>
                             AED{" "}
@@ -161,20 +193,22 @@ const CartScreen = () => {
                           </div>
                           <div style={{ textDecoration: "line-through" }}>
                             {cartItem.variant.selectedPrice
-                              ? ` ${cartItem.variant.selectedPrice.toFixed(2)}`
+                              ? `AED ${cartItem.variant.selectedPrice.toFixed(
+                                  2
+                                )}`
                               : ""}
                           </div>
                         </>
                       ) : (
                         <div>
                           AED{" "}
-                          {cartItem.variant.selectedPrice
+                          {cartItem.variant &&
+                          cartItem.variant.selectedPrice !== undefined
                             ? ` ${cartItem.variant.selectedPrice.toFixed(2)}`
                             : ""}
                         </div>
                       )}
                     </Col>
-
                     <Col md={1}>
                       <div className="quantity-container">
                         <button
@@ -185,6 +219,7 @@ const CartScreen = () => {
                         </button>
                         <div className="qty-number">
                           {cartItem.variant &&
+                            cartItem.variant.selectedNoOfProducts &&
                             cartItem.variant.selectedNoOfProducts}
                         </div>
                         <button
@@ -195,7 +230,6 @@ const CartScreen = () => {
                         </button>
                       </div>
                     </Col>
-
                     <Col md={1}>
                       <Button
                         type="button"
@@ -207,7 +241,8 @@ const CartScreen = () => {
                       </Button>
                     </Col>
                     <Col md={2} style={{ fontSize: "0.8em" }}>
-                      {cartItem.variant.selectedDiscount > 0 ? (
+                      {cartItem.variant &&
+                      cartItem.variant.selectedDiscount !== undefined ? (
                         <>
                           <div>
                             AED{" "}
