@@ -7,6 +7,7 @@ import Message from "../components/Message";
 import Loader from "../components/Loader";
 import Meta from "../components/Meta";
 import { categoryProducts } from "../actions/productActions";
+import CarouselContainer from "../components/CarouselContainer";
 
 const ProductCategoryScreen = () => {
   const dispatch = useDispatch();
@@ -29,8 +30,7 @@ const ProductCategoryScreen = () => {
       .join(" ");
   }
 
-  const { loading, error, products, page, pages } = productCategory;
-  console.log(productCategory);
+  const { loading, error, products } = productCategory;
   useEffect(() => {
     // Check if the category is 'all' and conditionally dispatch the action
     //all displays all the product related code is in getProductByCategory in productController
@@ -45,7 +45,7 @@ const ProductCategoryScreen = () => {
     <>
       <Meta />
       <h3>{formatCategoryName(category)}</h3>
-
+      <CarouselContainer category={category} />
       {loading ? (
         <Loader />
       ) : error ? (

@@ -350,7 +350,6 @@ export const resetPassword = (password, token) => async (dispatch) => {
         },
       }
     );
-    console.log(data);
     dispatch({
       type: USER_RESET_PASSWORD_SUCCESS,
       payload: data.message,

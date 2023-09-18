@@ -91,8 +91,6 @@ const ProductEditScreen = () => {
       const discountedPrice =
         priceEntry.price * (1 - priceEntry.discount / 100);
       priceEntry.discountedPrice = discountedPrice;
-      console.log("Discount:", priceEntry.discount);
-      console.log("Discounted Price:", priceEntry.discountedPrice);
     } else {
       priceEntry.discountedPrice = 0; // Set a default value if price or discount is missing
     }

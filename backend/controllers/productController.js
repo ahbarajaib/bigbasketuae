@@ -8,7 +8,7 @@ import asyncHandler from "express-async-handler";
 //@route GET /api/products
 //@access Public
 const getProducts = asyncHandler(async (req, res) => {
-  const pageSize = "200";
+  const pageSize = "500";
   const page = Number(req.query.pageNumber) || 1;
 
   const keyword = req.query.keyword
@@ -121,8 +121,6 @@ const updateProduct = asyncHandler(async (req, res) => {
     product.countInStock = countInStock;
 
     // Log the values of discount and discountedPrice
-    console.log("Discount:", req.body.prices[0].discount);
-    console.log("Discounted Price:", req.body.prices[0].discountedPrice);
 
     const updatedProduct = await product.save();
     res.json(updatedProduct);

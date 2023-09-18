@@ -198,13 +198,11 @@ export const updateProduct = (product) => async (dispatch, getState) => {
       },
     };
     //{} because we are making a post request but not sending any data
-    console.log("Updating product with data:", product);
     const { data } = await axiosInstance.put(
       `/api/products/${product._id}`,
       product,
       config
     );
-    console.log("API response data:", data);
 
     dispatch({
       type: PRODUCT_UPDATE_SUCCESS,
