@@ -30,13 +30,11 @@ const sendResetPasswordMail = async (name, email, token, res) => {
 
     transporter.sendMail(mailOptions, function (error, info) {
       if (error) {
-        console.log(error);
         res.status(400).send({
           success: false,
           message: "Failed to send reset password email",
         });
       } else {
-        console.log("Mail has been sent:", info.response);
         res.status(200).send({
           success: true,
           message:
@@ -220,10 +218,8 @@ const updateUser = asyncHandler(async (req, res) => {
 });
 const forgotPassword = asyncHandler(async (req, res) => {
   try {
-    console.log(req.body);
     const email = req.body.email;
     const userData = await User.findOne({ email: email });
-    console.log(userData);
     if (userData) {
       const randomString = randomstring.generate();
       const data = await User.updateOne(
@@ -250,7 +246,6 @@ const resetPassword = asyncHandler(async (req, res) => {
     const tokenData = await User.findOne({ token: token });
     if (tokenData) {
       const password = req.body.password;
-      console.log(password);
       const salt = await bcrypt.genSalt(10);
       const hashedPassword = await bcrypt.hash(password, salt);
       const userData = await User.findByIdAndUpdate(

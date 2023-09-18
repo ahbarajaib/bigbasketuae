@@ -1,13 +1,8 @@
 import React, { useState, useEffect } from "react";
 import { Link } from "react-router-dom";
-import { Card, Button, Dropdown, Col } from "react-bootstrap";
-import {
-  addToCart,
-  removeFromCart,
-  updateCartQuantity,
-} from "../actions/cartActions";
+import { Card, Button, Dropdown } from "react-bootstrap";
+import { addToCart, removeFromCart } from "../actions/cartActions";
 import { useDispatch, useSelector } from "react-redux";
-import { useNavigate } from "react-router-dom";
 
 const Product = ({ product }) => {
   const [selectedQty, setSelectedQty] = useState(
@@ -35,15 +30,13 @@ const Product = ({ product }) => {
 
   const cartItems = useSelector((state) => state.cart.cartItems);
   const dispatch = useDispatch();
-  const cartItem = cartItems.find((item) => item.cartItemId === cartItemId);
   useEffect(() => {
     // const cartItem = cartItems.find((item) => item.product === product._id);
     const cartItem = cartItems.find((item) => item.cartItemId === cartItemId);
     if (cartItem) {
       setSelectedNoOfProducts(cartItem.variant.selectedNoOfProducts);
     }
-  }, [product.prices, cartItems, product._id, selectedQty]);
-  //console.log(cartItems);
+  }, [product.prices, cartItems, product._id, selectedQty, cartItemId]);
 
   const isProductInCart = cartItems.some(
     (item) => item.cartItemId === `${product._id}-${selectedQty}`
@@ -51,9 +44,6 @@ const Product = ({ product }) => {
 
   const addToCartHandler = () => {
     const cartItemId = `${product._id}-${selectedQty}`;
-    console.log("cartItems:", cartItems);
-    console.log("product._id:", product._id);
-    console.log("selectedQty:", selectedQty);
 
     // If quantity is 0, add to cart with quantity 1
     const variant = {
@@ -88,7 +78,6 @@ const Product = ({ product }) => {
     setSelectedDiscountedPrice(discountedPrice);
     const newCartItemId = `${product._id}-${qty}`;
     setCartItemId(newCartItemId);
-    console.log(newCartItemId);
   };
 
   const handleDecreaseQty = () => {

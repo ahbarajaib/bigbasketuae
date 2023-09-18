@@ -96,7 +96,9 @@ function App() {
             />
             <Route path="/admin/orders" element={<OrderListScreen />} />
 
-            <Route path="/search/:keyword" element={<HomeScreen />} exact />
+            {/* <Route path="/search/:keyword" element={<HomeScreen />} exact /> */}
+            <Route path="/search/:keyword" element={<HomeScreen />} />
+
             <Route path="/page/:pageNumber" element={<HomeScreen />} />
 
             <Route path="/" element={<HomeScreen />} exact />

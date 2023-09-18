@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from "react";
 
-import { Link, useParams, useNavigate, useLocation } from "react-router-dom";
+import { Link, useParams, useNavigate } from "react-router-dom";
 import { ListGroup, Image, Card, Row, Col, Button } from "react-bootstrap";
 import { useDispatch, useSelector } from "react-redux";
 import Message from "../components/Message";
@@ -48,7 +48,6 @@ const OrderScreen = (history) => {
     order.taxPrice = addDecimals(order.taxPrice);
     order.totalPrice = addDecimals(order.totalPrice);
   }
-  console.log(order);
   useEffect(() => {
     if (!userInfo) {
       navigate("/login");
@@ -79,10 +78,7 @@ const OrderScreen = (history) => {
   const deliverHandler = () => {
     dispatch(deliverOrder(order));
   };
-  const location = useLocation();
-  const { paymentMethod } = location.state || {};
 
-  const isCashOnDelivery = paymentMethod === "Cash on Delivery";
   return loading ? (
     <Loader />
   ) : error ? (

@@ -1,27 +1,25 @@
-import React, { useState, useEffect } from 'react';
-import { Form, Button, Container, Row, Col } from 'react-bootstrap';
-import { resetPassword } from '../actions/userActions';
-import { useDispatch, useSelector } from 'react-redux';
-import Loader from '../components/Loader';
+import React, { useState, useEffect } from "react";
+import { Form, Button, Container, Row, Col } from "react-bootstrap";
+import { resetPassword } from "../actions/userActions";
+import { useDispatch, useSelector } from "react-redux";
+import Loader from "../components/Loader";
 
 const ResetPasswordScreen = () => {
   const dispatch = useDispatch();
   const resetPasswordState = useSelector((state) => state.resetPassword);
-  const [password, setPassword] = useState('');
-  const [token, setToken] = useState('');
-  console.log(token)
+  const [password, setPassword] = useState("");
+  const [token, setToken] = useState("");
   const handleSubmit = (e) => {
     e.preventDefault();
 
     // Dispatch the resetPassword action with the required parameters
-    dispatch(resetPassword(password,token));
+    dispatch(resetPassword(password, token));
   };
 
   useEffect(() => {
     const urlSearchParams = new URLSearchParams(window.location.search);
-    const tokenFromURL = urlSearchParams.get('token');
+    const tokenFromURL = urlSearchParams.get("token");
     setToken(tokenFromURL);
-
   }, []);
 
   return (

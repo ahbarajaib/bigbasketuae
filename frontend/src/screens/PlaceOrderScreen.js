@@ -12,8 +12,6 @@ const PlaceOrderScreen = () => {
   const location = useLocation();
   const { paymentMethod } = location.state || {};
   const cart = useSelector((state) => state.cart);
-  const cartItems = useSelector((state) => state.cart.cartItems);
-  console.log(cart);
   const { shippingAddress } = cart;
   if (!shippingAddress) {
     navigate("/shipping");
@@ -50,12 +48,6 @@ const PlaceOrderScreen = () => {
         typeof item.variant.selectedNoOfProducts === "number"
           ? item.variant.selectedNoOfProducts
           : 0;
-      console.log(
-        "Item details:",
-        item.variant.selectedDiscountedPrice,
-        item.variant.selectedPrice,
-        item.variant.selectedNoOfProducts
-      );
 
       const itemTotal = noOfProducts * price;
       return acc + itemTotal;
@@ -65,13 +57,11 @@ const PlaceOrderScreen = () => {
   // Calculate the shipping price based on cart.itemsPrice and cart.discountedItemsPrice
   const smallerPrice = Math.min(cart.itemsPrice, cart.discountedItemsPrice);
 
-  console.log(cart.itemsPrice);
-  console.log(cart.discountedItemsPrice);
   cart.itemsPrice = smallerPrice.toFixed(2);
   cart.shippingPrice = addDecimals(smallerPrice > 50 ? 0 : 10);
 
   cart.taxPrice = addDecimals(Number((0.05 * smallerPrice).toFixed(2)));
-  console.log(cart.taxPrice);
+
   cart.totalPrice =
     Number(smallerPrice) + Number(cart.shippingPrice) + Number(cart.taxPrice);
   cart.paymentMethod = paymentMethod;
@@ -103,7 +93,6 @@ const PlaceOrderScreen = () => {
       selectedDiscount: item.variant.selectedDiscount, // Add this field
       selectedUnits: item.variant.selectedUnits, // Add this field
     }));
-    console.log("orderItems:", orderItems);
 
     dispatch(
       createOrder({
