@@ -45,11 +45,9 @@ const productSchema = mongoose.Schema(
         },
         discountedPrice: {
           type: Number,
-          required: true,
         },
         discount: {
           type: Number,
-          required: true,
         },
         units: {
           type: String,

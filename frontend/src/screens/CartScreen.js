@@ -124,14 +124,7 @@ const CartScreen = () => {
     .toFixed(2);
 
   const total = cartItems
-    .filter(
-      (item) =>
-        item.variant &&
-        item.variant.selectedDiscount !== undefined &&
-        item.variant.selectedNoOfProducts !== undefined && // Add this check
-        item.variant.selectedPrice !== undefined && // Add this check
-        item.variant.selectedDiscountedPrice !== undefined // Add this check
-    )
+    .filter((item) => item.variant)
     .reduce((acc, item) => {
       const price =
         item.variant.selectedDiscount > 0

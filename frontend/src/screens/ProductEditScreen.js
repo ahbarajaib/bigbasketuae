@@ -126,14 +126,21 @@ const ProductEditScreen = () => {
 
   const submitHandler = (e) => {
     e.preventDefault();
-    const newPrice = prices.filter(
-      (p) => p.qty && p.units && p.price && p.discount && p.discountedPrice
-    );
+
+    // Prepare the prices array with multiple price entries
+    const newPrices = prices.map((p) => ({
+      qty: p.qty,
+      units: p.units,
+      price: p.price,
+      discountedPrice: p.discountedPrice,
+      discount: p.discount,
+    }));
+
     dispatch(
       updateProduct({
         _id: id,
         name,
-        prices: newPrice,
+        prices: newPrices,
         image,
         brand,
         category,

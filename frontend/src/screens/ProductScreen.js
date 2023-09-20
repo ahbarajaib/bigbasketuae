@@ -1,15 +1,7 @@
 import React, { useState, useEffect } from "react";
 import { useParams, useNavigate } from "react-router-dom";
 import { useDispatch, useSelector } from "react-redux";
-import {
-  Form,
-  Row,
-  Col,
-  Image,
-  ListGroup,
-  Card,
-  Button,
-} from "react-bootstrap";
+import { Row, Col, Image, ListGroup, Card, Button } from "react-bootstrap";
 import Loader from "../components/Loader";
 import Message from "../components/Message";
 import Meta from "../components/Meta";
@@ -23,7 +15,6 @@ const ProductScreen = () => {
 
   const productDetails = useSelector((state) => state.productDetails);
   const { loading, error, product } = productDetails;
-
   const [selectedQty, setSelectedQty] = useState(
     product.prices && product.prices.length > 0 ? product.prices[0].qty : ""
   );
@@ -48,17 +39,30 @@ const ProductScreen = () => {
   const [cartItemId, setCartItemId] = useState("");
 
   const cartItems = useSelector((state) => state.cart.cartItems);
+
   useEffect(() => {
     const cartItem = cartItems.find((item) => item.cartItemId === cartItemId);
     if (cartItem) {
       setSelectedNoOfProducts(cartItem.variant.selectedNoOfProducts);
     }
   }, [product.prices, cartItems, cartItemId]);
-
+  console.log(cartItems);
   useEffect(() => {
     dispatch(listProductDetails(id));
   }, [dispatch, id]);
-
+  useEffect(() => {
+    // Check if the product prices array exists and is not empty
+    if (product.prices && product.prices.length > 0) {
+      // Set the initial selectedQty to the first value in the prices array
+      setSelectedQty(product.prices[0].qty);
+      // You can also set other related states here if needed
+      setSelectedUnits(product.prices[0].units);
+      setSelectedPrice(product.prices[0].price);
+      setSelectedDiscount(product.prices[0].discount);
+      setSelectedDiscountedPrice(product.prices[0].discountedPrice);
+      setCartItemId(`${product._id}-${product.prices[0].qty}`);
+    }
+  }, [product.prices, product._id]);
   const isProductInCart = cartItems.some(
     (item) => item.cartItemId === `${product._id}-${selectedQty}`
   );
@@ -83,8 +87,16 @@ const ProductScreen = () => {
     }
   };
 
-  const handleQtySelect = (qty, units, price, discount, discountedPrice) => {
+  const handleQtySelect = (
+    qty,
+    noOfProducts,
+    units,
+    price,
+    discount,
+    discountedPrice
+  ) => {
     setSelectedQty(qty);
+    setSelectedNoOfProducts(noOfProducts);
     setSelectedUnits(units);
     setSelectedPrice(price);
     setSelectedDiscount(discount);
@@ -168,11 +180,11 @@ const ProductScreen = () => {
                             onClick={() =>
                               handleQtySelect(
                                 price.qty,
+                                price.noOfProducts,
                                 price.units,
                                 price.price,
                                 price.discount,
-                                price.discountedPrice,
-                                price.noOfProducts
+                                price.discountedPrice
                               )
                             }
                             style={{
