@@ -237,3 +237,42 @@ header {
   text-decoration: underline; /* Add an underline to indicate a link */
   cursor: pointer; /* Change the cursor to a pointer to indicate interactivity */
 }
+
+/* CSS */
+.scrolling-container {
+  display: flex;
+  align-items: center;
+  width: 100%;
+}
+
+.category-text {
+  flex: 1;
+}
+
+.scrolling-text {
+  flex: 2;
+  background-color: #0072bb;
+  white-space: nowrap;
+  overflow: hidden;
+  padding-left: 10px; /* Add spacing to separate category and text */
+}
+
+.scrolling-text span {
+  animation: scroll 10s linear infinite; /* Adjust the animation duration */
+  color: white;
+  font-size: 1.5em;
+  font-weight: 600;
+  padding-right: 20px; /* Add space between text spans */
+  display: inline-block;
+}
+@keyframes scroll {
+  0% {
+    transform: translateX(100%);
+  }
+  100% {
+    transform: translateX(-100%);
+  }
+  200% {
+    transform: translateX(100%);
+  }
+}
