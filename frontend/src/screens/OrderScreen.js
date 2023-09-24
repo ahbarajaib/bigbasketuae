@@ -210,7 +210,15 @@ const OrderScreen = (history) => {
               <ListGroup.Item>
                 <Row>
                   <Col>Shipping</Col>
-                  <Col>AED {order.shippingPrice}</Col>
+                  <Col>
+                    {Math.abs(order.shippingPrice) < 0.01 ? (
+                      <strong>
+                        <span style={{ color: "green" }}>FREE</span>
+                      </strong>
+                    ) : (
+                      `AED ${order.shippingPrice.toFixed(2)}`
+                    )}
+                  </Col>
                 </Row>
               </ListGroup.Item>
               <ListGroup.Item>

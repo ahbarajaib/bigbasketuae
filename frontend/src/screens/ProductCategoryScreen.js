@@ -44,7 +44,16 @@ const ProductCategoryScreen = () => {
   return (
     <>
       <Meta />
-      <h3>{formatCategoryName(category)}</h3>
+      <div className="scrolling-container">
+        <h3 className="category-text">{formatCategoryName(category)}</h3>
+        <div className="scrolling-text">
+          <span>Same Day Delivery if ordered before 12pm</span>
+          <span>
+            &nbsp;&nbsp; Free Delivery on orders above AED 80.00&nbsp;&nbsp;
+          </span>
+        </div>
+      </div>
+
       <CarouselContainer category={category} />
       {loading ? (
         <Loader />

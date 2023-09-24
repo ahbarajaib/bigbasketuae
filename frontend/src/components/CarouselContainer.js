@@ -4,7 +4,6 @@ import carousel2 from "../images/carousel2.avif";
 import Canned1 from "../images/canned-and-jarred-goods/Canned1.avif";
 import Dairy1 from "../images/dairy-and-eggs/Dairy1.avif";
 import Dairy2 from "../images/dairy-and-eggs/Dairy2.avif";
-import Dairy3 from "../images/dairy-and-eggs/Dairy3.avif";
 import Dryfruits1 from "../images/dryfruits-nuts-and-chocolates/Dryfruits1.avif";
 import Dryfruits2 from "../images/dryfruits-nuts-and-chocolates/Dryfruits2.avif";
 import Dryfruits3 from "../images/dryfruits-nuts-and-chocolates/Dryfruits3.avif";

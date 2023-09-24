@@ -58,7 +58,7 @@ const PlaceOrderScreen = () => {
   const smallerPrice = Math.min(cart.itemsPrice, cart.discountedItemsPrice);
 
   cart.itemsPrice = smallerPrice.toFixed(2);
-  cart.shippingPrice = addDecimals(smallerPrice > 50 ? 0 : 10);
+  cart.shippingPrice = addDecimals(smallerPrice > 80 ? 0 : 10);
 
   cart.taxPrice = addDecimals(Number((0.05 * smallerPrice).toFixed(2)));
 
@@ -226,7 +226,15 @@ const PlaceOrderScreen = () => {
               <ListGroup.Item>
                 <Row>
                   <Col>Shipping</Col>
-                  <Col>AED {cart.shippingPrice}</Col>
+                  <Col>
+                    {Math.abs(cart.shippingPrice) < 0.01 ? (
+                      <strong>
+                        <span style={{ color: "green" }}>FREE</span>
+                      </strong>
+                    ) : (
+                      `AED ${cart.shippingPrice.toFixed(2)}`
+                    )}
+                  </Col>
                 </Row>
               </ListGroup.Item>
               <ListGroup.Item>
