@@ -35,7 +35,7 @@ const categoryImages = {
   "oils-and-ghees": [Oils1, Oils2],
   "canned-and-jarred-goods": [Canned1],
   "dryfruits-nuts-and-chocolates": [Dryfruits1, Dryfruits2, Dryfruits3],
-  "dairy-and-eggs": [Dairy1, Dairy2, Dairy3],
+  "dairy-and-eggs": [Dairy1, Dairy2],
   "bakery-and-snacks": [Snacks1, Snacks2],
   beverages: [Beverages1, Beverages2, Beverages3],
   wholesale: [Wholesale1],

@@ -1,6 +1,7 @@
 import React, { useEffect } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { Row, Col } from "react-bootstrap";
+import SpecialOffers from "../components/SpecialOffers";
 import Product from "../components/Product";
 import Loader from "../components/Loader";
 import Meta from "../components/Meta";
@@ -86,6 +87,7 @@ const HomeScreen = () => {
     <>
       <Meta />
       <CarouselContainer />
+      <SpecialOffers />
       {searchKeyword ? (
         // If there's a search keyword, only render the search results
         <>

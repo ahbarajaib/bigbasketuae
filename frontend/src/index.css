@@ -276,3 +276,11 @@ header {
     transform: translateX(100%);
   }
 }
+
+/* SpecialOffers.css */
+.selected {
+  border: 2px solid #0072bb;
+  border-radius: 10px;
+}
+
+/* Add more styling as needed */
