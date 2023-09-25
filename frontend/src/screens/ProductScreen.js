@@ -136,6 +136,7 @@ const ProductScreen = () => {
                 alt={product.name}
                 fluid
               />
+
               {selectedDiscount > 0 && (
                 <span
                   className="discount-badge"
@@ -347,6 +348,15 @@ const ProductScreen = () => {
                 </ListGroup>
               </Card>
             </Col>
+            <Row>
+              <Card.Text
+                as="p"
+                className="mr-2"
+                style={{ marginBottom: "3em" }}
+              >
+                {product.description}
+              </Card.Text>
+            </Row>
           </Row>
         </>
       )}
