@@ -211,13 +211,13 @@ const OrderScreen = (history) => {
                 <Row>
                   <Col>Shipping</Col>
                   <Col>
-                    {order && typeof order.shippingPrice === "number" ? (
+                    {order && order.shippingPrice ? (
                       Math.abs(order.shippingPrice) < 0.01 ? (
                         <strong>
                           <span style={{ color: "green" }}>FREE</span>
                         </strong>
                       ) : (
-                        `AED ${order.shippingPrice.toFixed(2)}`
+                        `AED ${order.shippingPrice}`
                       )
                     ) : (
                       // Handle the case where order is not properly initialized

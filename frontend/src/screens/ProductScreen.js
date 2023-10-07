@@ -46,7 +46,6 @@ const ProductScreen = () => {
       setSelectedNoOfProducts(cartItem.variant.selectedNoOfProducts);
     }
   }, [product.prices, cartItems, cartItemId]);
-  console.log(cartItems);
   useEffect(() => {
     dispatch(listProductDetails(id));
   }, [dispatch, id]);

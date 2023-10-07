@@ -80,7 +80,7 @@ const PlaceOrderScreen = () => {
       }
     }
   }, [success, navigate, order, paymentMethod]);
-
+  console.log(cart.shippingPrice);
   const placeOrderHandler = () => {
     const orderItems = cart.cartItems.map((item) => ({
       name: item.name,
@@ -232,7 +232,7 @@ const PlaceOrderScreen = () => {
                         <span style={{ color: "green" }}>FREE</span>
                       </strong>
                     ) : (
-                      `AED ${cart.shippingPrice.toFixed(2)}`
+                      `AED ${cart.shippingPrice}`
                     )}
                   </Col>
                 </Row>

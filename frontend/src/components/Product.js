@@ -37,7 +37,6 @@ const Product = ({ product }) => {
       setSelectedNoOfProducts(cartItem.variant.selectedNoOfProducts);
     }
   }, [product.prices, cartItems, product._id, selectedQty, cartItemId]);
-  console.log(cartItems);
 
   const isProductInCart = cartItems.some(
     (item) => item.cartItemId === `${product._id}-${selectedQty}`
