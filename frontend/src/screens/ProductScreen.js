@@ -7,11 +7,14 @@ import Message from "../components/Message";
 import Meta from "../components/Meta";
 import { listProductDetails } from "../actions/productActions";
 import { addToCart, removeFromCart } from "../actions/cartActions";
+import { categoryProducts } from "../actions/productActions";
+import Product from "../components/Product";
 
 const ProductScreen = () => {
   const { id } = useParams();
   const navigate = useNavigate();
   const dispatch = useDispatch();
+  const { keyword, pageNumber = 1 } = useParams();
 
   const productDetails = useSelector((state) => state.productDetails);
   const { loading, error, product } = productDetails;
@@ -39,6 +42,13 @@ const ProductScreen = () => {
   const [cartItemId, setCartItemId] = useState("");
 
   const cartItems = useSelector((state) => state.cart.cartItems);
+  const productCategory = useSelector((state) => state.productCategory);
+
+  const {
+    loading: categoryLoading,
+    error: categoryError,
+    products,
+  } = productCategory;
 
   useEffect(() => {
     const cartItem = cartItems.find((item) => item.cartItemId === cartItemId);
@@ -62,6 +72,20 @@ const ProductScreen = () => {
       setCartItemId(`${product._id}-${product.prices[0].qty}`);
     }
   }, [product.prices, product._id]);
+  useEffect(() => {
+    // Check if the category is 'all' and conditionally dispatch the action
+    //all displays all the product related code is in getProductByCategory in productController
+
+    if (product.category && product.category.toLowerCase() === "all") {
+      dispatch(categoryProducts(keyword, pageNumber, ""));
+    } else {
+      dispatch(categoryProducts(keyword, pageNumber, product.category));
+    }
+  }, [dispatch, keyword, pageNumber, product.category]);
+
+  // Shuffle the products from the same category randomly
+  const shuffledProducts = products.slice().sort(() => Math.random() - 0.5);
+
   const isProductInCart = cartItems.some(
     (item) => item.cartItemId === `${product._id}-${selectedQty}`
   );
@@ -357,6 +381,26 @@ const ProductScreen = () => {
               </Card.Text>
             </Row>
           </Row>
+          <h3>Similar Products</h3>
+          {categoryLoading ? (
+            <Loader />
+          ) : categoryError ? (
+            <Message variant="danger">{error}</Message>
+          ) : (
+            <>
+              <Row>
+                {shuffledProducts.slice(0, 6).map(
+                  (
+                    product // Slice the array to show only 6 products
+                  ) => (
+                    <Col key={product._id} xs={6} sm={6} md={4} lg={3} xl={2}>
+                      <Product product={product} category={product.category} />
+                    </Col>
+                  )
+                )}
+              </Row>
+            </>
+          )}
         </>
       )}
     </>
