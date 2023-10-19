@@ -80,7 +80,6 @@ const PlaceOrderScreen = () => {
       }
     }
   }, [success, navigate, order, paymentMethod]);
-  console.log(cart.shippingPrice);
   const placeOrderHandler = () => {
     const orderItems = cart.cartItems.map((item) => ({
       name: item.name,
