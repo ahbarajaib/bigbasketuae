@@ -1,6 +1,6 @@
 import React, { useEffect } from "react";
 import { useDispatch, useSelector } from "react-redux";
-import { Row, Col } from "react-bootstrap";
+import { Row, Col, Container } from "react-bootstrap";
 import SpecialOffers from "../components/SpecialOffers";
 import Product from "../components/Product";
 import Loader from "../components/Loader";
@@ -9,9 +9,9 @@ import CarouselContainer from "../components/CarouselContainer";
 import { listProducts } from "../actions/productActions";
 import Categories from "../components/Categories"; // Assuming this is your Categories component
 import { useNavigate, useLocation } from "react-router-dom";
+import DeliveryInfo from "../components/DeliveryInfo";
 
 const HomeScreen = () => {
-  const navigate = useNavigate();
   const location = useLocation();
   const dispatch = useDispatch();
   const searchKeyword = location.pathname.split("/search/")[1];
@@ -86,67 +86,38 @@ const HomeScreen = () => {
   return (
     <>
       <Meta />
+      <DeliveryInfo />
       <CarouselContainer />
       <SpecialOffers />
-      {searchKeyword ? (
-        // If there's a search keyword, only render the search results
-        <>
-          {loading ? (
-            <Loader />
-          ) : (
-            <Row>
-              {products.map((product) => (
-                <Col key={product._id} xs={6} sm={6} md={4} lg={3} xl={2}>
-                  <Product product={product} />
-                </Col>
-              ))}
-            </Row>
-          )}
-        </>
-      ) : (
-        // Otherwise, render everything including categories and featured products
-        <>
-          <h1>Categories</h1>
-          <Row>
-            <Col>
-              <Categories />
-            </Col>
-          </Row>
-          <h1>Featured Products</h1>
-          <Row>
-            <Col>
-              {categories.map((category) => (
-                <div key={category.id}>
-                  <h1 className="text-center">{category.title}</h1>
-                  <Row>
-                    {loading ? (
-                      <Loader />
-                    ) : (
-                      products
-                        .filter((product) => product.category === category.name)
-                        .slice(0, 6)
-                        .map((product) => (
-                          <Col
-                            key={product._id}
-                            xs={6}
-                            sm={6}
-                            md={4}
-                            lg={3}
-                            xl={2}
-                          >
-                            <Product product={product} />
-                          </Col>
-                        ))
-                    )}
-                  </Row>
-                </div>
-              ))}
-            </Col>
-          </Row>
-        </>
-      )}
+      <Container fluid>
+        <h1>Categories</h1>
+        <Row>
+          <Col>
+            <Categories />
+          </Col>
+        </Row>
+        {loading ? (
+          <Loader />
+        ) : (
+          categories.map((category) => (
+            <div key={category.id}>
+              <h1 className="text-center">{category.title}</h1>
+              <div style={{ overflowX: "auto" }}>
+                <Row className="d-flex flex-nowrap">
+                  {products
+                    .filter((product) => product.category === category.name)
+                    .map((product) => (
+                      <Col key={product._id} xs={6} sm={6} md={4} lg={3} xl={2}>
+                        <Product product={product} />
+                      </Col>
+                    ))}
+                </Row>
+              </div>
+            </div>
+          ))
+        )}
+      </Container>
     </>
   );
 };
-
 export default HomeScreen;

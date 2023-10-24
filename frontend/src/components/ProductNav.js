@@ -14,6 +14,8 @@ const ProductNav = () => {
 
   return (
     <Navbar
+      bg="light"
+      variant="light"
       expanded={expanded}
       expand="lg"
       className="bg-body-tertiary"

@@ -16,7 +16,12 @@ const SearchBox = () => {
   };
 
   return (
-    <Form onSubmit={submitHandler} className="d-flex">
+    <Form
+      onSubmit={submitHandler}
+      className="d-flex"
+      style={{ width: "600px" }}
+    >
+      {/* Adjust the width property above to your desired width in pixels */}
       <FormControl
         type="text"
         name="q"
