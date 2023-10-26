@@ -31,7 +31,11 @@ const Header = () => {
                 <Image
                   src="/images/logo_medium_horizontal.png"
                   alt="BigBasket Logo"
-                  style={{ maxWidth: "360px" }}
+                  style={{
+                    maxWidth: "180px",
+                    marginTop: "24px",
+                    marginBottom: "12px",
+                  }}
                 />
               </Navbar.Brand>
             </LinkContainer>

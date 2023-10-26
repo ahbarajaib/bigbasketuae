@@ -89,12 +89,13 @@ const Categories = () => {
                 style={{ display: "block" }}
               >
                 <div
-                  className="rounded-circle mx-auto circle-category" // Add a class to target circles with CSS
+                  className="rounded-square mx-auto square-category" // Add a class to target squares with CSS
                   style={{
                     objectFit: "cover",
                     height: "150px",
                     width: "150px",
                     overflow: "hidden",
+                    borderRadius: "10px", // Set the border-radius to control roundness
                   }}
                 >
                   <img
@@ -137,9 +138,9 @@ const Categories = () => {
               flex: 0 0 33.33%;
               max-width: 33.33%;
             }
-            .circle-category {
-              width: 50px; /* Adjust the size as needed */
-              height: 50px; /* Adjust the size as needed */
+            .square-category {
+              width: 50px; // Adjust the size as needed
+              height: 50px; // Adjust the size as needed
             }
           }
         `}
