@@ -1,6 +1,8 @@
 import React, { useState } from "react";
 import { Form, FormControl, Button } from "react-bootstrap";
 import { useNavigate } from "react-router-dom";
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import { faSearch } from "@fortawesome/free-solid-svg-icons";
 
 const SearchBox = () => {
   const navigate = useNavigate();
@@ -16,12 +18,7 @@ const SearchBox = () => {
   };
 
   return (
-    <Form
-      onSubmit={submitHandler}
-      className="d-flex"
-      style={{ width: "600px" }}
-    >
-      {/* Adjust the width property above to your desired width in pixels */}
+    <Form onSubmit={submitHandler} className="d-flex">
       <FormControl
         type="text"
         name="q"
@@ -36,6 +33,12 @@ const SearchBox = () => {
           fontSize: "16px",
           fontWeight: "400",
           padding: "10px 20px",
+          outline: "none",
+          boxShadow: "none",
+          WebkitAppearance: "none" /* Safari and Chrome */,
+          MozAppearance: "none" /* Firefox */,
+          minWidth: "150px", // Adjust the minimum width as needed
+          flex: "1", // Allow the input to flex and grow to fill available space
         }}
       />
       <Button
@@ -51,7 +54,7 @@ const SearchBox = () => {
           border: "none",
         }}
       >
-        Search
+        <FontAwesomeIcon icon={faSearch} />
       </Button>
     </Form>
   );

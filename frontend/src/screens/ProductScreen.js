@@ -388,17 +388,22 @@ const ProductScreen = () => {
             <Message variant="danger">{error}</Message>
           ) : (
             <>
-              <Row>
-                {shuffledProducts.slice(0, 6).map(
-                  (
-                    product // Slice the array to show only 6 products
-                  ) => (
-                    <Col key={product._id} xs={6} sm={6} md={4} lg={3} xl={2}>
-                      <Product product={product} category={product.category} />
-                    </Col>
-                  )
-                )}
-              </Row>
+              <div style={{ overflowX: "auto" }}>
+                <Row className="d-flex flex-nowrap">
+                  {shuffledProducts.map(
+                    (
+                      product // Slice the array to show only 6 products
+                    ) => (
+                      <Col key={product._id} xs={6} sm={6} md={4} lg={3} xl={2}>
+                        <Product
+                          product={product}
+                          category={product.category}
+                        />
+                      </Col>
+                    )
+                  )}
+                </Row>
+              </div>
             </>
           )}
         </>

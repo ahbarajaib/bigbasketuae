@@ -5,7 +5,16 @@ import { useDispatch, useSelector } from "react-redux";
 
 // This let us wrap bootstrap components
 import { LinkContainer } from "react-router-bootstrap";
-import { Container, Navbar, Nav, NavDropdown, Image } from "react-bootstrap";
+import {
+  Container,
+  Navbar,
+  Nav,
+  NavDropdown,
+  Image,
+  NavLink,
+} from "react-bootstrap";
+import largeLogo from "../images/logo_medium_horizontal.png";
+import smallLogo from "../images/logo_only.png";
 
 import SearchBox from "./SearchBox";
 import { logout } from "../actions/userActions";
@@ -29,13 +38,14 @@ const Header = () => {
             <LinkContainer to="/">
               <Navbar.Brand>
                 <Image
-                  src="/images/logo_medium_horizontal.png"
+                  src={largeLogo} // Use the large screen logo
                   alt="BigBasket Logo"
-                  style={{
-                    maxWidth: "180px",
-                    marginTop: "24px",
-                    marginBottom: "12px",
-                  }}
+                  className="logo large-logo" // Add classes for large screens
+                />
+                <Image
+                  src={smallLogo} // Use the small screen logo
+                  alt="BigBasket Logo"
+                  className="logo small-logo" // Add classes for small screens
                 />
               </Navbar.Brand>
             </LinkContainer>
@@ -58,17 +68,15 @@ const Header = () => {
               <Nav className="ml-auto">
                 <div className="d-flex align-items-center">
                   <SearchBox />
-                </div>{" "}
-                <LinkContainer to="/cart">
-                  <Nav.Link>
-                    <div className="cart">
-                      <i className="fas fa-shopping-cart"></i> Cart
-                      {cartItems.length > 0 && (
-                        <sup className="badge">{cartItems.length}</sup>
-                      )}
-                    </div>
+                </div>
+
+                <LinkContainer to="/">
+                  <Nav.Link className="location-link">
+                    <i className="fa-solid fa-location-dot"></i>
+                    <span>Location</span>
                   </Nav.Link>
                 </LinkContainer>
+
                 {userInfo ? (
                   <NavDropdown title={userInfo.name} id="username">
                     <LinkContainer to="/profile">
@@ -80,7 +88,7 @@ const Header = () => {
                   </NavDropdown>
                 ) : (
                   <LinkContainer to="/login">
-                    <Nav.Link>
+                    <Nav.Link className="signin-link">
                       <i className="fas fa-user"></i> Sign In
                     </Nav.Link>
                   </LinkContainer>
@@ -99,6 +107,16 @@ const Header = () => {
                     </LinkContainer>
                   </NavDropdown>
                 )}
+                <LinkContainer to="/cart">
+                  <Nav.Link>
+                    <div className="cart">
+                      <i className="fas fa-shopping-cart"></i>
+                      {cartItems.length > 0 && (
+                        <sup className="badge">{cartItems.length}</sup>
+                      )}
+                    </div>
+                  </Nav.Link>
+                </LinkContainer>
               </Nav>
             </Navbar.Collapse>
           </div>

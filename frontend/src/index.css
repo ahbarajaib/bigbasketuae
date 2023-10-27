@@ -63,6 +63,73 @@ header {
 .dropdown:hover > .dropdown-menu {
   display: block;
 }
+
+/* Header.css */
+/* Define styles for large screens */
+.large-logo {
+  display: block;
+  max-width: 240px; /* Show the large logo */
+}
+
+/* Define styles for small screens */
+.small-logo {
+  display: none;
+  max-width: 80px; /* Hide the small logo on small screens */
+}
+
+/* Use a media query to adjust the display property for small screens */
+@media (max-width: 767px) {
+  .large-logo {
+    display: none;
+    /* Hide the large logo on small screens */
+  }
+  .small-logo {
+    display: block; /* Show the small logo on small screens */
+  }
+}
+
+/* Center the text below the icon on small and medium screens */
+@media (max-width: 991px) {
+  .location-link {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    text-align: center;
+  }
+
+  /* Add a margin between the icon and text if needed */
+  .location-link i {
+    margin-bottom: 5px; /* Adjust the margin as needed */
+  }
+}
+/* Center the text below the icon on small and medium screens */
+@media (max-width: 991px) {
+  .signin-link {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    text-align: center;
+  }
+
+  /* Add a margin between the icon and text if needed */
+  .signin-link i {
+    margin-bottom: 5px; /* Adjust the margin as needed */
+  }
+}
+/* Display the SearchBox inline on screens larger than or equal to medium */
+@media (min-width: 768px) {
+  .d-flex.align-items-center {
+    display: flex;
+  }
+}
+
+/* Display the SearchBox as a block on screens smaller than medium */
+@media (max-width: 767px) {
+  .d-flex.align-items-center {
+    display: block;
+  }
+}
+
 /* all buttons */
 .button-primary {
   background-color: #fff;
