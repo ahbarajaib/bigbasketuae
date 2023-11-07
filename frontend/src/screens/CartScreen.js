@@ -157,7 +157,7 @@ const CartScreen = () => {
               {cartItems.map((cartItem) => (
                 <ListGroup.Item key={cartItem.id}>
                   <Row>
-                    <Col md={1}>
+                    <Col md={1} sm={1} xs={1}>
                       <Image
                         src={process.env.REACT_APP_API_URL + cartItem.image}
                         alt={cartItem.name}
@@ -165,11 +165,11 @@ const CartScreen = () => {
                         rounded
                       />
                     </Col>
-                    <Col md={3} style={{ fontSize: "0.8em" }}>
+                    <Col md={3} sm={2} xs={2} style={{ fontSize: "0.8em" }}>
                       <Link to={`/product/${cartItem.product}`}>
                         {cartItem.name}
                       </Link>
-                      <Col md={3}>
+                      <Col md={3} sm={2} xs={2}>
                         {cartItem.variant && cartItem.variant.selectedQty && (
                           <div>
                             {cartItem.variant.selectedQty}
@@ -178,7 +178,7 @@ const CartScreen = () => {
                         )}
                       </Col>
                     </Col>
-                    <Col md={2} style={{ fontSize: "0.8em" }}>
+                    <Col md={2} sm={2} xs={2} style={{ fontSize: "0.8em" }}>
                       {cartItem.variant &&
                       cartItem.variant.selectedDiscount !== undefined ? (
                         <>
@@ -211,7 +211,7 @@ const CartScreen = () => {
                       )}
                     </Col>
 
-                    <Col md={1}>
+                    <Col md={1} sm={1} xs={1}>
                       <div className="quantity-container">
                         <button
                           className="qty-btn"
@@ -232,7 +232,7 @@ const CartScreen = () => {
                         </button>
                       </div>
                     </Col>
-                    <Col md={1}>
+                    <Col md={1} sm={1} xs={1}>
                       <Button
                         type="button"
                         variant="light"
@@ -242,7 +242,7 @@ const CartScreen = () => {
                         <i className="fas fa-trash"></i>
                       </Button>
                     </Col>
-                    <Col md={2} style={{ fontSize: "0.8em" }}>
+                    <Col md={2} sm={2} xs={2} style={{ fontSize: "0.8em" }}>
                       {cartItem.variant &&
                       cartItem.variant.selectedDiscount !== undefined ? (
                         <>

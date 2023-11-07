@@ -1,5 +1,5 @@
 import React from "react";
-import { Card } from "react-bootstrap";
+import { Card,Col } from "react-bootstrap";
 import spices from "../images/spices.jpeg";
 import legumes from "../images/legumes.jpeg";
 import grains from "../images/grains.jpeg";
@@ -79,10 +79,7 @@ const Categories = () => {
     <div className="container mt-4">
       <div className="row justify-content-center">
         {categories.map((category) => (
-          <div
-            key={category.id}
-            className="col-xl-2 col-lg-3 col-md-4 col-sm-6 col-12 mb-2"
-          >
+          <Col key={category.id} xs={4} sm={3} md={3} lg={2} className="mb-2">
             <Card className="my-3 border-0 text-center">
               <a
                 href={`/category/${category.name}`}
@@ -92,8 +89,8 @@ const Categories = () => {
                   className="rounded-square mx-auto square-category" // Add a class to target squares with CSS
                   style={{
                     objectFit: "cover",
-                    height: "150px",
-                    width: "150px",
+                    height: "100px",
+                    width: "100px",
                     overflow: "hidden",
                     borderRadius: "10px", // Set the border-radius to control roundness
                   }}
@@ -114,15 +111,15 @@ const Categories = () => {
                 </Card.Body>
               </a>
             </Card>
-          </div>
+          </Col>
         ))}
       </div>
       <style>
-        {`
+      {`
           @media (max-width: 1199.98px) {
             .col-lg-3, .col-md-4 {
-              flex: 0 0 25%;
-              max-width: 25%;
+              flex: 0 0 33.33%;
+              max-width: 33.33%;
             }
           }
 
@@ -134,9 +131,9 @@ const Categories = () => {
           }
 
           @media (max-width: 575.98px) {
-            .col-12 {
-              flex: 0 0 33.33%;
-              max-width: 33.33%;
+            .col-xl-2, .col-lg-3, .col-md-4 {
+              flex: 0 0 100%;
+              max-width: 100%;
             }
             .square-category {
               width: 50px; // Adjust the size as needed

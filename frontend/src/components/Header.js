@@ -72,7 +72,7 @@ const Header = () => {
 
                 <LinkContainer to="/">
                   <Nav.Link>
-                    <i class="fa-solid fa-location-dot"></i> location
+                    <i class="fa-solid fa-location-dot"></i> <span className="d-none d-md-block">location</span>
                   </Nav.Link>
                 </LinkContainer>
                 {userInfo ? (
@@ -87,7 +87,7 @@ const Header = () => {
                 ) : (
                   <LinkContainer to="/login">
                     <Nav.Link>
-                      <i className="fas fa-user"></i> Sign In
+                      <i className="fas fa-user"></i> <span className="d-none d-md-block">Sign In</span>
                     </Nav.Link>
                   </LinkContainer>
                 )}

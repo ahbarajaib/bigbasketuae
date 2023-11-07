@@ -83,9 +83,9 @@ const ProductScreen = () => {
     }
   }, [dispatch, keyword, pageNumber, product.category]);
 
-  // Shuffle the products from the same category randomly
-  const shuffledProducts = products.slice().sort(() => Math.random() - 0.5);
-
+  const similarProducts = products.filter(
+    (prod) => prod.category === product.category
+  );
   const isProductInCart = cartItems.some(
     (item) => item.cartItemId === `${product._id}-${selectedQty}`
   );
@@ -153,12 +153,18 @@ const ProductScreen = () => {
         <>
           <Meta title={product.name} />
           <Row>
-            <Col md={6} style={{ position: "relative" }}>
-              <Image
-                src={process.env.REACT_APP_API_URL + product.image}
-                alt={product.name}
-                fluid
-              />
+            <Col md={6} style={{ position: "relative" }} className="d-flex justify-content-center">
+            <Image
+        src={process.env.REACT_APP_API_URL + product.image}
+        alt={product.name}
+        fluid
+        style={{
+          maxWidth: "75%", // Set maximum width to 100%
+          height: "auto", // Ensure aspect ratio is maintained
+ 
+        }}
+        
+      />
 
               {selectedDiscount > 0 && (
                 <span
@@ -193,7 +199,7 @@ const ProductScreen = () => {
                   <Row className="flex-wrap align-items-center">
                     {product.prices &&
                       product.prices.map((price) => (
-                        <Col key={price.qty} xs={6} className="mb-2">
+                        <Col key={price.qty} xs={3} sm={3} md={6} lg={6} className="mb-2">
                           <Button
                             variant={
                               selectedQty === price.qty
@@ -286,7 +292,7 @@ const ProductScreen = () => {
             </Col>
 
             <Col md={3}>
-              <Card>
+              <Card style={{ width: "75%" }}>
                 <ListGroup variant="flush">
                   <ListGroup.Item>
                     <div className="price-container d-flex justify-content-center">
@@ -375,7 +381,7 @@ const ProductScreen = () => {
               <Card.Text
                 as="p"
                 className="mr-2"
-                style={{ marginBottom: "3em" }}
+                style={{ marginTop: "2em", marginLeft:"1em",marginRight:"1em" }}
               >
                 {product.description}
               </Card.Text>
@@ -383,29 +389,23 @@ const ProductScreen = () => {
           </Row>
           <h3>Similar Products</h3>
           {categoryLoading ? (
-            <Loader />
-          ) : categoryError ? (
-            <Message variant="danger">{error}</Message>
-          ) : (
-            <>
-              <div style={{ overflowX: "auto" }}>
-                <Row className="d-flex flex-nowrap">
-                  {shuffledProducts.map(
-                    (
-                      product // Slice the array to show only 6 products
-                    ) => (
-                      <Col key={product._id} xs={6} sm={6} md={4} lg={3} xl={2}>
-                        <Product
-                          product={product}
-                          category={product.category}
-                        />
-                      </Col>
-                    )
-                  )}
-                </Row>
-              </div>
-            </>
-          )}
+        <Loader />
+      ) : categoryError ? (
+        <Message variant="danger">{error}</Message>
+      ) : (
+        <div style={{ overflowX: "auto" }}>
+          <Row className="d-flex flex-nowrap">
+            {similarProducts.map((product) => (
+              <Col key={product._id} xs={6} sm={6} md={4} lg={3} xl={2}>
+                <Product
+                  product={product}
+                  category={product.category}
+                />
+              </Col>
+            ))}
+          </Row>
+        </div>
+      )}
         </>
       )}
     </>
