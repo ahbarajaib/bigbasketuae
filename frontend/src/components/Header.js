@@ -71,12 +71,10 @@ const Header = () => {
                 </div>
 
                 <LinkContainer to="/">
-                  <Nav.Link className="location-link">
-                    <i className="fa-solid fa-location-dot"></i>
-                    <span>Location</span>
+                  <Nav.Link>
+                    <i class="fa-solid fa-location-dot"></i> location
                   </Nav.Link>
                 </LinkContainer>
-
                 {userInfo ? (
                   <NavDropdown title={userInfo.name} id="username">
                     <LinkContainer to="/profile">
@@ -88,7 +86,7 @@ const Header = () => {
                   </NavDropdown>
                 ) : (
                   <LinkContainer to="/login">
-                    <Nav.Link className="signin-link">
+                    <Nav.Link>
                       <i className="fas fa-user"></i> Sign In
                     </Nav.Link>
                   </LinkContainer>
