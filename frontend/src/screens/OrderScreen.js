@@ -169,7 +169,7 @@ const OrderScreen = (history) => {
                   {order.orderItems.map((item, index) => (
                     <ListGroup.Item key={index}>
                       <Row>
-                        <Col md={1}>
+                        <Col md={1} sm={2}>
                           <Image
                             src={process.env.REACT_APP_API_URL + item.image}
                             alt={item.name}
@@ -177,12 +177,12 @@ const OrderScreen = (history) => {
                             rounded
                           />
                         </Col>
-                        <Col>
+                        <Col md={1} sm={4}>
                           <Link to={`/product/${item.product}`}>
                             {item.name}
                           </Link>
                         </Col>
-                        <Col md={4}>
+                        <Col md={4} sm={5}>
                           {item.noOfProducts} x AED{" "}
                           {item.selectedPrice.toFixed(2)} = AED{" "}
                           {(item.noOfProducts * item.selectedPrice).toFixed(2)}

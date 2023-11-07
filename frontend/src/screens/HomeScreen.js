@@ -90,14 +90,26 @@ const HomeScreen = () => {
       <CarouselContainer />
       <SpecialOffers />
       <Container fluid>
-        <h1>Categories</h1>
-        <Row>
-          <Col>
-            <Categories />
-          </Col>
-        </Row>
+      {!searchKeyword && (
+          <div>
+            <h1>Categories</h1>
+            <Row>
+              <Col>
+                <Categories />
+              </Col>
+            </Row>
+          </div>
+        )}
         {loading ? (
           <Loader />
+        ) : searchKeyword ? (
+          <Row style={{ overflowX: "auto" }}>
+            {products.map((product) => (
+              <Col key={product._id} xs={6} sm={6} md={4} lg={3} xl={2}>
+                <Product product={product} />
+              </Col>
+            ))}
+          </Row>
         ) : (
           categories.map((category) => (
             <div key={category.id}>
