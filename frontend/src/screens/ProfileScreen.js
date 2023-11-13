@@ -58,7 +58,21 @@ const ProfileScreen = () => {
     setPhoneNumber(limitedPhoneNumber);
     //location removed from below
   }, [dispatch, userInfo, user, phoneNumber, navigate]);
-
+  function formatDateTime(dateTimeStr) {
+    const options = {
+      day: "2-digit",
+      month: "2-digit",
+      year: "numeric",
+      hour: "2-digit",
+      minute: "2-digit",
+      hour12: true,
+    };
+    const formattedDate = new Date(dateTimeStr).toLocaleString(
+      "en-GB",
+      options
+    );
+    return formattedDate;
+  }
   const submitHandler = (e) => {
     e.preventDefault();
 
@@ -165,32 +179,10 @@ const ProfileScreen = () => {
               {orders.map((order) => (
                 <tr key={order._id}>
                   <td>{order._id}</td>
-                  <td>{order.createdAt}</td>
+                  <td>{formatDateTime(order.createdAt)}</td>
                   <td>AED {order.totalPrice}</td>
-                  <td>
-                    {order.isPaid ? (
-                      new Date(order.paidAt).toLocaleDateString("en-GB", {
-                        day: "2-digit",
-                        month: "2-digit",
-                        year: "numeric",
-                      })
-                    ) : (
-                      <FontAwesomeIcon
-                        icon={faXmark}
-                        style={{ color: "red" }}
-                      />
-                    )}
-                  </td>
-                  <td>
-                    {order.isDelivered ? (
-                      order.deliveredAt.substring(0, 10)
-                    ) : (
-                      <FontAwesomeIcon
-                        icon={faXmark}
-                        style={{ color: "red" }}
-                      />
-                    )}
-                  </td>
+                  <td>{order.paymentMethod}</td>
+                  <td>{order.isDelivered ? "Delivered" : "Not Delivered"}</td>
                   <td>
                     <LinkContainer to={`/orders/${order._id}`}>
                       <Button className="btn-sm" variant="light">

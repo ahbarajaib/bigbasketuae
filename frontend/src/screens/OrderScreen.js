@@ -1,11 +1,14 @@
-import React, { useState, useEffect } from "react";
-
+import React, { useState, useEffect, useRef } from "react";
+import ReactToPrint from "react-to-print";
 import { Link, useParams, useNavigate } from "react-router-dom";
 import { ListGroup, Image, Card, Row, Col, Button } from "react-bootstrap";
 import { useDispatch, useSelector } from "react-redux";
 import Message from "../components/Message";
 import Loader from "../components/Loader";
 import { getOrderDetails, deliverOrder } from "../actions/orderActions";
+import { faPrint } from "@fortawesome/free-solid-svg-icons";
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import PrintableOrderDetails from "./PrintableOrderDetails";
 
 import {
   ORDER_PAY_RESET,
@@ -15,7 +18,7 @@ import {
 const OrderScreen = (history) => {
   const dispatch = useDispatch();
   const navigate = useNavigate();
-
+  const printRef = useRef();
   const { id } = useParams();
 
   const [sdkReady, setSdkReady] = useState(false);
@@ -78,6 +81,144 @@ const OrderScreen = (history) => {
   const deliverHandler = () => {
     dispatch(deliverOrder(order));
   };
+  const handlePrint = () => {
+    const printWindow = window.open("", "_blank");
+
+    printWindow.document.write(`
+      <html>
+        <head>
+          <title>Print Order</title>
+          <style>
+            body {
+              font-family: 'Arial', sans-serif;
+            }
+            /* Additional print styles */
+            .shipping-details,
+            .payment-method,
+            .order-items,
+            .order-summary {
+              margin-bottom: 20px;
+            }
+            .shipping-details h2,
+            .payment-method h2,
+            .order-summary h2 {
+              font-size: 18px;
+              margin-bottom: 10px;
+            }
+            .shipping-details p {
+              margin: 5px 0;
+            }
+            .order-items table,
+            .order-summary table {
+              width: 100%;
+              border-collapse: collapse;
+            }
+            .order-items th, .order-items td,
+            .order-summary th, .order-summary td {
+              border: 1px solid #ddd;
+              padding: 8px;
+              text-align: left;
+            }
+            .order-summary th {
+              background-color: #f2f2f2;
+            }
+            .order-summary strong {
+              font-weight: bold;
+            }
+            /* Add more styles as needed */
+          </style>
+        </head>
+        <body>
+          <div class="shipping-details">
+            <h2>Shipping</h2>
+            <p><strong>Name:</strong> ${order.user.name}</p>
+            <p><strong>Email:</strong> <a href="mailto:${
+              order.user.email
+            }" class="clickable">${order.user.email}</a></p>
+            ${
+              order.user.phoneNumber
+                ? `<p><strong>Phone:</strong> <a href="tel:${order.user.phoneNumber}" class="clickable">${order.user.phoneNumber}</a></p>`
+                : ""
+            }
+            <p><strong>Address:</strong> ${order.shippingAddress.building}, ${
+      order.shippingAddress.address
+    }, ${order.shippingAddress.city}, ${order.shippingAddress.country}</p>
+          </div>
+  
+          <div class="payment-method">
+            <h2>Payment Method</h2>
+            <p><strong>Method:</strong> ${order.paymentMethod}</p>
+            
+          </div>
+  
+          <div class="order-items">
+            <h2 >Order Items </h2>
+            ${
+              order.orderItems.length === 0
+                ? '<div class="message">Order is empty</div>'
+                : "<table>" +
+                  "<thead>" +
+                  "<tr>" +
+                  "<th>Product</th>" +
+                  "<th>Quantity</th>" +
+                  "<th>Price</th>" +
+                  "<th>Total</th>" +
+                  "</tr>" +
+                  "</thead>" +
+                  "<tbody>" +
+                  order.orderItems
+                    .map(
+                      (item, index) =>
+                        "<tr>" +
+                        `<td><a href="/product/${item.product}">${item.name}</a></td>` +
+                        `<td>${item.noOfProducts}</td>` +
+                        `<td>AED ${item.selectedPrice.toFixed(2)}</td>` +
+                        `<td>AED ${(
+                          item.noOfProducts * item.selectedPrice
+                        ).toFixed(2)}</td>` +
+                        "</tr>"
+                    )
+                    .join("") +
+                  "</tbody>" +
+                  "</table>"
+            }
+          </div>
+          <div class="order-summary">
+          <h2>Order Summary</h2>
+          <table>
+            <tr>
+              <td>Items</td>
+              <td>AED ${order.itemsPrice}</td>
+            </tr>
+            <tr>
+              <td>Shipping</td>
+              <td>
+                ${
+                  order && order.shippingPrice
+                    ? Math.abs(order.shippingPrice) < 0.01
+                      ? '<strong><span style="color: green">FREE</span></strong>'
+                      : `AED ${order.shippingPrice}`
+                    : "<span>Shipping price is not available</span>"
+                }
+              </td>
+            </tr>
+            <tr>
+              <td>VAT</td>
+              <td>AED ${order.taxPrice}</td>
+            </tr>
+            <tr>
+              <td>Total</td>
+              <td><strong>AED ${order.totalPrice}</strong></td>
+            </tr>
+          </table>
+        </div>
+        </body>
+      </html>
+    `);
+
+    printWindow.document.close();
+    printWindow.print();
+  };
 
   return loading ? (
     <Loader />
@@ -119,8 +260,8 @@ const OrderScreen = (history) => {
 
               <p>
                 <strong>Address: </strong>
-                {order.shippingAddress.address}, {order.shippingAddress.city},
-                {order.shippingAddress.postalCode},{" "}
+                {order.shippingAddress.building},&nbsp;
+                {order.shippingAddress.address}, {order.shippingAddress.city},{" "}
                 {order.shippingAddress.country}
               </p>
               {order.isDelivered ? (
@@ -161,7 +302,13 @@ const OrderScreen = (history) => {
             </ListGroup.Item>
 
             <ListGroup.Item>
-              <h2>Order Items</h2>
+              <h2 ref={printRef}>
+                Order Items{" "}
+                <Button onClick={handlePrint}>
+                  Print &nbsp;
+                  <FontAwesomeIcon icon={faPrint} />
+                </Button>
+              </h2>
               {order.orderItems.length === 0 ? (
                 <Message>Order is empty</Message>
               ) : (

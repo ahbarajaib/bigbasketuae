@@ -120,8 +120,10 @@ const PlaceOrderScreen = () => {
               <p>
                 <strong>Address: </strong>
                 <br />
+                {cart.shippingAddress.building}
+                &nbsp;
                 {cart.shippingAddress.address}
-                &nbsp;PO Box&nbsp;{cart.shippingAddress.postalCode}&nbsp;
+                &nbsp;&nbsp;
                 {cart.shippingAddress.city}
                 <br />
                 {cart.shippingAddress.country}
@@ -142,7 +144,7 @@ const PlaceOrderScreen = () => {
                   {cart.cartItems.map((item, index) => (
                     <ListGroup.Item key={index}>
                       <Row>
-                        <Col md={1}>
+                        <Col md={2} sm={2}>
                           <Image
                             src={process.env.REACT_APP_API_URL + item.image}
                             alt={item.name}
@@ -150,12 +152,12 @@ const PlaceOrderScreen = () => {
                             rounded
                           />
                         </Col>
-                        <Col>
+                        <Col md={2} sm={3}>
                           <Link to={`/product/${item.product}`}>
                             {item.name}
                           </Link>
                         </Col>
-                        <Col md={4}>
+                        <Col md={3} sm={3}>
                           {item.variant.selectedDiscount > 0 ? (
                             <>
                               <div>
@@ -176,7 +178,7 @@ const PlaceOrderScreen = () => {
                             </div>
                           )}
                         </Col>
-                        <Col md={3}>
+                        <Col md={2} sm={2}>
                           {item.variant.selectedDiscount > 0 ? (
                             <>
                               <div>

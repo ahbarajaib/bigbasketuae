@@ -19,7 +19,7 @@ const ProductNav = () => {
       expanded={expanded}
       expand="lg"
       className="bg-body-tertiary"
-      style={{ backgroundColor: "#fff" }}
+      style={{ backgroundColor: "#fff", marginLeft: "5em" }}
     >
       <Navbar.Toggle
         aria-controls="navbarScroll"
