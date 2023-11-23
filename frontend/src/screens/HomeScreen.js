@@ -90,7 +90,7 @@ const HomeScreen = () => {
       <CarouselContainer />
       <SpecialOffers />
       <Container fluid>
-      {!searchKeyword && (
+        {!searchKeyword && (
           <div>
             <h1>Categories</h1>
             <Row>
@@ -105,7 +105,7 @@ const HomeScreen = () => {
         ) : searchKeyword ? (
           <Row style={{ overflowX: "auto" }}>
             {products.map((product) => (
-              <Col key={product._id} xs={6} sm={6} md={6} lg={4} xl={3}>
+              <Col key={product._id} xs={6} sm={6} md={4} lg={3} xl={2}>
                 <Product product={product} />
               </Col>
             ))}
@@ -119,7 +119,7 @@ const HomeScreen = () => {
                   {products
                     .filter((product) => product.category === category.name)
                     .map((product) => (
-                      <Col key={product._id} xs={6} sm={6} md={6} lg={4} xl={3}>
+                      <Col key={product._id} xs={6} sm={6} md={4} lg={3} xl={2}>
                         <Product product={product} />
                       </Col>
                     ))}

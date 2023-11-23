@@ -13,70 +13,78 @@ const ProductNav = () => {
   };
 
   return (
-    <Navbar
-      bg="light"
-      variant="light"
-      expanded={expanded}
-      expand="lg"
-      className="bg-body-tertiary"
-      style={{ backgroundColor: "#fff", marginLeft: "5em" }}
-    >
-      <Navbar.Toggle
-        aria-controls="navbarScroll"
-        onClick={handleToggle}
-        className="ml-auto"
-      />
-      <Navbar.Collapse id="navbarScroll">
-        <Nav className="justify-content-center">
-          <Link to="/category/all" className="nav-link smaller-text">
-            <FontAwesomeIcon icon={faBars} className="burger-icon" />
-            &nbsp;&nbsp;All Categories
-          </Link>
-          <Link
-            to="/category/spices-and-condiments"
-            className="nav-link smaller-text"
-          >
-            Spices & Condiments
-          </Link>
-          <Link to="/category/legumes" className="nav-link smaller-text">
-            Legumes
-          </Link>
-          <Link to="/category/grains" className="nav-link smaller-text">
-            Grains
-          </Link>
-          <Link to="/category/oils-and-ghees" className="nav-link smaller-text">
-            Oils & Ghees
-          </Link>
-          <Link
-            to="/category/canned-and-jarred-goods"
-            className="nav-link smaller-text"
-          >
-            Canned & Jarred Goods
-          </Link>
-          <Link
-            to="/category/dryfruits-nuts-and-chocolates"
-            className="nav-link smaller-text"
-          >
-            Dryfruits, Nuts & Chocolates
-          </Link>
-          <Link to="/category/dairy-and-eggs" className="nav-link smaller-text">
-            Dairy & Eggs
-          </Link>
-          <Link
-            to="/category/bakery-and-snacks"
-            className="nav-link smaller-text"
-          >
-            Bakery & Snacks
-          </Link>
-          <Link to="/category/beverages" className="nav-link smaller-text">
-            Beverages
-          </Link>
-          <Link to="/category/wholesale" className="nav-link smaller-text">
-            Wholesale
-          </Link>
-        </Nav>
-      </Navbar.Collapse>
-    </Navbar>
+    <div className="container">
+      <Navbar
+        bg="light"
+        variant="light"
+        expanded={expanded}
+        expand="lg"
+        className="bg-body-tertiary"
+        style={{ backgroundColor: "#fff" }}
+      >
+        <Navbar.Toggle
+          aria-controls="navbarScroll"
+          onClick={handleToggle}
+          className="ml-auto"
+        />
+        <Navbar.Collapse id="navbarScroll">
+          <Nav className="justify-content-start">
+            <Link to="/category/all" className="nav-link smaller-text">
+              <FontAwesomeIcon icon={faBars} className="burger-icon" />
+              &nbsp;&nbsp;All Categories
+            </Link>
+            <Link
+              to="/category/spices-and-condiments"
+              className="nav-link smaller-text"
+            >
+              Spices & Condiments
+            </Link>
+            <Link to="/category/legumes" className="nav-link smaller-text">
+              Legumes
+            </Link>
+            <Link to="/category/grains" className="nav-link smaller-text">
+              Grains
+            </Link>
+            <Link
+              to="/category/oils-and-ghees"
+              className="nav-link smaller-text"
+            >
+              Oils & Ghees
+            </Link>
+            <Link
+              to="/category/canned-and-jarred-goods"
+              className="nav-link smaller-text"
+            >
+              Canned & Jarred Goods
+            </Link>
+            <Link
+              to="/category/dryfruits-nuts-and-chocolates"
+              className="nav-link smaller-text"
+            >
+              Dryfruits, Nuts & Chocolates
+            </Link>
+            <Link
+              to="/category/dairy-and-eggs"
+              className="nav-link smaller-text"
+            >
+              Dairy & Eggs
+            </Link>
+            <Link
+              to="/category/bakery-and-snacks"
+              className="nav-link smaller-text"
+            >
+              Bakery & Snacks
+            </Link>
+            <Link to="/category/beverages" className="nav-link smaller-text">
+              Beverages
+            </Link>
+            <Link to="/category/wholesale" className="nav-link smaller-text">
+              Wholesale
+            </Link>
+          </Nav>
+        </Navbar.Collapse>
+      </Navbar>
+    </div>
   );
 };
 

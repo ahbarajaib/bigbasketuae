@@ -22,6 +22,7 @@ const ProductListScreen = () => {
 
   const productList = useSelector((state) => state.productList);
   const { loading, error, products, page, pages } = productList;
+  console.log(products);
 
   const productDelete = useSelector((state) => state.productDelete);
   const {
@@ -138,7 +139,7 @@ const ProductListScreen = () => {
               <tr>
                 <th>ID</th>
                 <th>NAME</th>
-                <th>PRICE</th>
+                <th>STOCK</th>
                 <th>CATEGORY</th>
                 <th>BRAND</th>
                 <th></th>
@@ -155,7 +156,16 @@ const ProductListScreen = () => {
                   <tr key={product._id}>
                     <td>{product._id}</td>
                     <td>{product.name}</td>
-                    <td>AED {product.price}</td>
+                    <td
+                      style={{
+                        backgroundColor:
+                          product.countInStock < 10 ? "lightcoral" : "inherit",
+                        textAlign: "center",
+                      }}
+                    >
+                      {product.countInStock}
+                    </td>
+
                     <td>{product.category}</td>
                     <td>{product.brand}</td>
                     <td>

@@ -5,6 +5,7 @@ import CheckoutForm from "../components/CheckoutForm";
 import { loadStripe } from "@stripe/stripe-js";
 import { useSelector, useDispatch } from "react-redux";
 import { useParams } from "react-router-dom";
+import { Container } from "react-bootstrap";
 
 function Payment() {
   const { id } = useParams();
@@ -46,12 +47,16 @@ function Payment() {
 
   return (
     <>
-      <h1>Secure Payment</h1>
-      {clientSecret && stripePromise && (
-        <Elements stripe={stripePromise} options={{ clientSecret }}>
-          <CheckoutForm id={id} />
-        </Elements>
-      )}
+      <Container>
+        <div className="card">
+          <h1>Secure Payment</h1>
+          {clientSecret && stripePromise && (
+            <Elements stripe={stripePromise} options={{ clientSecret }}>
+              <CheckoutForm id={id} />
+            </Elements>
+          )}
+        </div>
+      </Container>
     </>
   );
 }

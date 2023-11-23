@@ -65,45 +65,46 @@ const Header = () => {
 
   return (
     <header>
-      <Navbar bg="light" variant="light">
-        <Container>
-          <div className="d-flex justify-content-between align-items-center w-100">
-            <LinkContainer to="/">
-              <Navbar.Brand>
+      <div className="container">
+        <Navbar bg="light" variant="light">
+          <Container>
+            <div className="d-flex justify-content-between align-items-center w-100">
+              <LinkContainer to="/">
+                <Navbar.Brand>
+                  <Image
+                    src={largeLogo} // Use the large screen logo
+                    alt="BigBasket Logo"
+                    className="logo large-logo" // Add classes for large screens
+                  />
+                  <Image
+                    src={smallLogo} // Use the small screen logo
+                    alt="BigBasket Logo"
+                    className="logo small-logo" // Add classes for small screens
+                  />
+                </Navbar.Brand>
+              </LinkContainer>
+              {/* WhatsApp Link */}
+              <a
+                href="https://wa.link/btn1kf" // Make sure to include the complete URL with 'https://'
+                target="_blank"
+                rel="noopener noreferrer"
+                className="whatsapp-link"
+              >
                 <Image
-                  src={largeLogo} // Use the large screen logo
-                  alt="BigBasket Logo"
-                  className="logo large-logo" // Add classes for large screens
+                  src={whatsapp}
+                  alt="WhatsApp Logo"
+                  style={{ maxWidth: "48px" }}
                 />
-                <Image
-                  src={smallLogo} // Use the small screen logo
-                  alt="BigBasket Logo"
-                  className="logo small-logo" // Add classes for small screens
-                />
-              </Navbar.Brand>
-            </LinkContainer>
-            {/* WhatsApp Link */}
-            <a
-              href="https://wa.link/btn1kf" // Make sure to include the complete URL with 'https://'
-              target="_blank"
-              rel="noopener noreferrer"
-              className="whatsapp-link"
-            >
-              <Image
-                src={whatsapp}
-                alt="WhatsApp Logo"
-                style={{ maxWidth: "48px" }}
-              />
-            </a>
-            {/* End WhatsApp Link */}
-            <Navbar.Toggle aria-controls="basic-navbar-nav" />
-            <Navbar.Collapse id="basic-navbar-nav">
-              <Nav className="mr-auto">
-                <div className="d-flex align-items-center">
-                  <SearchBox />
-                </div>
+              </a>
+              {/* End WhatsApp Link */}
+              <Navbar.Toggle aria-controls="basic-navbar-nav" />
+              <Navbar.Collapse id="basic-navbar-nav">
+                <Nav className="mr-auto">
+                  <div className="d-flex align-items-center">
+                    <SearchBox />
+                  </div>
 
-                {/* <LinkContainer to="/">
+                  {/* <LinkContainer to="/">
                   <Nav.Link>
                     <div
                       style={{ display: "flex", alignItems: "center" }}
@@ -117,77 +118,85 @@ const Header = () => {
                     </div>
                   </Nav.Link>
                 </LinkContainer> */}
-                {userInfo ? (
-                  <NavDropdown
-                    title={
-                      <>
+                  {userInfo ? (
+                    <NavDropdown
+                      title={
+                        <>
+                          <div
+                            style={{ display: "flex", alignItems: "center" }}
+                          >
+                            <i className="fas fa-user"></i>&nbsp;
+                            <span className="d-none d-md-block">
+                              {userInfo.name}
+                            </span>
+                          </div>
+                        </>
+                      }
+                      id="username"
+                    >
+                      <LinkContainer to="/profile">
+                        <NavDropdown.Item>Profile</NavDropdown.Item>
+                      </LinkContainer>
+                      <NavDropdown.Item onClick={logoutHandler}>
+                        Logout
+                      </NavDropdown.Item>
+                    </NavDropdown>
+                  ) : (
+                    <LinkContainer to="/login">
+                      <Nav.Link>
                         <div style={{ display: "flex", alignItems: "center" }}>
                           <i className="fas fa-user"></i>&nbsp;
-                          <span className="d-none d-md-block">
-                            {userInfo.name}
-                          </span>
+                          <span className="d-none d-md-block">Sign In</span>
                         </div>
-                      </>
-                    }
-                    id="username"
-                  >
-                    <LinkContainer to="/profile">
-                      <NavDropdown.Item>Profile</NavDropdown.Item>
+                      </Nav.Link>
                     </LinkContainer>
-                    <NavDropdown.Item onClick={logoutHandler}>
-                      Logout
-                    </NavDropdown.Item>
-                  </NavDropdown>
-                ) : (
-                  <LinkContainer to="/login">
+                  )}
+
+                  {/* This is for the admin  */}
+                  {userInfo && userInfo.isAdmin && (
+                    <NavDropdown
+                      title={
+                        <>
+                          <div
+                            style={{ display: "flex", alignItems: "center" }}
+                          >
+                            <i className="fa-solid fa-toolbox"></i>&nbsp;
+                            <span className="d-none d-md-block">
+                              {" "}
+                              Admin Menu
+                            </span>
+                          </div>
+                        </>
+                      }
+                      id="adminmenu"
+                    >
+                      <LinkContainer to="/admin/userList">
+                        <NavDropdown.Item>Users</NavDropdown.Item>
+                      </LinkContainer>
+                      <LinkContainer to="/admin/productlist">
+                        <NavDropdown.Item>Products</NavDropdown.Item>
+                      </LinkContainer>
+                      <LinkContainer to="/admin/orderlist">
+                        <NavDropdown.Item>Orders</NavDropdown.Item>
+                      </LinkContainer>
+                    </NavDropdown>
+                  )}
+                  <LinkContainer to="/cart">
                     <Nav.Link>
-                      <div style={{ display: "flex", alignItems: "center" }}>
-                        <i className="fas fa-user"></i>&nbsp;
-                        <span className="d-none d-md-block">Sign In</span>
+                      <div className="cart">
+                        <i className="fas fa-shopping-cart"></i>
+                        {cartItems.length > 0 && (
+                          <sup className="badge">{cartItems.length}</sup>
+                        )}
                       </div>
                     </Nav.Link>
                   </LinkContainer>
-                )}
-
-                {/* This is for the admin  */}
-                {userInfo && userInfo.isAdmin && (
-                  <NavDropdown
-                    title={
-                      <>
-                        <div style={{ display: "flex", alignItems: "center" }}>
-                          <i className="fa-solid fa-toolbox"></i>&nbsp;
-                          <span className="d-none d-md-block"> Admin Menu</span>
-                        </div>
-                      </>
-                    }
-                    id="adminmenu"
-                  >
-                    <LinkContainer to="/admin/userList">
-                      <NavDropdown.Item>Users</NavDropdown.Item>
-                    </LinkContainer>
-                    <LinkContainer to="/admin/productlist">
-                      <NavDropdown.Item>Products</NavDropdown.Item>
-                    </LinkContainer>
-                    <LinkContainer to="/admin/orderlist">
-                      <NavDropdown.Item>Orders</NavDropdown.Item>
-                    </LinkContainer>
-                  </NavDropdown>
-                )}
-                <LinkContainer to="/cart">
-                  <Nav.Link>
-                    <div className="cart">
-                      <i className="fas fa-shopping-cart"></i>
-                      {cartItems.length > 0 && (
-                        <sup className="badge">{cartItems.length}</sup>
-                      )}
-                    </div>
-                  </Nav.Link>
-                </LinkContainer>
-              </Nav>
-            </Navbar.Collapse>
-          </div>
-        </Container>
-      </Navbar>
+                </Nav>
+              </Navbar.Collapse>
+            </div>
+          </Container>
+        </Navbar>
+      </div>
     </header>
   );
 };
