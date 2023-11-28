@@ -42,7 +42,7 @@ const SelectPaymentScreen = () => {
         taxPrice: cart.taxPrice,
         totalPrice: cart.totalPrice,
       });
-
+      console.log(order);
       navigate("/placeorder", {
         state: { paymentMethod: "Bring Swiping Machine" },
       });

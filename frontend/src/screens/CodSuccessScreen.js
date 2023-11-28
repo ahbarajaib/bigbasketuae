@@ -18,6 +18,7 @@ const CodSuccessScreen = () => {
 
   // Get the order details from the Redux store
   const orderDetails = useSelector((state) => state.orderDetails);
+
   const { order } = orderDetails;
 
   // State to hold the payment method

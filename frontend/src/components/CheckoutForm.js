@@ -4,6 +4,7 @@ import { useStripe, useElements } from "@stripe/react-stripe-js";
 import { payOrder } from "../actions/orderActions";
 import { useDispatch } from "react-redux";
 import { useNavigate } from "react-router-dom";
+import { Container } from "react-bootstrap";
 
 export default function CheckoutForm(props) {
   const stripe = useStripe();
@@ -59,15 +60,25 @@ export default function CheckoutForm(props) {
   };
 
   return (
-    <form id="payment-form" onSubmit={handleSubmit}>
-      <PaymentElement id="payment-element" />
-      <button disabled={isProcessing || !stripe || !elements} id="submit">
-        <span id="button-text">
-          {isProcessing ? "Processing ... " : "Pay now"}
-        </span>
-      </button>
-      {/* Show any error or success messages */}
-      {message && <div id="payment-message">{message}</div>}
-    </form>
+    <div>
+      <form id="payment-form" onSubmit={handleSubmit}>
+        <Container>
+          <PaymentElement id="payment-element" />
+        </Container>
+        <div className="text-center">
+          <button
+            className="button-primary mt-3 mb-3 text-center"
+            disabled={isProcessing || !stripe || !elements}
+            id="submit"
+          >
+            <span id="button-text">
+              {isProcessing ? "Processing ... " : "Pay now"}
+            </span>
+          </button>
+        </div>
+        {/* Show any error or success messages */}
+        {message && <div id="payment-message">{message}</div>}
+      </form>
+    </div>
   );
 }

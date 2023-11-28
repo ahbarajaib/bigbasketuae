@@ -127,7 +127,8 @@ const Header = () => {
                           >
                             <i className="fas fa-user"></i>&nbsp;
                             <span className="d-none d-md-block">
-                              {userInfo.name}
+                              {/* print only the string before the space */}
+                              {userInfo.name.split(" ")[0]}
                             </span>
                           </div>
                         </>

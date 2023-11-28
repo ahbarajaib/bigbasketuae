@@ -77,6 +77,7 @@ const PlaceOrderScreen = () => {
         navigate(`/orders/${order._id}/cod`);
       } else if (paymentMethod === "Card Payment") {
         navigate(`/orders/${order._id}/payment`);
+        console.log(order._id);
       }
     }
   }, [success, navigate, order, paymentMethod]);
