@@ -104,7 +104,8 @@ const HomeScreen = () => {
           <Loader />
         ) : searchKeyword ? (
           <Row style={{ overflowX: "auto" }}>
-            {           products.map((product) => (
+            {products &&
+              products.map((product) => (
                 <Col key={product._id} xs={6} sm={6} md={4} lg={3} xl={2}>
                   <Product product={product} />
                 </Col>
@@ -116,9 +117,6 @@ const HomeScreen = () => {
               <h1 className="text-center">{category.title}</h1>
               <div style={{ overflowX: "auto" }}>
                 <Row className="d-flex flex-nowrap">
-<<<<<<< HEAD
-                  
-=======
                   {products &&
                     products
                       .filter((product) => product.category === category.name)
@@ -134,7 +132,6 @@ const HomeScreen = () => {
                           <Product product={product} />
                         </Col>
                       ))}
->>>>>>> 9ff0481a536a828810f6e02f3c563f3130891c79
                 </Row>
               </div>
             </div>
@@ -145,10 +142,3 @@ const HomeScreen = () => {
   );
 };
 export default HomeScreen;
-{products
-                    .filter((product) => product.category === category.name)
-                    .map((product) => (
-                      <Col key={product._id} xs={6} sm={6} md={4} lg={3} xl={2}>
-                        <Product product={product} />
-                      </Col>
-                    ))}
