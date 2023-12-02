@@ -125,7 +125,7 @@ const HomeScreen = () => {
                           key={product._id}
                           xs={6}
                           sm={6}
-                          md={4}
+                          md={3}
                           lg={3}
                           xl={2}
                         >
