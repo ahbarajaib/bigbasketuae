@@ -1,5 +1,5 @@
 import React from "react";
-import { Card,Col } from "react-bootstrap";
+import { Card, Col } from "react-bootstrap";
 import spices from "../images/spices.jpeg";
 import legumes from "../images/legumes.jpeg";
 import grains from "../images/grains.jpeg";
@@ -115,7 +115,7 @@ const Categories = () => {
         ))}
       </div>
       <style>
-      {`
+        {`
           @media (max-width: 1199.98px) {
             .col-lg-3, .col-md-4 {
               flex: 0 0 33.33%;
@@ -130,15 +130,7 @@ const Categories = () => {
             }
           }
 
-          @media (max-width: 575.98px) {
-            .col-xl-2, .col-lg-3, .col-md-4 {
-              flex: 0 0 100%;
-              max-width: 100%;
-            }
-            .square-category {
-              width: 50px; // Adjust the size as needed
-              height: 50px; // Adjust the size as needed
-            }
+          
           }
         `}
       </style>
