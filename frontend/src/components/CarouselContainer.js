@@ -1,6 +1,8 @@
 import Carousel from "react-bootstrap/Carousel";
 import carousel1 from "../images/carousel1.avif";
 import carousel2 from "../images/carousel2.avif";
+import carousel3 from "../images/carousel3.avif";
+
 import Canned1 from "../images/canned-and-jarred-goods/Canned1.avif";
 import Dairy1 from "../images/dairy-and-eggs/Dairy1.avif";
 import Dairy2 from "../images/dairy-and-eggs/Dairy2.avif";
@@ -22,14 +24,15 @@ import Wholesale1 from "../images/wholesale/Wholesale1.avif";
 import Spices1 from "../images/spices-and-condiments/Spices1.avif";
 import Spices2 from "../images/spices-and-condiments/Spices2.avif";
 import Spices3 from "../images/spices-and-condiments/Spices3.avif";
+import Spices4 from "../images/spices-and-condiments/Spices4.avif";
 import Beverages1 from "../images/beverages/Beverages1.avif";
 import Beverages2 from "../images/beverages/Beverages2.avif";
 import Beverages3 from "../images/beverages/Beverages3.avif";
 
 // Create an object to map categories to image arrays
 const categoryImages = {
-  all: [carousel1, carousel2],
-  "spices-and-condiments": [Spices1, Spices2, Spices3],
+  all: [carousel3, Legumes2, carousel1, carousel2, Spices4],
+  "spices-and-condiments": [Spices4, Spices1, Spices2, Spices3],
   legumes: [Legumes1, Legumes2],
   grains: [Grains1, Grains2, Grains3],
   "oils-and-ghees": [Oils1, Oils2],

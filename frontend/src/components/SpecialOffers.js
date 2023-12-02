@@ -1,7 +1,7 @@
 import React, { useState } from "react";
 import { Card, Row, Col } from "react-bootstrap";
 import { Link } from "react-router-dom";
-import drinks from "../images/special-offers/drinks.avif";
+import nuts from "../images/special-offers/nuts.avif";
 import milk from "../images/special-offers/milk.avif";
 import rice from "../images/special-offers/rice.avif";
 import snacks from "../images/special-offers/snacks.avif";
@@ -10,9 +10,9 @@ const SpecialOffers = () => {
   const specialOffers = [
     {
       id: 1,
-      title: "Drinks",
-      name: "drink",
-      image: drinks, // Replace this with the actual image path
+      title: "Nuts",
+      name: "nuts",
+      image: nuts, // Replace this with the actual image path
     },
     {
       id: 2,
