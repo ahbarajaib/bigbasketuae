@@ -1,6 +1,6 @@
-import { createStore, combineReducers, applyMiddleware } from 'redux'
-import thunk from 'redux-thunk'
-import { composeWithDevTools } from '@redux-devtools/extension'
+import { createStore, combineReducers, applyMiddleware } from "redux";
+import thunk from "redux-thunk";
+import { composeWithDevTools } from "@redux-devtools/extension";
 import {
   productListReducer,
   productDetailsReducer,
@@ -8,9 +8,9 @@ import {
   productCreateReducer,
   productUpdateReducer,
   productCategoryReducer,
-} from './reducers/productReducers'
+} from "./reducers/productReducers";
 
-import { cartReducer } from './reducers/cartReducers'
+import { cartReducer } from "./reducers/cartReducers";
 import {
   userLoginReducer,
   userRegisterReducer,
@@ -21,7 +21,7 @@ import {
   userUpdateReducer,
   userForgotPasswordReducer,
   userResetPasswordReducer,
-} from './reducers/userReducers'
+} from "./reducers/userReducers";
 
 import {
   orderCreateReducer,
@@ -30,7 +30,12 @@ import {
   orderDeliverReducer,
   orderListMyReducer,
   orderListReducer,
-} from './reducers/orderReducers'
+} from "./reducers/orderReducers";
+import {
+  bannerViewReducer,
+  bannerUploadReducer,
+  bannerDeleteReducer,
+} from "./reducers/bannerReducers";
 
 const reducer = combineReducers({
   productList: productListReducer,
@@ -48,8 +53,8 @@ const reducer = combineReducers({
   userList: userListReducer,
   userDelete: userDeleteReducer,
   userUpdate: userUpdateReducer,
-  forgotPassword:userForgotPasswordReducer,
-  resetPassword:userResetPasswordReducer,
+  forgotPassword: userForgotPasswordReducer,
+  resetPassword: userResetPasswordReducer,
 
   orderCreate: orderCreateReducer,
   orderDetails: orderDetailsReducer,
@@ -57,19 +62,23 @@ const reducer = combineReducers({
   orderListMy: orderListMyReducer,
   orderList: orderListReducer,
   orderDeliver: orderDeliverReducer,
-})
 
-const cartItemsFromStorage = localStorage.getItem('cartItems')
-  ? JSON.parse(localStorage.getItem('cartItems'))
-  : []
+  bannerView: bannerViewReducer,
+  bannerUpload: bannerUploadReducer,
+  bannerDelete: bannerDeleteReducer,
+});
 
-const userInfoFromStorage = localStorage.getItem('userInfo')
-  ? JSON.parse(localStorage.getItem('userInfo'))
-  : null
+const cartItemsFromStorage = localStorage.getItem("cartItems")
+  ? JSON.parse(localStorage.getItem("cartItems"))
+  : [];
 
-const shippingAddressFromStorage = localStorage.getItem('shippingAddress')
-  ? JSON.parse(localStorage.getItem('shippingAddress'))
-  : {}
+const userInfoFromStorage = localStorage.getItem("userInfo")
+  ? JSON.parse(localStorage.getItem("userInfo"))
+  : null;
+
+const shippingAddressFromStorage = localStorage.getItem("shippingAddress")
+  ? JSON.parse(localStorage.getItem("shippingAddress"))
+  : {};
 
 const initialState = {
   cart: {
@@ -77,13 +86,13 @@ const initialState = {
     shippingAddress: shippingAddressFromStorage,
   },
   userLogin: { userInfo: userInfoFromStorage },
-}
+};
 
-const middleware = [thunk]
+const middleware = [thunk];
 const store = createStore(
   reducer,
   initialState,
   composeWithDevTools(applyMiddleware(...middleware))
-)
+);
 
-export default store
+export default store;

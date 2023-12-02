@@ -15,6 +15,7 @@ import productRoutes from "./routes/productRoutes.js";
 import userRoutes from "./routes/userRoutes.js";
 import orderRoutes from "./routes/orderRoutes.js";
 import uploadRoutes from "./routes/uploadRoutes.js";
+import bannerRoutes from "./routes/bannerRoutes.js";
 import bodyParser from "body-parser";
 import cors from "cors";
 import nStatic from "node-static";
@@ -87,9 +88,11 @@ app.use("/api/products", productRoutes);
 app.use("/api/users", userRoutes);
 app.use("/api/orders", orderRoutes);
 app.use("/api/upload", uploadRoutes);
+app.use("/api/banners", bannerRoutes);
 
 const __dirname = path.resolve();
 app.use("/uploads", express.static(path.join(__dirname, "/uploads")));
+app.use("/banners", express.static(path.join(__dirname, "/banners")));
 
 var fileServer = new nStatic.Server("./public");
 

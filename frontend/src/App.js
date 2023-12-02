@@ -19,6 +19,7 @@ import ShippingScreen from "./screens/ShippingScreen";
 import PlaceOrderScreen from "./screens/PlaceOrderScreen";
 import OrderScreen from "./screens/OrderScreen";
 import UserListScreen from "./screens/UserListScreen";
+import BannerUploadScreen from "./screens/BannerUploadScreen";
 import UserEditScreen from "./screens/UserEditScreen";
 import ProductListScreen from "./screens/ProductListScreen";
 import ProductEditScreen from "./screens/ProductEditScreen";
@@ -53,6 +54,7 @@ function App() {
               <Route path="/orders/:id/payment" element={<Payment />} />
               <Route path="/completion" element={<Completion />} />
               <Route path="/orders/:id" element={<OrderScreen />} />
+
               <Route
                 path="/forgot-password"
                 element={<ForgotPasswordScreen />}
@@ -83,6 +85,7 @@ function App() {
               <Route path="/admin/userlist" element={<UserListScreen />} />
               <Route path="/admin/user/:id/edit" element={<UserEditScreen />} />
               <Route path="/admin/orderlist" element={<OrderListScreen />} />
+              <Route path="/admin/banners" element={<BannerUploadScreen />} />
               <Route
                 path="/admin/productlist"
                 element={<ProductListScreen />}
