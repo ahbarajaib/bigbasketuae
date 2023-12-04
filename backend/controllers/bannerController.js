@@ -8,7 +8,7 @@ import fs from "fs";
 const storage = multer.diskStorage({
   destination: function (req, file, cb) {
     const category = req.body.category || "uncategorized";
-    const uploadPath = path.join("banners", category);
+    const uploadPath = path.join("banners/", category);
 
     if (!fs.existsSync(uploadPath)) {
       fs.mkdirSync(uploadPath, { recursive: true });
@@ -76,7 +76,7 @@ const uploadBanner = asyncHandler(async (req, res) => {
         }
 
         // Respond with JSON containing the image path
-        res.json(`/${imagePath}`);
+        res.json(imagePath);
       } catch (error) {
         console.error(error);
         res.status(500).json({ message: "Server Error" });

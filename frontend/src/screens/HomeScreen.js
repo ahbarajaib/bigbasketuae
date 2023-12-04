@@ -89,7 +89,7 @@ const HomeScreen = () => {
       <DeliveryInfo />
       <CarouselContainer />
       <SpecialOffers />
-      <Container fluid>
+      <Container fluid style={{ margin: 0, padding: 0 }}>
         {!searchKeyword && (
           <div>
             <h1>Categories</h1>
@@ -115,25 +115,17 @@ const HomeScreen = () => {
           categories.map((category) => (
             <div key={category.id}>
               <h1 className="text-center">{category.title}</h1>
-              <div style={{ overflowX: "auto" }}>
-                <Row className="d-flex flex-nowrap">
-                  {products &&
-                    products
-                      .filter((product) => product.category === category.name)
-                      .map((product) => (
-                        <Col
-                          key={product._id}
-                          xs={6}
-                          sm={6}
-                          md={3}
-                          lg={3}
-                          xl={2}
-                        >
-                          <Product product={product} />
-                        </Col>
-                      ))}
-                </Row>
-              </div>
+
+              <Row className="d-flex flex-nowrap" style={{ overflowX: "auto" }}>
+                {products &&
+                  products
+                    .filter((product) => product.category === category.name)
+                    .map((product) => (
+                      <Col key={product._id} xs={6} sm={6} md={3} lg={3} xl={2}>
+                        <Product product={product} />
+                      </Col>
+                    ))}
+              </Row>
             </div>
           ))
         )}
