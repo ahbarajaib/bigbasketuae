@@ -8,12 +8,14 @@ import Meta from "../components/Meta";
 import CarouselContainer from "../components/CarouselContainer";
 import { listProducts } from "../actions/productActions";
 import Categories from "../components/Categories"; // Assuming this is your Categories component
-import { useNavigate, useLocation } from "react-router-dom";
+import { useLocation } from "react-router-dom";
 import DeliveryInfo from "../components/DeliveryInfo";
+import CarouselContainerSmall from "../components/CarouselContainerSmall";
 
 const HomeScreen = () => {
   const location = useLocation();
   const dispatch = useDispatch();
+
   const searchKeyword = location.pathname.split("/search/")[1];
 
   // State of productList from the store
@@ -82,7 +84,7 @@ const HomeScreen = () => {
       name: "wholesale",
     },
   ];
-
+  console.log(categories);
   return (
     <>
       <Meta />
@@ -115,7 +117,10 @@ const HomeScreen = () => {
           categories.map((category) => (
             <div key={category.id}>
               <h1 className="text-center">{category.title}</h1>
-
+              <CarouselContainerSmall
+                key={category.name}
+                category={category.name}
+              />
               <Row className="d-flex flex-nowrap" style={{ overflowX: "auto" }}>
                 {products &&
                   products

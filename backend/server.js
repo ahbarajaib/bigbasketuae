@@ -16,6 +16,8 @@ import userRoutes from "./routes/userRoutes.js";
 import orderRoutes from "./routes/orderRoutes.js";
 import uploadRoutes from "./routes/uploadRoutes.js";
 import bannerRoutes from "./routes/bannerRoutes.js";
+import smallBannerRoutes from "./routes/smallBannerRoutes.js";
+
 import bodyParser from "body-parser";
 import cors from "cors";
 import nStatic from "node-static";
@@ -89,6 +91,7 @@ app.use("/api/users", userRoutes);
 app.use("/api/orders", orderRoutes);
 app.use("/api/upload", uploadRoutes);
 app.use("/api/banners", bannerRoutes);
+app.use("/api/smallbanners", smallBannerRoutes);
 
 const __dirname = path.resolve();
 app.use("/uploads", express.static(path.join(__dirname, "/uploads")));

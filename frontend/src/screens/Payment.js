@@ -42,16 +42,7 @@ function Payment() {
       const { publishableKey } = await r.json();
       setStripePromise(loadStripe(publishableKey));
     });
-  }, [
-    dispatch,
-    id,
-    success,
-    successDeliver,
-    order,
-    ,
-    orderDetails,
-    totalPrice,
-  ]);
+  }, [dispatch, id, success, successDeliver, order, orderDetails, totalPrice]);
 
   useEffect(() => {
     if (totalPrice !== null) {

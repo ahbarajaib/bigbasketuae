@@ -58,13 +58,12 @@ const BannerUploadScreen = () => {
         formData,
         config
       );
-      console.log("Server Response:", data);
+
       setSelectedFileName(data);
       setImage(data);
       setUploading(false);
       fileInputRef.current.value = "";
       dispatch(viewBanner(category));
-      console.log(viewBanner);
     } catch (error) {
       console.error(error);
       setUploading(false);
@@ -74,8 +73,7 @@ const BannerUploadScreen = () => {
   const handleDelete = (category, imagePath) => {
     if (window.confirm("Are you sure you want to delete this banner?")) {
       dispatch(deleteBanner(category, imagePath));
-      console.log(imagePath);
-      setCategory(""); // Clear category after delete
+      dispatch(viewBanner(category)); // Dispatch the action again
     }
   };
 
@@ -84,8 +82,9 @@ const BannerUploadScreen = () => {
     setCategory(selectedCategory);
     if (selectedCategory) {
       dispatch(viewBanner(selectedCategory));
-      console.log(selectedCategory);
     }
+    // Save the selected category to localStorage
+    localStorage.setItem("selectedCategory", selectedCategory);
   };
 
   return (

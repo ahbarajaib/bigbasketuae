@@ -47,6 +47,7 @@
     "react-to-print": "^2.14.15",
     "stripe": "^8.191.0",
     "typescript": "^5.0.2",
+    "use-places-autocomplete": "^4.0.1",
     "util": "^0.12.5"
   },
   "devDependencies": {

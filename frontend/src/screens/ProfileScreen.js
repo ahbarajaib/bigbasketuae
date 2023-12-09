@@ -5,8 +5,6 @@ import { LinkContainer } from "react-router-bootstrap";
 import { useDispatch, useSelector } from "react-redux";
 import Message from "../components/Message";
 import Loader from "../components/Loader";
-import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import { faXmark } from "@fortawesome/free-solid-svg-icons";
 import { getUserDetails, updateUserProfile } from "../actions/userActions";
 import { listMyOrder } from "../actions/orderActions";
 import uaeFlag from "../images/uaeFlag.png";

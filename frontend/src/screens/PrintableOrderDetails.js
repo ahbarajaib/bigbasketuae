@@ -1,7 +1,5 @@
 import React from "react";
-import { Button, Row, Col } from "react-bootstrap";
-import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import { faPrint } from "@fortawesome/free-solid-svg-icons";
+import { Row, Col } from "react-bootstrap";
 
 const PrintableOrderDetails = ({ order }) => {
   return (

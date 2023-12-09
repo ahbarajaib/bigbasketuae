@@ -20,6 +20,7 @@ import PlaceOrderScreen from "./screens/PlaceOrderScreen";
 import OrderScreen from "./screens/OrderScreen";
 import UserListScreen from "./screens/UserListScreen";
 import BannerUploadScreen from "./screens/BannerUploadScreen";
+import SmallBannerUploadScreen from "./screens/SmallBannerUploadScreen";
 import UserEditScreen from "./screens/UserEditScreen";
 import ProductListScreen from "./screens/ProductListScreen";
 import ProductEditScreen from "./screens/ProductEditScreen";
@@ -86,6 +87,11 @@ function App() {
               <Route path="/admin/user/:id/edit" element={<UserEditScreen />} />
               <Route path="/admin/orderlist" element={<OrderListScreen />} />
               <Route path="/admin/banners" element={<BannerUploadScreen />} />
+              <Route
+                path="/admin/bannerssmall"
+                element={<SmallBannerUploadScreen />}
+              />
+
               <Route
                 path="/admin/productlist"
                 element={<ProductListScreen />}

@@ -1,4 +1,3 @@
-import axios from "axios";
 import {
   CART_ADD_ITEM,
   CART_REMOVE_ITEM,
@@ -6,8 +5,6 @@ import {
   CART_SAVE_PAYMENT_METHOD,
   CART_UPDATE_ITEM,
 } from "../constants/cartConstants";
-
-const axiosInstance = axios.create({ baseURL: process.env.REACT_APP_API_URL });
 
 //get id and qty from the url
 // cartActions.js

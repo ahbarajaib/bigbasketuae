@@ -1,5 +1,5 @@
 import React, { useState } from "react";
-import { Link, useNavigate } from "react-router-dom";
+import { useNavigate } from "react-router-dom";
 import { Button, Container, Form } from "react-bootstrap";
 import CheckoutSteps from "../components/CheckoutSteps";
 import { createOrder } from "../actions/orderActions";
@@ -19,15 +19,6 @@ const SelectPaymentScreen = () => {
   const handleProceedToPayment = async () => {
     if (selectedPaymentMethod === "CashOnDelivery") {
       // Create an order and navigate to the appropriate page
-      const order = await createOrder({
-        orderItems: cart.cartItems,
-        shippingAddress: cart.shippingAddress,
-        paymentMethod: "Cash on Delivery",
-        itemsPrice: cart.itemsPrice,
-        shippingPrice: cart.shippingPrice,
-        taxPrice: cart.taxPrice,
-        totalPrice: cart.totalPrice,
-      });
 
       navigate("/placeorder", {
         state: { paymentMethod: "Cash on Delivery" },
@@ -47,16 +38,6 @@ const SelectPaymentScreen = () => {
         state: { paymentMethod: "Bring Swiping Machine" },
       });
     } else if (selectedPaymentMethod === "CardPayment") {
-      const order = await createOrder({
-        orderItems: cart.cartItems,
-        shippingAddress: cart.shippingAddress,
-        paymentMethod: "Card Payment",
-        itemsPrice: cart.itemsPrice,
-        shippingPrice: cart.shippingPrice,
-        taxPrice: cart.taxPrice,
-        totalPrice: cart.totalPrice,
-      });
-
       navigate("/placeorder", {
         state: { paymentMethod: "Card Payment" },
       });

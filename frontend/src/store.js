@@ -35,6 +35,9 @@ import {
   bannerViewReducer,
   bannerUploadReducer,
   bannerDeleteReducer,
+  smallBannerViewReducer,
+  smallBannerUploadReducer,
+  smallBannerDeleteReducer,
 } from "./reducers/bannerReducers";
 
 const reducer = combineReducers({
@@ -66,6 +69,10 @@ const reducer = combineReducers({
   bannerView: bannerViewReducer,
   bannerUpload: bannerUploadReducer,
   bannerDelete: bannerDeleteReducer,
+
+  smallBannerView: smallBannerViewReducer,
+  smallBannerUpload: smallBannerUploadReducer,
+  smallBannerDelete: smallBannerDeleteReducer,
 });
 
 const cartItemsFromStorage = localStorage.getItem("cartItems")
