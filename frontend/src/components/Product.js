@@ -117,6 +117,7 @@ const Product = ({ product }) => {
             objectFit: "cover",
             height: "200px",
             borderRadius: "10px",
+            padding: "5px",
           }}
         />
       </Link>
