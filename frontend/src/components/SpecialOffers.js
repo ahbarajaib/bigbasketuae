@@ -11,25 +11,25 @@ const SpecialOffers = () => {
     {
       id: 1,
       title: "Nuts",
-      name: "nuts",
+      name: "dryfruits-nuts-and-chocolates",
       image: nuts, // Replace this with the actual image path
     },
     {
       id: 2,
       title: "Milk",
-      name: "milk",
+      name: "dairy-and-eggs",
       image: milk, // Replace this with the actual image path
     },
     {
       id: 3,
       title: "Rice",
-      name: "rice",
+      name: "grains",
       image: rice, // Replace this with the actual image path
     },
     {
       id: 4,
       title: "Snacks",
-      name: "chips",
+      name: "bakery-and-snacks",
       image: snacks, // Replace this with the actual image path
     },
   ];
@@ -41,7 +41,7 @@ const SpecialOffers = () => {
         {specialOffers.map((offer) => (
           <Col xs={3} key={offer.id}>
             {/* Use Link to navigate to the search route */}
-            <Link to={`/search/${offer.name}`}>
+            <Link to={`/category/${offer.name}`}>
               <Card>
                 <Card.Img variant="top" src={offer.image} alt={offer.title} />
               </Card>

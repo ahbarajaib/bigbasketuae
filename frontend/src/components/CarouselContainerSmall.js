@@ -13,7 +13,6 @@ const CarouselContainerSmall = React.memo(({ category }) => {
 
   useEffect(() => {
     if (category) {
-      console.log(`Fetching images for category: ${category}`);
       dispatch(viewSmallBanner(category));
     }
   }, [dispatch, category]);

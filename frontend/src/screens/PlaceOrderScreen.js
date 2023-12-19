@@ -43,7 +43,6 @@ const PlaceOrderScreen = () => {
           : typeof item.variant.selectedPrice === "number"
           ? item.variant.selectedPrice
           : 0;
-
       const noOfProducts =
         typeof item.variant.selectedNoOfProducts === "number"
           ? item.variant.selectedNoOfProducts
@@ -58,7 +57,30 @@ const PlaceOrderScreen = () => {
   const smallerPrice = Math.min(cart.itemsPrice, cart.discountedItemsPrice);
 
   cart.itemsPrice = smallerPrice.toFixed(2);
-  cart.shippingPrice = addDecimals(smallerPrice > 80 ? 0 : 10);
+  // Calculate the shipping price based on cart.itemsPrice and cart.discountedItemsPrice
+  let shippingCost = 0;
+
+  // Check if there is a product in the cart with the category 'wholesale'
+  const hasWholesaleProduct = cart.cartItems.some(
+    (item) => item.category === "wholesale"
+  );
+
+  // Adjust the shipping cost based on the conditions
+  if (hasWholesaleProduct) {
+    if (smallerPrice < 200) {
+      shippingCost = 20;
+    }
+    // Free shipping for orders greater than or equal to 200 AED
+  } else {
+    if (smallerPrice < 100) {
+      shippingCost = 10;
+    }
+    // Free shipping for orders greater than or equal to 100 AED
+  }
+
+  cart.shippingPrice = addDecimals(shippingCost);
+
+  // cart.shippingPrice = addDecimals(smallerPrice > 80 ? 0 : 10);
 
   cart.taxPrice = addDecimals(Number((0.05 * smallerPrice).toFixed(2)));
 
@@ -77,7 +99,6 @@ const PlaceOrderScreen = () => {
         navigate(`/orders/${order._id}/cod`);
       } else if (paymentMethod === "Card Payment") {
         navigate(`/orders/${order._id}/payment`);
-        console.log(order._id);
       }
     }
   }, [success, navigate, order, paymentMethod]);

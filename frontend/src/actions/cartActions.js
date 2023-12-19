@@ -19,6 +19,7 @@ export const addToCart =
       product: product._id,
       name: product.name,
       image: product.image,
+      category: product.category,
       variant, // Pass the variant object
       countInStock: product.countInStock,
     };

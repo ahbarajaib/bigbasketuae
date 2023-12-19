@@ -31,8 +31,6 @@ const smallStorage = multer.diskStorage({
     const category = req.body.category || "uncategorized";
     const uploadPath = path.join("banners", "small", category); // Adjust this line
 
-    console.log("Upload Path:", uploadPath);
-
     if (!fs.existsSync(uploadPath)) {
       fs.mkdirSync(uploadPath, { recursive: true });
     }
@@ -88,9 +86,6 @@ const uploadBanner = asyncHandler(async (req, res) => {
 
       const imagePath = req.file.path.replace(/\\/g, "/");
       const category = req.body.category;
-
-      console.log("Received category:", category);
-      console.log("Received image path:", imagePath);
 
       try {
         let banner = await Banner.findOne({ category });
@@ -180,9 +175,6 @@ const uploadSmallBanner = asyncHandler(async (req, res) => {
       const imagePath = req.file.path.replace(/\\/g, "/");
       const category = req.body.category;
 
-      console.log("Received small category:", category);
-      console.log("Received small image path:", imagePath);
-
       const pathSegments = imagePath.split("/");
       const finalImagePath = `${category}/${
         pathSegments[pathSegments.length - 1]
@@ -207,7 +199,7 @@ const uploadSmallBanner = asyncHandler(async (req, res) => {
         }
 
         // Respond with JSON containing the image path
-        console.log("Final image path:", finalImagePath);
+
         res.json(finalImagePath);
       } catch (error) {
         console.error(error);

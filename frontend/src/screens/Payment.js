@@ -18,10 +18,8 @@ function Payment() {
   }, [dispatch, id]);
   const orderDetails = useSelector((state) => state.orderDetails);
   const { order } = orderDetails;
-  console.log(orderDetails);
   const totalPrice = orderDetails.order ? orderDetails.order.totalPrice : null;
 
-  console.log(totalPrice);
   const orderPay = useSelector((state) => state.orderPay);
   const { success } = orderPay;
 
@@ -33,9 +31,6 @@ function Payment() {
   const [clientSecret, setClientSecret] = useState("");
 
   useEffect(() => {
-    console.log("Order Details:", orderDetails);
-    console.log("Total Price:", totalPrice);
-
     fetch(
       `${process.env.REACT_APP_API_URL}/api/config/stripe?${Date.now()}`
     ).then(async (r) => {

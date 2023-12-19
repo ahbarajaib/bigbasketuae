@@ -24,7 +24,6 @@ const axiosInstance = axios.create({ baseURL: process.env.REACT_APP_API_URL });
 // Upload Banner Image
 // actions/bannerActions.js
 export const uploadBanner = (formData) => async (dispatch, getState) => {
-  console.log("Upload Banner Action Dispatched");
   try {
     dispatch({ type: BANNER_UPLOAD_REQUEST });
 
@@ -108,7 +107,6 @@ export const deleteBanner =
 
 // Upload Small Banner Image
 export const uploadSmallBanner = (formData) => async (dispatch, getState) => {
-  console.log("Upload Small Banner Action Dispatched");
   try {
     dispatch({ type: SMALL_BANNER_UPLOAD_REQUEST });
 

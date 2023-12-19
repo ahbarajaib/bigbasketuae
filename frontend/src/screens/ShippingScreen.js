@@ -34,7 +34,6 @@ const ShippingScreen = (history) => {
     setLoadingLocation(true);
 
     if (!navigator.geolocation) {
-      console.log("Geolocaiton is not supported by your browser");
     } else {
       navigator.geolocation.getCurrentPosition(
         (position) => {
@@ -47,7 +46,6 @@ const ShippingScreen = (history) => {
               setAddress(
                 `${data.address.road},${data.address.suburb},${data.address.town}`
               );
-              console.log(data);
               setLocationClicked(true);
               setLoadingLocation(false); // Set locationClicked to true when the location is clicked
             })

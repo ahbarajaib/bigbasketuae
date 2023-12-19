@@ -416,3 +416,43 @@ button {
   height: 100%;
   width: 100%;
 }
+
+/* Slider buttons for products */
+
+/* Add this to your CSS */
+.round-arrow.left-arrow {
+  left: 24px; /* Adjust the left position as needed */
+  z-index: 1; /* Ensure the left arrow is above other elements */
+}
+
+.round-arrow.right-arrow {
+  right: 24px; /* Adjust the right position as needed */
+  z-index: 1; /* Ensure the right arrow is above other elements */
+}
+
+/* Center the arrows vertically */
+.round-arrow {
+  display: flex;
+  align-items: center;
+  top: 50%;
+  transform: translateY(-50%);
+  position: absolute;
+  background-color: #068225;
+  color: #fff;
+  border-radius: 50%;
+  width: 40px;
+  height: 40px;
+  font-size: 1.5em;
+  cursor: pointer;
+}
+
+/* Center the arrow icon within the button */
+.round-arrow svg {
+  margin-top: 7px; /* Adjust the margin-top as needed */
+  margin-left: 10px; /* Adjust the margin-left to center horizontally */
+}
+
+/* Style the arrows on hover if needed */
+.round-arrow:hover {
+  background-color: #25d366; /* Change the background color on hover */
+}

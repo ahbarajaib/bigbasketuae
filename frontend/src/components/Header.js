@@ -34,7 +34,6 @@ const Header = () => {
   const { cartItems } = cart;
   const locationHandler = () => {
     if (!navigator.geolocation) {
-      console.log("Geolocaiton is not supported by your browser");
     } else {
       navigator.geolocation.getCurrentPosition(
         (position) => {
@@ -47,7 +46,6 @@ const Header = () => {
               setAddress(
                 `${data.address.road},${data.address.suburb},${data.address.town}`
               );
-              console.log(data);
               setLocationClicked(true); // Set locationClicked to true when the location is clicked
             });
         },
@@ -57,7 +55,6 @@ const Header = () => {
       );
     }
   };
-  console.log(address);
 
   const logoutHandler = () => {
     dispatch(logout());
