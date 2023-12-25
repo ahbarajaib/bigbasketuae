@@ -117,8 +117,8 @@ const HomeScreen = () => {
 
   const settings = {
     dots: false,
-    infinite: true,
-    speed: 500,
+    infinite: false,
+    speed: 800,
     slidesToShow: 5, // Set the number of visible slides
     slidesToScroll: 5,
     nextArrow: <CustomNextArrow />,
@@ -173,13 +173,12 @@ const HomeScreen = () => {
           <Loader />
         ) : searchKeyword ? (
           <Row style={{ overflowX: "auto" }}>
-            {products && (
-              <Slider {...settings}>
-                {products.map((product) => (
+            <Slider {...settings}>
+              {products &&
+                products.map((product) => (
                   <Product key={product._id} product={product} />
                 ))}
-              </Slider>
-            )}
+            </Slider>
           </Row>
         ) : (
           categories.map((category) => (
@@ -190,15 +189,14 @@ const HomeScreen = () => {
                 category={category.name}
               />
               <Row className="d-flex flex-nowrap" style={{ overflowX: "auto" }}>
-                {products && (
-                  <Slider {...settings}>
-                    {products
+                <Slider {...settings}>
+                  {products &&
+                    products
                       .filter((product) => product.category === category.name)
                       .map((product) => (
                         <Product key={product._id} product={product} />
                       ))}
-                  </Slider>
-                )}
+                </Slider>
               </Row>
             </div>
           ))

@@ -119,6 +119,7 @@ const Product = ({ product }) => {
             borderRadius: "10px",
             padding: "5px",
           }}
+          loading="lazy"
         />
       </Link>
       <Card.Body className="text-center d-flex flex-column">

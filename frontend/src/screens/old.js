@@ -23,7 +23,7 @@ const ProductListScreen = () => {
 
   const productList = useSelector((state) => state.productList);
   const { loading, error, products, page, pages } = productList;
-  console.log(products);
+
   const productDelete = useSelector((state) => state.productDelete);
   const {
     loading: loadingDelete,
@@ -47,6 +47,7 @@ const ProductListScreen = () => {
   useEffect(() => {
     dispatch({ type: PRODUCT_CREATE_RESET });
 
+    // Check if the user is an admin, otherwise redirect to login
     if (!userInfo || !userInfo.isAdmin) {
       navigate("/login");
     }
@@ -54,7 +55,7 @@ const ProductListScreen = () => {
     if (successCreate) {
       navigate(`/admin/product/${createdProduct._id}/edit`);
     } else {
-      dispatch(listProducts("", pageNumber));
+      dispatch(listProducts("", pageNumber)); // Initially, load all products
     }
   }, [
     dispatch,
@@ -75,39 +76,15 @@ const ProductListScreen = () => {
   const createProductHandler = () => {
     dispatch(createProduct());
   };
+
   const formatDataForCSV = (products) => {
-    return products.map((product) => {
-      const formattedProduct = {
-        ID: product._id,
-        Name: product.name,
-        Stock: product.countInStock,
-        Category: product.category,
-        Brand: product.brand,
-
-        Image: product.image,
-        NoOfProducts: product.noOfProducts,
-        CountInStock: product.countInStock,
-      };
-
-      // Add prices to the formatted product
-      for (let i = 0; i < 4; i++) {
-        const priceKey = `Prices${i + 1}`;
-        const price = product.prices[i];
-
-        formattedProduct[`${priceKey}Qty`] = price ? price.qty : "";
-        formattedProduct[`${priceKey}NoOfProducts`] = price
-          ? price.noOfProducts
-          : "";
-        formattedProduct[`${priceKey}Price`] = price ? price.price : "";
-        formattedProduct[`${priceKey}DiscountedPrice`] = price
-          ? price.discountedPrice
-          : "";
-        formattedProduct[`${priceKey}Discount`] = price ? price.discount : "";
-        formattedProduct[`${priceKey}Units`] = price ? price.units : "";
-      }
-
-      return formattedProduct;
-    });
+    return products.map((product) => ({
+      ID: product._id,
+      Name: product.name,
+      Stock: product.countInStock,
+      Category: product.category,
+      Brand: product.brand,
+    }));
   };
 
   const handleDownloadReports = () => {
@@ -123,45 +100,15 @@ const ProductListScreen = () => {
       { label: "Stock", key: "Stock" },
       { label: "Category", key: "Category" },
       { label: "Brand", key: "Brand" },
-
-      { label: "Image", key: "Image" },
-      { label: "NoOfProducts", key: "NoOfProducts" },
-      { label: "CountInStock", key: "CountInStock" },
     ];
-
-    // Add headers for Prices 1 to 4
-    for (let i = 1; i <= 4; i++) {
-      headers.push(
-        { label: `Prices${i}Qty`, key: `Prices${i}Qty` },
-        { label: `Prices${i}NoOfProducts`, key: `Prices${i}NoOfProducts` },
-        { label: `Prices${i}Price`, key: `Prices${i}Price` },
-        {
-          label: `Prices${i}DiscountedPrice`,
-          key: `Prices${i}DiscountedPrice`,
-        },
-        { label: `Prices${i}Discount`, key: `Prices${i}Discount` },
-        { label: `Prices${i}Units`, key: `Prices${i}Units` }
-      );
-    }
-
-    // Create a CSVLink component with the generated CSV report
-    const csvReport = {
-      data: formattedData,
-      headers: headers,
-      filename: "products_report.csv",
-    };
-
-    // Create a CSVLink component with the generated CSV report
-    const csvLink = <CSVLink {...csvReport}>&nbsp;Download Report</CSVLink>;
-
-    return csvLink;
   };
-
+  // Render the category dropdown
   const renderCategoryDropdown = () => {
+    // Get unique categories from products
     const categories = [
       ...new Set(products.map((product) => product.category)),
     ];
-    categories.unshift("All");
+    categories.unshift("All"); // Add "All" option
 
     return (
       <div>
@@ -177,8 +124,20 @@ const ProductListScreen = () => {
             </option>
           ))}
         </select>
-        {/* Render the CSV download button */}
-        <button className="mx-auto">{handleDownloadReports()}</button>
+        <Button
+          sx={{ height: "36px", fontSize: "12px", marginTop: "10px" }}
+          variant="contained"
+        >
+          <CSVLink
+            data={formattedData}
+            headers={headers}
+            filename={"products_report.csv"}
+            target="_blank"
+            style={{ color: "white", textDecoration: "none" }}
+          >
+            Download Report
+          </CSVLink>
+        </Button>
       </div>
     );
   };
@@ -197,6 +156,7 @@ const ProductListScreen = () => {
         </Col>
       </Row>
 
+      {/* Add the category dropdown below the title */}
       <Row className="mb-3">
         <Col>{renderCategoryDropdown()}</Col>
       </Row>

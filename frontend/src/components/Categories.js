@@ -10,6 +10,8 @@ import beverages from "../images/beverages.jpeg";
 import dairy from "../images/dairy.jpeg";
 import bakery from "../images/bakery.jpeg";
 import wholesale from "../images/wholesale.jpeg";
+import fruits from "../images/fruits.jpeg";
+import meat from "../images/meat.jpeg";
 
 const Categories = () => {
   const categories = [
@@ -73,6 +75,18 @@ const Categories = () => {
       name: "wholesale",
       image: wholesale, // Replace this with the actual image path
     },
+    {
+      id: 11,
+      title: "Coming Soon",
+      name: "fruits-and-vegetables",
+      image: fruits,
+    },
+    {
+      id: 12,
+      title: "Coming Soon",
+      name: "meat-and-fish",
+      image: meat,
+    },
   ];
 
   return (
@@ -81,35 +95,57 @@ const Categories = () => {
         {categories.map((category) => (
           <Col key={category.id} xs={4} sm={3} md={3} lg={2} className="mb-2">
             <Card className="my-3 border-0 text-center">
-              <a
-                href={`/category/${category.name}`}
-                style={{ display: "block" }}
-              >
-                <div
-                  className="rounded-square mx-auto square-category" // Add a class to target squares with CSS
-                  style={{
-                    objectFit: "cover",
-                    height: "100px",
-                    width: "100px",
-                    overflow: "hidden",
-                    borderRadius: "10px", // Set the border-radius to control roundness
-                  }}
-                >
+              {category.name === "fruits-and-vegetables" ||
+              category.name === "meat-and-fish" ? (
+                <div className="rounded-square mx-auto square-category">
                   <img
                     src={category.image}
                     alt={category.title}
                     style={{
-                      height: "100%",
-                      width: "100%",
+                      height: "100px", // Adjust the height for "Coming Soon" categories
+                      width: "100px",
+                      borderRadius: "10px",
+                      marginTop: "10px",
                     }}
                   />
+                  <Card.Body>
+                    <Card.Title as="h5" className="mb-0 smaller-text">
+                      {category.title}
+                    </Card.Title>
+                  </Card.Body>
                 </div>
-                <Card.Body>
-                  <Card.Title as="h5" className="mb-0 smaller-text">
-                    {category.title}
-                  </Card.Title>
-                </Card.Body>
-              </a>
+              ) : (
+                <a
+                  href={`/category/${category.name}`}
+                  style={{ display: "block" }}
+                >
+                  <div
+                    className="rounded-square mx-auto square-category"
+                    style={{
+                      objectFit: "cover",
+                      height: "100px",
+                      width: "100px",
+                      overflow: "hidden",
+                      borderRadius: "10px",
+                      marginTop: "10px",
+                    }}
+                  >
+                    <img
+                      src={category.image}
+                      alt={category.title}
+                      style={{
+                        height: "100%",
+                        width: "100%",
+                      }}
+                    />
+                  </div>
+                  <Card.Body>
+                    <Card.Title as="h5" className="mb-0 smaller-text">
+                      {category.title}
+                    </Card.Title>
+                  </Card.Body>
+                </a>
+              )}
             </Card>
           </Col>
         ))}
