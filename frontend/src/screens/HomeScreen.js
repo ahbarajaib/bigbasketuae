@@ -1,9 +1,9 @@
 import React, { useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { Row, Col, Container } from "react-bootstrap";
-import Slider from "react-slick";
 import "slick-carousel/slick/slick.css";
 import "slick-carousel/slick/slick-theme.css";
+import Slider from "react-slick";
 import SpecialOffers from "../components/SpecialOffers";
 import Product from "../components/Product";
 import Loader from "../components/Loader";
