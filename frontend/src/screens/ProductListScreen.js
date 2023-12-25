@@ -177,8 +177,6 @@ const ProductListScreen = () => {
             </option>
           ))}
         </select>
-        {/* Render the CSV download button */}
-        <button className="mx-auto">{handleDownloadReports()}</button>
       </div>
     );
   };
@@ -188,6 +186,9 @@ const ProductListScreen = () => {
       <Row className="align-items-center">
         <Col>
           <h1>Products</h1>
+        </Col>
+        <Col className="d-flex justify-content-start">
+          <button style={{ color: "white" }}>{handleDownloadReports()}</button>
         </Col>
         <Col className="d-flex justify-content-end">
           <Button className="my-3" onClick={createProductHandler}>
