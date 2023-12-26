@@ -8,8 +8,7 @@ import Loader from "../components/Loader";
 import { getOrderDetails, deliverOrder } from "../actions/orderActions";
 import { faPrint } from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import PrintableOrderDetails from "./PrintableOrderDetails";
-
+import logo from "../images/logo_only.png";
 import {
   ORDER_PAY_RESET,
   ORDER_DELIVER_RESET,
@@ -87,11 +86,20 @@ const OrderScreen = (history) => {
     printWindow.document.write(`
       <html>
         <head>
-          <title>Print Order</title>
+        
+          <title>&nbsp;</title>
           <style>
+          
             body {
               font-family: 'Arial', sans-serif;
             }
+            #logo {
+              max-width: 50px;
+              height: auto;
+              float: right;
+              margin-right: 20px; /* Adjust the margin as needed */
+            }
+          
             /* Additional print styles */
             .shipping-details,
             .payment-method,
@@ -107,6 +115,12 @@ const OrderScreen = (history) => {
             }
             .shipping-details p {
               margin: 5px 0;
+            }
+            .shipping-details a {
+              color: black !important;
+            }
+            .order-items a {
+              color: black !important;
             }
             .order-items table,
             .order-summary table {
@@ -125,12 +139,37 @@ const OrderScreen = (history) => {
             .order-summary strong {
               font-weight: bold;
             }
+            .right-side{
+              text-align: left;
+              
+            }
+            h1{
+              text-align: center;
+            }
+            .right-side p {
+              margin: 5px; /* Reset margin for <p> elements */
+              padding: 0; /* Reset padding for <p> elements */
+            }
+          
             /* Add more styles as needed */
           </style>
         </head>
         <body>
+        <div class="right-side">
+          <img id="logo" src=${logo} alt="logo" />
+            <p>Big Basket UAE</p>
+            <p><strong>SHAHI KOHINOOR FOODSTUFF TRADING LLC</strong></p>
+            <p>Bur Dubai, Meena Bazaar Plaza, Dubai, UAE </p>
+            <p>Phone: <strong>+971 522512453</strong></p>
+            <p>TRN No: <strong>104142142900003</strong></p>
+            
+            </div>
+            <br />
+            
           <div class="shipping-details">
+          <h1>TAX INVOICE</h1>
             <h2>Shipping</h2>
+            <p>Order No: <strong>${order._id}</strong></p>
             <p><strong>Name:</strong> ${order.user.name}</p>
             <p><strong>Email:</strong> <a href="mailto:${
               order.user.email

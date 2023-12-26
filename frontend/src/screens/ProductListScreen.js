@@ -78,13 +78,11 @@ const ProductListScreen = () => {
   const formatDataForCSV = (products) => {
     return products.map((product) => {
       const formattedProduct = {
-        ID: product._id,
         Name: product.name,
         Stock: product.countInStock,
         Category: product.category,
         Brand: product.brand,
 
-        Image: product.image,
         NoOfProducts: product.noOfProducts,
         CountInStock: product.countInStock,
       };
@@ -118,13 +116,11 @@ const ProductListScreen = () => {
 
     const formattedData = formatDataForCSV(filteredProducts);
     const headers = [
-      { label: "ID", key: "ID" },
       { label: "Name", key: "Name" },
       { label: "Stock", key: "Stock" },
       { label: "Category", key: "Category" },
       { label: "Brand", key: "Brand" },
 
-      { label: "Image", key: "Image" },
       { label: "NoOfProducts", key: "NoOfProducts" },
       { label: "CountInStock", key: "CountInStock" },
     ];

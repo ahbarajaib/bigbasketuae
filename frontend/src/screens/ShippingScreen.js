@@ -1,17 +1,16 @@
-import React, { useState } from "react";
+import React, { useState, useRef, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import { Form, Button, Spinner } from "react-bootstrap";
 import { useDispatch, useSelector } from "react-redux";
 import FormContainer from "../components/FormContainer";
 import CheckoutSteps from "../components/CheckoutSteps";
 import { saveShippingAddress } from "../actions/cartActions";
+import MapView from "../components/Map";
 
-//history props
-const ShippingScreen = (history) => {
+const ShippingScreen = () => {
   const defaultCity = "Dubai";
   const defaultCountry = "United Arab Emirates";
   const cart = useSelector((state) => state.cart);
-  //stored from localstorage
   const { shippingAddress } = cart;
   const [locationClicked, setLocationClicked] = useState(false);
   const [Lat, setLat] = useState(null);
@@ -21,19 +20,82 @@ const ShippingScreen = (history) => {
   const [city, setCity] = useState(defaultCity);
   const [country, setCountry] = useState(defaultCountry);
   const [loadingLocation, setLoadingLocation] = useState(false);
+
   const dispatch = useDispatch();
   const navigate = useNavigate();
+
+  const inputRef = useRef();
+  const inputStyle = {
+    boxShadow: "inset 0 0 10px #eee !important",
+    border: "2px solid #eee",
+    width: "456px",
+    height: "40px",
+    marginLeft: "16px",
+    borderRadius: "20px",
+    fontWeight: "300 !important",
+    outline: "none",
+    padding: "10px 20px",
+    marginBottom: "10px",
+  };
+  const [autoComplete, setAutoComplete] = useState(null);
+
+  useEffect(() => {
+    // Load Google Maps JavaScript API and initialize Autocomplete
+    const loadGoogleMaps = () => {
+      const script = document.createElement("script");
+      script.src = `https://maps.googleapis.com/maps/api/js?key=${process.env.REACT_APP_GOOGLE_MAP_API_KEY}&libraries=places`;
+      script.async = true;
+      script.onload = () => {
+        const newAutoComplete = new window.google.maps.places.Autocomplete(
+          inputRef.current
+        );
+        setAutoComplete(newAutoComplete);
+      };
+      document.head.appendChild(script);
+    };
+
+    if (!window.google) {
+      loadGoogleMaps();
+    } else {
+      const newAutoComplete = new window.google.maps.places.Autocomplete(
+        inputRef.current
+      );
+      setAutoComplete(newAutoComplete);
+    }
+  }, []);
+
+  useEffect(() => {
+    if (autoComplete) {
+      autoComplete.setOptions({
+        types: ["geocode", "establishment"], // Add more specific place types if necessary
+        componentRestrictions: { country: "AE" },
+      });
+
+      autoComplete.addListener("place_changed", () => {
+        const place = autoComplete.getPlace();
+        if (!place.geometry || !place.geometry.location) {
+          alert("This location is not available");
+        }
+        if (place.geometry.viewport || place.geometry.location) {
+          const formattedAddress = place.formatted_address;
+          setAddress(formattedAddress);
+          console.log(place.geometry.location);
+        }
+      });
+    }
+  }, [autoComplete]);
 
   const submitHandler = (e) => {
     e.preventDefault();
     dispatch(saveShippingAddress({ building, address, city, country }));
-    navigate("/selectpayment"); // Navigate to the SelectPayment page
+    navigate("/selectpayment");
   };
 
   const locationHandler = () => {
     setLoadingLocation(true);
 
     if (!navigator.geolocation) {
+      // Handle geolocation not supported
     } else {
       navigator.geolocation.getCurrentPosition(
         (position) => {
@@ -47,7 +109,7 @@ const ShippingScreen = (history) => {
                 `${data.address.road},${data.address.suburb},${data.address.town}`
               );
               setLocationClicked(true);
-              setLoadingLocation(false); // Set locationClicked to true when the location is clicked
+              setLoadingLocation(false);
             })
             .catch((error) => {
               console.error("Error fetching location:", error);
@@ -70,6 +132,15 @@ const ShippingScreen = (history) => {
       <FormContainer>
         <h1>Shipping</h1>
         <CheckoutSteps step1 step2 />
+        <div style={{ height: "400px", width: "100%" }}>
+          <label>Location</label>
+          <input
+            placeholder="type your location"
+            ref={inputRef}
+            style={inputStyle}
+          />
+          <MapView />
+        </div>
         <Form onSubmit={submitHandler}>
           <Button onClick={locationHandler} disabled={loadingLocation}>
             {loadingLocation ? (

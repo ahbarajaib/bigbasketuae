@@ -1,7 +1,9 @@
 import React from "react";
 import { Container, Row, Col } from "react-bootstrap";
 import { Link } from "react-router-dom";
-import visa from "../images/visa.png";
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import { faFacebook, faInstagram } from "@fortawesome/free-brands-svg-icons";
+
 const Footer = () => {
   return (
     <footer className="bg-dark py-5 text-light">
@@ -71,23 +73,27 @@ const Footer = () => {
             <h4>Follow Us</h4>
             <ul className="list-unstyled m-auto">
               <li>
-                <a href="/#" className="text-light">
+                <FontAwesomeIcon icon={faFacebook} />
+                &nbsp;
+                <a
+                  href="https://www.facebook.com/people/Bigbasketuaecom/61550970719817/?mibextid=LQQJ4d"
+                  className="text-light"
+                  target="_blank" // Add target="_blank" to open in a new tab
+                  rel="noopener noreferrer" // Add rel="noopener noreferrer" for security
+                >
                   Facebook
                 </a>
               </li>
               <li>
-                <a href="/#" className="text-light">
-                  Twitter
-                </a>
-              </li>
-              <li>
-                <a href="/#" className="text-light">
+                <FontAwesomeIcon icon={faInstagram} />
+                &nbsp;
+                <a
+                  href="https://www.instagram.com/bigbasketuaeonlinegrocery/?igsh=OWJtdnBpNTVlemI0&utm_source=qr"
+                  className="text-light"
+                  target="_blank" // Add target="_blank" to open in a new tab
+                  rel="noopener noreferrer" // Add rel="noopener noreferrer" for security
+                >
                   Instagram
-                </a>
-              </li>
-              <li>
-                <a href="/#" className="text-light">
-                  Pinterest
                 </a>
               </li>
             </ul>
