@@ -25,6 +25,24 @@ const OrderScreen = (history) => {
   const orderDetails = useSelector((state) => state.orderDetails);
   const { order, loading, error } = orderDetails;
 
+  const coordinates = order?.shippingAddress?.coordinates || {};
+  const { latitude: Lat, longitude: Lng } = coordinates;
+
+  // Add a check for order and shippingAddress
+  const shippingAddress = order?.shippingAddress || {};
+  const {
+    building,
+    address,
+    city,
+    country,
+    coordinates: shippingCoordinates,
+  } = shippingAddress;
+
+  // Now you can use building, address, city, country, Lat, and Lng safely
+
+  console.log(order?.shippingAddress);
+  // Now you can use building, address, city, country, Lat, and Lng safely
+
   const orderPay = useSelector((state) => state.orderPay);
   //loadingPay is just a rename because its used above
   const { loading: loadingPay, success: successPay } = orderPay;
@@ -259,6 +277,14 @@ const OrderScreen = (history) => {
     printWindow.print();
   };
 
+  const openGoogleMaps = () => {
+    if (order && order.shippingAddress && order.shippingAddress.coordinates) {
+      const { latitude, longitude } = order.shippingAddress.coordinates;
+      const mapsUrl = `https://www.google.com/maps/place/${latitude},${longitude}`;
+      window.open(mapsUrl, "_blank");
+    }
+  };
+
   return loading ? (
     <Loader />
   ) : error ? (
@@ -301,8 +327,20 @@ const OrderScreen = (history) => {
                 <strong>Address: </strong>
                 {order.shippingAddress.building},&nbsp;
                 {order.shippingAddress.address}, {order.shippingAddress.city},{" "}
-                {order.shippingAddress.country}
+                {order.shippingAddress.country},
               </p>
+              {/* New button to open Google Maps */}
+              {userInfo &&
+                userInfo.isAdmin &&
+                order.shippingAddress.coordinates && (
+                  <Button
+                    className="mb-3"
+                    onClick={openGoogleMaps}
+                    variant="outline-primary"
+                  >
+                    Open in Google Maps
+                  </Button>
+                )}
               {order.isDelivered ? (
                 <Message variant="success">
                   Delivered on {order.deliveredAt}{" "}
@@ -448,7 +486,8 @@ const OrderScreen = (history) => {
               </ListGroup.Item>
               {loadingDeliver && <Loader />}
               {/* Mark As Delivered button */}
-              {userInfo.isAdmin &&
+              {userInfo &&
+                userInfo.isAdmin && // Add a check for userInfo
                 ((order.isPaid && !order.isDelivered) ||
                   (!order.isPaid &&
                     (order.paymentMethod === "Cash on Delivery" ||

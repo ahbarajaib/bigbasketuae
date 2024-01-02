@@ -50,41 +50,6 @@ export const updateCartQuantity =
     );
   };
 
-// export const addToCart =
-//   (product, selectedQty, variant) => (dispatch, getState) => {
-//     const cartItem = {
-//       product: product._id,
-//       name: product.name,
-//       image: product.image,
-//       selectedQty,
-//       variant, // Pass the variant object
-//       countInStock: product.countInStock,
-//     };
-
-//     dispatch({
-//       type: CART_ADD_ITEM,
-//       payload: cartItem,
-//     });
-
-//     localStorage.setItem(
-//       "cartItems",
-//       JSON.stringify(getState().cart.cartItems)
-//     );
-//   };
-
-// export const updateCartQuantity =
-//   (productId, selectedQty, selectedNoOfProducts) => (dispatch, getState) => {
-//     dispatch({
-//       type: CART_UPDATE_ITEM,
-//       payload: { productId, selectedQty, selectedNoOfProducts },
-//     });
-
-//     localStorage.setItem(
-//       "cartItems",
-//       JSON.stringify(getState().cart.cartItems)
-//     );
-//   };
-
 export const removeFromCart = (cartItemId) => (dispatch, getState) => {
   dispatch({
     type: CART_REMOVE_ITEM,
@@ -95,12 +60,22 @@ export const removeFromCart = (cartItemId) => (dispatch, getState) => {
 };
 
 export const saveShippingAddress = (data) => (dispatch) => {
+  console.log("Data in saveShippingAddress:", data);
+  const formattedData = {
+    ...data,
+    coordinates: {
+      latitude: data.coordinates.latitude,
+      longitude: data.coordinates.longitude,
+    },
+  };
+  console.log("Formatted data:", formattedData);
+
   dispatch({
     type: CART_SAVE_SHIPPING_ADDRESS,
-    payload: data,
+    payload: formattedData,
   });
 
-  localStorage.setItem("shippingAddress", JSON.stringify(data));
+  localStorage.setItem("shippingAddress", JSON.stringify(formattedData));
 };
 
 export const savePaymentMethod = (data) => (dispatch) => {

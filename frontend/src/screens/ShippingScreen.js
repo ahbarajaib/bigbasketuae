@@ -79,7 +79,10 @@ const ShippingScreen = () => {
         if (place.geometry.viewport || place.geometry.location) {
           const formattedAddress = place.formatted_address;
           setAddress(formattedAddress);
-          console.log(place.geometry.location);
+          const latitude = place.geometry.location.lat();
+          const longitude = place.geometry.location.lng();
+          setLat(latitude);
+          setLng(longitude);
         }
       });
     }
@@ -87,8 +90,24 @@ const ShippingScreen = () => {
 
   const submitHandler = (e) => {
     e.preventDefault();
-    dispatch(saveShippingAddress({ building, address, city, country }));
-    navigate("/selectpayment");
+    if (Lat === null || Lng === null) {
+      alert("Please enter location on map or select current location");
+    } else {
+      console.log("Lat, Lng before dispatch:", Lat, Lng);
+      dispatch(
+        saveShippingAddress({
+          building,
+          address,
+          city,
+          country,
+          coordinates: {
+            latitude: Lat,
+            longitude: Lng,
+          },
+        })
+      );
+      navigate("/selectpayment");
+    }
   };
 
   const locationHandler = () => {
@@ -99,8 +118,11 @@ const ShippingScreen = () => {
     } else {
       navigator.geolocation.getCurrentPosition(
         (position) => {
+          console.log("Latitude: ", position.coords.latitude);
+          console.log("Longitude: ", position.coords.longitude);
           setLat(position.coords.latitude);
           setLng(position.coords.longitude);
+
           const url = `https://nominatim.openstreetmap.org/reverse?format=json&lat=${position.coords.latitude}&lon=${position.coords.longitude}`;
           fetch(url)
             .then((res) => res.json())

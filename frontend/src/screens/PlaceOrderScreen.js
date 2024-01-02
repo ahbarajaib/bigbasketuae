@@ -13,6 +13,8 @@ const PlaceOrderScreen = () => {
   const { paymentMethod } = location.state || {};
   const cart = useSelector((state) => state.cart);
   const { shippingAddress } = cart;
+
+  console.log("Shipping Address in PlaceOrderScreen:", shippingAddress);
   if (!shippingAddress) {
     navigate("/shipping");
   }
@@ -118,7 +120,13 @@ const PlaceOrderScreen = () => {
     dispatch(
       createOrder({
         orderItems,
-        shippingAddress: cart.shippingAddress,
+        shippingAddress: {
+          building: cart.shippingAddress.building,
+          address: cart.shippingAddress.address,
+          city: cart.shippingAddress.city,
+          country: cart.shippingAddress.country,
+          coordinates: cart.shippingAddress.coordinates, // Include coordinates here
+        },
         paymentMethod: paymentMethod, // Use the selected payment method
         itemsPrice: cart.items,
         shippingPrice: cart.shippingPrice,
