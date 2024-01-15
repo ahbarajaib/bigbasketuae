@@ -13,14 +13,14 @@ const ProductNav = () => {
   };
 
   return (
-    <div className="container">
+    <div>
       <Navbar
         bg="light"
         variant="light"
         expanded={expanded}
         expand="lg"
         className="bg-body-tertiary"
-        style={{ backgroundColor: "#fff" }}
+        style={{ backgroundColor: "#fff", padding: 0, margin: 0 }}
       >
         <Navbar.Toggle
           aria-controls="navbarScroll"

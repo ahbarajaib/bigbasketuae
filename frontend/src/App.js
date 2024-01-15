@@ -35,19 +35,23 @@ import TermsScreen from "./screens/TermsScreen";
 import ProductCategoryScreen from "./screens/ProductCategoryScreen";
 import ForgotPasswordScreen from "./screens/ForgotPasswordScreen";
 import ResetPasswordScreen from "./screens/ResetPasswordScreen";
-
+import ScrollToTop from "./components/ScrollToTop";
 import Payment from "./screens/Payment";
 import Completion from "./screens/Completion";
 import SelectPaymentScreen from "./screens/SelectPaymentScreen";
-
+const getMarginTop = () => {
+  const isMobile = window.innerWidth <= 767; // Adjust the breakpoint as needed
+  return isMobile ? "140px" : "100px";
+};
 function App() {
   return (
     <Router>
+      <ScrollToTop />
       <div className="bg-light">
         <Header />
-        <ProductNav />
+
         <main className="py-3">
-          <Container>
+          <Container style={{ marginTop: getMarginTop(), padding: 0 }}>
             {/* <HomeScreen /> */}
             {/* If a link has / with anything it will take this route so 'exact'*/}
             {/* 'component' has changed to 'element' in react-router-dom version 6*/}

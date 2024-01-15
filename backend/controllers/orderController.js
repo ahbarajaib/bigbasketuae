@@ -1,12 +1,11 @@
 import Order from "../models/orderModel.js";
+import nodemailer from "nodemailer";
+import config from "../config/config.js";
 
 //express-async-handler is a simple middleware for handling exceptions
 //inside of async express routes an passing them to your express error handlers
 import asyncHandler from "express-async-handler";
 
-//@desc Create new order
-//@route POST /api/orders
-//@access Private
 const addOrderItems = asyncHandler(async (req, res) => {
   const {
     orderItems,
@@ -21,10 +20,8 @@ const addOrderItems = asyncHandler(async (req, res) => {
   if (orderItems && orderItems.length === 0) {
     res.status(400);
     throw new Error("No order items");
-    return;
   } else {
     const order = new Order({
-      //we'll use token to get user ID as its a protected route
       user: req.user._id,
       orderItems,
       shippingAddress,
@@ -36,9 +33,70 @@ const addOrderItems = asyncHandler(async (req, res) => {
     });
 
     const createdOrder = await order.save();
+    // Pass the order object to confirmOrderEmail
+    confirmOrderEmail(req.user.email, createdOrder);
+    confirmOrderEmail2(config.emailUser, createdOrder);
+
+    // Send the response after calling confirmOrderEmail
     res.status(201).json(createdOrder);
   }
 });
+
+const confirmOrderEmail = async (email, order) => {
+  try {
+    const transporter = nodemailer.createTransport({
+      host: "smtpout.secureserver.net",
+      secure: true,
+      port: 465,
+      auth: {
+        user: config.emailUser,
+        pass: config.emailPassword,
+      },
+    });
+    const url = process.env.CLIENT_URL;
+    const mailOptions = {
+      from: config.emailUser,
+      to: email,
+      subject: "Order Confirmed - bigbasketuae.com",
+      html: `<p>Hello Sir/Madam,</p>
+      <p>Order successfully placed Order :<a href="${url}/orders/${order._id}">${order._id}</a></p>
+      <p>Your order will be delivered soon.</p>
+     <p> Thank you</p>`,
+    };
+
+    transporter.sendMail(mailOptions);
+  } catch (e) {
+    console.log("Failed to send email:");
+  }
+};
+
+const confirmOrderEmail2 = async (email, order) => {
+  try {
+    const transporter = nodemailer.createTransport({
+      host: "smtpout.secureserver.net",
+      secure: true,
+      port: 465,
+      auth: {
+        user: config.emailUser,
+        pass: config.emailPassword,
+      },
+    });
+    const url = process.env.CLIENT_URL;
+    const mailOptions = {
+      from: config.emailUser,
+      to: email,
+      subject: "New order placed - bigbasketuae.com",
+      html: `<p>Hello Sir/Madam,</p>
+      <p>A new order has been placed::<a href="${url}/orders/${order._id}">${order._id}</a></p>
+      <p>Confirmation email has been sent to the customer.</p>
+     <p> Thank you</p>`,
+    };
+
+    transporter.sendMail(mailOptions);
+  } catch (e) {
+    console.log("Failed to send email:");
+  }
+};
 
 // @desc    Get order by ID
 // @route   GET /api/orders/:id

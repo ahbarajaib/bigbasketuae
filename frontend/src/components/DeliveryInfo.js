@@ -12,7 +12,10 @@ const DeliveryInfo = () => {
   };
 
   return (
-    <div className="bg-light-green py-4 rounded d-none d-md-block">
+    <div
+      className="bg-light-green py-4 rounded d-none d-md-block"
+      style={{ marginTop: "120px" }}
+    >
       <div className="container">
         <div className="row text-center align-items-center">
           <div className="col-md-4" style={borderStyle}>

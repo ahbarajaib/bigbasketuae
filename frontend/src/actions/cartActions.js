@@ -60,7 +60,6 @@ export const removeFromCart = (cartItemId) => (dispatch, getState) => {
 };
 
 export const saveShippingAddress = (data) => (dispatch) => {
-  console.log("Data in saveShippingAddress:", data);
   const formattedData = {
     ...data,
     coordinates: {
@@ -68,7 +67,6 @@ export const saveShippingAddress = (data) => (dispatch) => {
       longitude: data.coordinates.longitude,
     },
   };
-  console.log("Formatted data:", formattedData);
 
   dispatch({
     type: CART_SAVE_SHIPPING_ADDRESS,

@@ -40,7 +40,6 @@ const OrderScreen = (history) => {
 
   // Now you can use building, address, city, country, Lat, and Lng safely
 
-  console.log(order?.shippingAddress);
   // Now you can use building, address, city, country, Lat, and Lng safely
 
   const orderPay = useSelector((state) => state.orderPay);
@@ -276,12 +275,45 @@ const OrderScreen = (history) => {
     printWindow.document.close();
     printWindow.print();
   };
-
   const openGoogleMaps = () => {
     if (order && order.shippingAddress && order.shippingAddress.coordinates) {
       const { latitude, longitude } = order.shippingAddress.coordinates;
+
+      // Create a Google Maps link
       const mapsUrl = `https://www.google.com/maps/place/${latitude},${longitude}`;
-      window.open(mapsUrl, "_blank");
+
+      if (
+        /Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(
+          navigator.userAgent
+        )
+      ) {
+        // If the user is on a mobile device, open a list of applications to share the link
+        if (navigator.share) {
+          navigator
+            .share({
+              title: "Check out the location on Google Maps",
+              text: "Location shared via Big Basket UAE",
+              url: mapsUrl,
+            })
+            .then(() => console.log("Successful share"))
+            .catch((error) => console.log("Error sharing:", error));
+        } else {
+          // If navigator.share is not supported, you can provide a fallback behavior
+          alert("Share this location:\n" + mapsUrl);
+        }
+      } else {
+        // If the user is on a desktop, provide the link that can be copied
+        navigator.clipboard
+          .writeText(mapsUrl)
+          .then(() => {
+            // Display a success message
+            alert("Location link copied to clipboard.");
+          })
+          .catch((error) => {
+            // Display an error message if copying to clipboard fails
+            console.error("Failed to copy location link to clipboard:", error);
+          });
+      }
     }
   };
 

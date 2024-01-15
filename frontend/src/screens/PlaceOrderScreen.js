@@ -14,7 +14,6 @@ const PlaceOrderScreen = () => {
   const cart = useSelector((state) => state.cart);
   const { shippingAddress } = cart;
 
-  console.log("Shipping Address in PlaceOrderScreen:", shippingAddress);
   if (!shippingAddress) {
     navigate("/shipping");
   }
@@ -104,6 +103,7 @@ const PlaceOrderScreen = () => {
       }
     }
   }, [success, navigate, order, paymentMethod]);
+
   const placeOrderHandler = () => {
     const orderItems = cart.cartItems.map((item) => ({
       name: item.name,

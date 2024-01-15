@@ -93,7 +93,6 @@ const ShippingScreen = () => {
     if (Lat === null || Lng === null) {
       alert("Please enter location on map or select current location");
     } else {
-      console.log("Lat, Lng before dispatch:", Lat, Lng);
       dispatch(
         saveShippingAddress({
           building,
@@ -118,8 +117,6 @@ const ShippingScreen = () => {
     } else {
       navigator.geolocation.getCurrentPosition(
         (position) => {
-          console.log("Latitude: ", position.coords.latitude);
-          console.log("Longitude: ", position.coords.longitude);
           setLat(position.coords.latitude);
           setLng(position.coords.longitude);
 

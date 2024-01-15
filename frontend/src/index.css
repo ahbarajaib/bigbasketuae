@@ -74,7 +74,7 @@ header {
 /* Define styles for small screens */
 .small-logo {
   display: none;
-  max-width: 80px; /* Hide the small logo on small screens */
+  max-width: 40px; /* Hide the small logo on small screens */
 }
 
 /* Use a media query to adjust the display property for small screens */
@@ -468,4 +468,16 @@ button {
 .slick-next {
   right: 3% !important;
   z-index: 1;
+}
+
+.sticky {
+  position: fixed;
+  top: 0;
+  width: 100%;
+  z-index: 999;
+}
+
+.carousel-container {
+  margin-top: 120px; /* Adjust this margin to leave space for the header */
+  z-index: 500; /* Adjust the z-index value */
 }

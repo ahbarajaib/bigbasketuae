@@ -140,6 +140,14 @@ const ProductScreen = () => {
     }
   };
 
+  const [randomProducts, setRandomProducts] = useState([]);
+
+  useEffect(() => {
+    // Shuffle the products array randomly
+    const shuffledProducts = products.sort(() => Math.random() - 0.5);
+    setRandomProducts(shuffledProducts);
+  }, [products]);
+
   return (
     <>
       <button className="btn btn-light my-3" onClick={() => navigate(-1)}>
@@ -412,7 +420,7 @@ const ProductScreen = () => {
           ) : (
             <div style={{ overflowX: "auto" }}>
               <Row className="d-flex flex-nowrap">
-                {similarProducts.map((product) => (
+                {randomProducts.map((product) => (
                   <Col key={product._id} xs={6} sm={6} md={4} lg={3} xl={2}>
                     <Product product={product} category={product.category} />
                   </Col>

@@ -11,7 +11,7 @@ import Meta from "../components/Meta";
 import CarouselContainer from "../components/CarouselContainer";
 import { listProducts } from "../actions/productActions";
 import Categories from "../components/Categories";
-import { useLocation } from "react-router-dom";
+import { Link, useLocation } from "react-router-dom";
 import DeliveryInfo from "../components/DeliveryInfo";
 import CarouselContainerSmall from "../components/CarouselContainerSmall";
 
@@ -151,14 +151,16 @@ const HomeScreen = () => {
       },
     ],
   };
-
+  const getMarginTop = () => {
+    const isMobile = window.innerWidth <= 767; // Adjust the breakpoint as needed
+    return isMobile ? "140px" : "110px";
+  };
   return (
     <>
       <Meta />
-      <DeliveryInfo />
-      <CarouselContainer />
-      <SpecialOffers />
-      <Container fluid style={{ margin: 0, padding: 0 }}>
+      <Container fluid style={{ marginTop: getMarginTop(), padding: 0 }}>
+        <CarouselContainer />
+        <SpecialOffers />
         {!searchKeyword && (
           <div>
             <h1>Categories</h1>
@@ -183,11 +185,9 @@ const HomeScreen = () => {
         ) : (
           categories.map((category) => (
             <div key={category.id}>
-              <h1 className="text-center">{category.title}</h1>
-              <CarouselContainerSmall
-                key={category.name}
-                category={category.name}
-              />
+              <Link to={`/category/${category.name}`} key={category.name}>
+                <CarouselContainerSmall category={category.name} />
+              </Link>
               <Row className="d-flex flex-nowrap" style={{ overflowX: "auto" }}>
                 <Slider {...settings}>
                   {products &&
