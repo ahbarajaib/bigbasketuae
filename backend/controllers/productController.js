@@ -108,8 +108,16 @@ const createProduct = asyncHandler(async (req, res) => {
 //@route POUT /api/products/:id
 //@access Private/Admin
 const updateProduct = asyncHandler(async (req, res) => {
-  const { name, prices, description, image, brand, category, countInStock } =
-    req.body;
+  const {
+    name,
+    prices,
+    description,
+    image,
+    brand,
+    category,
+    countInStock,
+    frequentlyBought,
+  } = req.body;
   const product = await Product.findById(req.params.id);
   if (product) {
     product.name = name;
@@ -119,6 +127,7 @@ const updateProduct = asyncHandler(async (req, res) => {
     product.brand = brand;
     product.category = category;
     product.countInStock = countInStock;
+    product.frequentlyBought = frequentlyBought;
 
     // Log the values of discount and discountedPrice
 

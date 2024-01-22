@@ -65,7 +65,21 @@ const productSchema = mongoose.Schema(
       required: true,
       default: 0,
     },
+    frequentlyBought: [
+      {
+        productId: {
+          type: mongoose.Schema.Types.ObjectId,
+          ref: "Product",
+        },
+        variant: {
+          qty: Number,
+          units: String,
+          // Add other variant properties as needed
+        },
+      },
+    ],
   },
+
   {
     timestamps: true,
   }

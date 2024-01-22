@@ -9,6 +9,7 @@ import { listProductDetails } from "../actions/productActions";
 import { addToCart, removeFromCart } from "../actions/cartActions";
 import { categoryProducts } from "../actions/productActions";
 import Product from "../components/Product";
+import ReactMarkdown from "react-markdown";
 
 const ProductScreen = () => {
   const { id } = useParams();
@@ -400,7 +401,7 @@ const ProductScreen = () => {
             </Col>
             <Row>
               <Card.Text
-                as="p"
+                as="div"
                 className="mr-2"
                 style={{
                   marginTop: "2em",
@@ -408,7 +409,7 @@ const ProductScreen = () => {
                   marginRight: "1em",
                 }}
               >
-                {product.description}
+                <ReactMarkdown>{product.description}</ReactMarkdown>
               </Card.Text>
             </Row>
           </Row>

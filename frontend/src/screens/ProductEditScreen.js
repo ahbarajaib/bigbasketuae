@@ -8,6 +8,7 @@ import Loader from "../components/Loader";
 import FormContainer from "../components/FormContainer";
 import { listProductDetails, updateProduct } from "../actions/productActions";
 import { PRODUCT_UPDATE_RESET } from "../constants/productConstants";
+import Select from "react-select"; // Import the react-select library
 
 const ProductEditScreen = () => {
   const { id } = useParams();
@@ -25,6 +26,9 @@ const ProductEditScreen = () => {
 
   const productDetails = useSelector((state) => state.productDetails);
   const { loading, error, product } = productDetails;
+
+  const productList = useSelector((state) => state.productList);
+  const { loading: ListLoading, error: ListError, products } = productList;
 
   const productUpdate = useSelector((state) => state.productUpdate);
   const {
@@ -51,6 +55,50 @@ const ProductEditScreen = () => {
       }
     }
   }, [dispatch, navigate, id, product, successUpdate]);
+
+  //This is new
+
+  const [selectedProducts, setSelectedProducts] = useState([]);
+  const productOptions = products.flatMap((product) =>
+    product.prices.map((variant) => ({
+      label: `${product.name} ${variant.qty}${variant.units}`,
+      value: { id: product._id, name: product.name, variant },
+    }))
+  );
+
+  const handleProductSelect = (selectedOption) => {
+    console.log("selectedOption", selectedOption);
+
+    if (selectedOption && selectedOption.length > 0) {
+      const productInfo = selectedOption[0].value;
+
+      console.log("productInfo", productInfo);
+
+      setSelectedProducts((prevSelectedProducts) => {
+        const updatedProducts = [
+          ...prevSelectedProducts,
+          {
+            id: productInfo?.id,
+            name: productInfo?.name,
+            variant: {
+              qty: productInfo?.variant?.qty || 0,
+              units: productInfo?.variant?.units || "",
+              price: productInfo?.variant?.price || 0,
+              discountedPrice: productInfo?.variant?.discountedPrice || 0,
+              discount: productInfo?.variant?.discount || 0,
+            },
+          },
+        ];
+
+        console.log("updatedProducts", updatedProducts);
+
+        return updatedProducts;
+      });
+    }
+  };
+
+  //Above is new
+
   const axiosInstance = axios.create({
     baseURL: process.env.REACT_APP_API_URL,
   });
@@ -135,6 +183,7 @@ const ProductEditScreen = () => {
       discountedPrice: p.discountedPrice,
       discount: p.discount,
     }));
+    console.log("Selected Products:", selectedProducts); // Add this line
 
     dispatch(
       updateProduct({
@@ -146,6 +195,7 @@ const ProductEditScreen = () => {
         category,
         description,
         countInStock,
+        selectedProducts,
       })
     );
   };
@@ -327,6 +377,37 @@ const ProductEditScreen = () => {
                 onChange={(e) => setDescription(e.target.value)}
               ></Form.Control>
             </Form.Group>
+            <Form.Group controlId="autocomplete">
+              <Form.Label>Frequently Bought Together</Form.Label>
+              <Select
+                options={productOptions}
+                isMulti
+                onChange={(selectedOptions) =>
+                  handleProductSelect(selectedOptions)
+                }
+              />
+            </Form.Group>
+
+            <Row>
+              {selectedProducts &&
+                selectedProducts.map((selectedProduct, index) => (
+                  <Col key={index}>
+                    {/* Make sure this key is unique */}
+                    {selectedProduct && (
+                      <>
+                        <h5>{selectedProduct.name}</h5>
+                        {selectedProduct.variant && (
+                          <div>
+                            {selectedProduct.variant.qty}{" "}
+                            {selectedProduct.variant.units} - AED{" "}
+                            {selectedProduct.variant.price}
+                          </div>
+                        )}
+                      </>
+                    )}
+                  </Col>
+                ))}
+            </Row>
 
             <Button type="submit" variant="primary">
               Update
