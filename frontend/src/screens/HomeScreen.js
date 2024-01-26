@@ -20,6 +20,7 @@ import {
   faChevronRight,
   faChevronLeft,
 } from "@fortawesome/free-solid-svg-icons";
+import BrandProducts from "../components/BrandProducts";
 
 const HomeScreen = () => {
   const location = useLocation();
@@ -160,13 +161,18 @@ const HomeScreen = () => {
       <Meta />
       <Container fluid style={{ marginTop: getMarginTop(), padding: 0 }}>
         <CarouselContainer />
-        <SpecialOffers />
+
         {!searchKeyword && (
           <div>
             <h1>Categories</h1>
             <Row>
               <Col>
                 <Categories />
+                <SpecialOffers />
+                <div className="mb-4">
+                  {" "}
+                  <BrandProducts />
+                </div>
               </Col>
             </Row>
           </div>

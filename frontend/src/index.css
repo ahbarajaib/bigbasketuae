@@ -481,3 +481,7 @@ button {
   margin-top: 120px; /* Adjust this margin to leave space for the header */
   z-index: 500; /* Adjust the z-index value */
 }
+
+.rounded-image {
+  border-radius: 10px; /* Adjust this value to get the desired roundness */
+}

@@ -121,127 +121,122 @@ const Header = () => {
 
   return (
     <header style={{ position: "fixed", top: 0, width: "100%", zIndex: 999 }}>
-      <div className="container">
-        <Navbar bg="light" variant="light">
-          <Container>
-            <div className="d-flex justify-content-between align-items-center w-100">
-              <Link to="/">
-                <Navbar.Brand style={{ display: "flex", alignItems: "center" }}>
-                  <Image
-                    src={largeLogo}
-                    alt="BigBasket Logo"
-                    className="logo large-logo"
-                  />
-                  <Image
-                    src={smallLogo}
-                    alt="BigBasket Logo"
-                    className="logo small-logo"
-                  />
-                </Navbar.Brand>
-              </Link>
-              <a
-                href="https://wa.link/btn1kf"
-                target="_blank"
-                rel="noopener noreferrer"
-                className="whatsapp-link"
-              >
+      <Navbar bg="light" variant="light">
+        <Container>
+          <div className="d-flex justify-content-between align-items-center w-100">
+            <Link to="/">
+              <Navbar.Brand style={{ display: "flex", alignItems: "center" }}>
                 <Image
-                  src={whatsapp}
-                  alt="WhatsApp Logo"
-                  style={{ maxWidth: "48px" }}
+                  src={largeLogo}
+                  alt="BigBasket Logo"
+                  className="logo large-logo"
                 />
-              </a>
-              <Navbar.Toggle aria-controls="basic-navbar-nav" />
-              <Navbar.Collapse id="basic-navbar-nav">
-                <Nav className="mr-auto">
-                  <div className="d-flex align-items-center">
-                    <SearchBox />
-                  </div>
-                  {/* Add Location component here if needed */}
-                  {userInfo ? (
-                    <NavDropdown
-                      title={
-                        <>
-                          <div className="d-flex align-items-center">
-                            <FontAwesomeIcon icon={faUser} />
-                            &nbsp;
-                            <span className="d-none d-md-block">
-                              {userInfo.name.split(" ")[0]}
-                            </span>
-                          </div>
-                        </>
-                      }
-                      id="username"
-                    >
-                      <LinkContainer to="/profile">
-                        <NavDropdown.Item>Profile</NavDropdown.Item>
-                      </LinkContainer>
-                      <NavDropdown.Item onClick={logoutHandler}>
-                        Logout
-                      </NavDropdown.Item>
-                    </NavDropdown>
-                  ) : (
-                    <LinkContainer to="/login">
-                      <Nav.Link>
+                <Image
+                  src={smallLogo}
+                  alt="BigBasket Logo"
+                  className="logo small-logo"
+                />
+              </Navbar.Brand>
+            </Link>
+            <a
+              href="https://wa.link/btn1kf"
+              target="_blank"
+              rel="noopener noreferrer"
+              className="whatsapp-link"
+            >
+              <Image
+                src={whatsapp}
+                alt="WhatsApp Logo"
+                style={{ maxWidth: "48px" }}
+              />
+            </a>
+            <Navbar.Toggle aria-controls="basic-navbar-nav" />
+            <Navbar.Collapse id="basic-navbar-nav">
+              <Nav className="mr-auto">
+                <div className="d-flex align-items-center">
+                  <SearchBox />
+                </div>
+                {/* Add Location component here if needed */}
+                {userInfo ? (
+                  <NavDropdown
+                    title={
+                      <>
                         <div className="d-flex align-items-center">
                           <FontAwesomeIcon icon={faUser} />
                           &nbsp;
-                          <span className="d-none d-md-block">Sign In</span>
+                          <span className="d-none d-md-block">
+                            {userInfo.name.split(" ")[0]}
+                          </span>
                         </div>
-                      </Nav.Link>
+                      </>
+                    }
+                    id="username"
+                  >
+                    <LinkContainer to="/profile">
+                      <NavDropdown.Item>Profile</NavDropdown.Item>
                     </LinkContainer>
-                  )}
-
-                  {userInfo && userInfo.isAdmin && (
-                    <NavDropdown
-                      title={
-                        <>
-                          <div className="d-flex align-items-center">
-                            <FontAwesomeIcon icon={faToolbox} />
-                            &nbsp;
-                            <span className="d-none d-md-block">
-                              {" "}
-                              Admin Menu
-                            </span>
-                          </div>
-                        </>
-                      }
-                      id="adminmenu"
-                    >
-                      <LinkContainer to="/admin/userList">
-                        <NavDropdown.Item>Users</NavDropdown.Item>
-                      </LinkContainer>
-                      <LinkContainer to="/admin/productlist">
-                        <NavDropdown.Item>Products</NavDropdown.Item>
-                      </LinkContainer>
-                      <LinkContainer to="/admin/orderlist">
-                        <NavDropdown.Item>Orders</NavDropdown.Item>
-                      </LinkContainer>
-                      <LinkContainer to="/admin/banners">
-                        <NavDropdown.Item>Banners</NavDropdown.Item>
-                      </LinkContainer>
-                      <LinkContainer to="/admin/bannerssmall">
-                        <NavDropdown.Item>Small Banners</NavDropdown.Item>
-                      </LinkContainer>
-                    </NavDropdown>
-                  )}
-                  <LinkContainer to="/cart">
+                    <NavDropdown.Item onClick={logoutHandler}>
+                      Logout
+                    </NavDropdown.Item>
+                  </NavDropdown>
+                ) : (
+                  <LinkContainer to="/login">
                     <Nav.Link>
-                      <div className="cart">
-                        <FontAwesomeIcon icon={faShoppingCart} />
-                        {cartItems.length > 0 && (
-                          <sup className="badge">{cartItems.length}</sup>
-                        )}
+                      <div className="d-flex align-items-center">
+                        <FontAwesomeIcon icon={faUser} />
+                        &nbsp;
+                        <span className="d-none d-md-block">Sign In</span>
                       </div>
                     </Nav.Link>
                   </LinkContainer>
-                </Nav>
-              </Navbar.Collapse>
-            </div>
-          </Container>
-        </Navbar>
-        <ProductNav />
-      </div>
+                )}
+
+                {userInfo && userInfo.isAdmin && (
+                  <NavDropdown
+                    title={
+                      <>
+                        <div className="d-flex align-items-center">
+                          <FontAwesomeIcon icon={faToolbox} />
+                          &nbsp;
+                          <span className="d-none d-md-block"> Admin Menu</span>
+                        </div>
+                      </>
+                    }
+                    id="adminmenu"
+                  >
+                    <LinkContainer to="/admin/userList">
+                      <NavDropdown.Item>Users</NavDropdown.Item>
+                    </LinkContainer>
+                    <LinkContainer to="/admin/productlist">
+                      <NavDropdown.Item>Products</NavDropdown.Item>
+                    </LinkContainer>
+                    <LinkContainer to="/admin/orderlist">
+                      <NavDropdown.Item>Orders</NavDropdown.Item>
+                    </LinkContainer>
+                    <LinkContainer to="/admin/banners">
+                      <NavDropdown.Item>Banners</NavDropdown.Item>
+                    </LinkContainer>
+                    <LinkContainer to="/admin/bannerssmall">
+                      <NavDropdown.Item>Small Banners</NavDropdown.Item>
+                    </LinkContainer>
+                  </NavDropdown>
+                )}
+                <LinkContainer to="/cart">
+                  <Nav.Link>
+                    <div className="cart">
+                      <FontAwesomeIcon icon={faShoppingCart} />
+                      {cartItems.length > 0 && (
+                        <sup className="badge">{cartItems.length}</sup>
+                      )}
+                    </div>
+                  </Nav.Link>
+                </LinkContainer>
+              </Nav>
+            </Navbar.Collapse>
+          </div>
+        </Container>
+      </Navbar>
+      <ProductNav />
     </header>
   );
 };
