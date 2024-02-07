@@ -339,6 +339,7 @@ apt install certbot python3-certbot-nginx
 Make sure that Nginx Full rule is available
 ```
 ufw status
+sudo ufw allow 8800/tcp
 ```
 
 ```
