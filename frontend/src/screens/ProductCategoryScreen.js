@@ -30,7 +30,7 @@ const ProductCategoryScreen = () => {
       .join(" ");
   }
 
-  const { loading, error, products } = productCategory;
+  const { loading, error, products, page, pages } = productCategory;
   useEffect(() => {
     // Check if the category is 'all' and conditionally dispatch the action
     //all displays all the product related code is in getProductByCategory in productController

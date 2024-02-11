@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import React, { Suspense, useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { Row, Col, Container } from "react-bootstrap";
 import "slick-carousel/slick/slick.css";
@@ -167,8 +167,12 @@ const HomeScreen = () => {
             <h1>Categories</h1>
             <Row>
               <Col>
-                <Categories />
-                <SpecialOffers />
+                <Suspense fallback={<Loader />}>
+                  <Categories />
+                </Suspense>
+                <Suspense fallback={<div>Loading Special Offers...</div>}>
+                  <SpecialOffers />
+                </Suspense>
                 <div className="mb-4">
                   {" "}
                   <BrandProducts />
