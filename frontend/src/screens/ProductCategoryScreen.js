@@ -6,12 +6,16 @@ import Product from "../components/Product";
 import Message from "../components/Message";
 import Loader from "../components/Loader";
 import Meta from "../components/Meta";
+import SEO from "../components/SEO";
+import seoData from "../data/SEOData.json";
 import { categoryProducts } from "../actions/productActions";
 import CarouselContainer from "../components/CarouselContainer";
 
 const ProductCategoryScreen = () => {
   const dispatch = useDispatch();
   const { keyword, pageNumber = 1, category } = useParams();
+  const currentSeoData =
+    seoData.find((data) => data.slugUrl === category) || {};
 
   const productCategory = useSelector((state) => state.productCategory);
   function formatCategoryName(category) {
@@ -29,6 +33,9 @@ const ProductCategoryScreen = () => {
       })
       .join(" ");
   }
+  const formattedCategoryName = formatCategoryName(category);
+  const seoTitle = `${formattedCategoryName} | Big Basket UAE`;
+  const seoDescription = `Explore our wide range of products in ${formattedCategoryName}. Find everything you need in this category and enjoy great prices and quality.`;
 
   const { loading, error, products, page, pages } = productCategory;
   useEffect(() => {
@@ -43,7 +50,10 @@ const ProductCategoryScreen = () => {
 
   return (
     <>
-      <Meta />
+      <SEO
+        title={currentSeoData.titleTag}
+        description={currentSeoData.description}
+      />{" "}
       <div className="scrolling-container">
         <h3 className="category-text">{formatCategoryName(category)}</h3>
         <div className="scrolling-text">
@@ -53,7 +63,6 @@ const ProductCategoryScreen = () => {
           </span>
         </div>
       </div>
-
       <CarouselContainer category={category} />
       {loading ? (
         <Loader />

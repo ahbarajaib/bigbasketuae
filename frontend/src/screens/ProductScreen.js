@@ -9,6 +9,7 @@ import { listProductDetails } from "../actions/productActions";
 import { addToCart, removeFromCart } from "../actions/cartActions";
 import { categoryProducts } from "../actions/productActions";
 import Product from "../components/Product";
+import SEO from "../components/SEO";
 import ReactMarkdown from "react-markdown";
 
 const ProductScreen = () => {
@@ -160,7 +161,12 @@ const ProductScreen = () => {
         <Message variant="danger">{error}</Message>
       ) : (
         <>
-          <Meta title={product.name} />
+          <SEO
+            title={`${product.name} | Big Basket UAE`}
+            description={
+              product.description ? product.description.substring(0, 150) : ""
+            } // Limit description to 150 characters or any suitable length
+          />
           <Row>
             <Col
               md={6}
