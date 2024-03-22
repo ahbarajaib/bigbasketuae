@@ -24,6 +24,7 @@ import SmallBannerUploadScreen from "./screens/SmallBannerUploadScreen";
 import UserEditScreen from "./screens/UserEditScreen";
 import ProductListScreen from "./screens/ProductListScreen";
 import ProductEditScreen from "./screens/ProductEditScreen";
+import CategoryListScreen from "./screens/CategoryListScreen";
 import OrderListScreen from "./screens/OrderListScreen";
 import CodSuccessScreen from "./screens/CodSuccessScreen";
 import ContactUsScreen from "./screens/ContactUsScreen";
@@ -39,6 +40,7 @@ import ScrollToTop from "./components/ScrollToTop";
 import Payment from "./screens/Payment";
 import Completion from "./screens/Completion";
 import SelectPaymentScreen from "./screens/SelectPaymentScreen";
+import CategoryEditScreen from "./screens/CategoryEditScreen";
 const getMarginTop = () => {
   const isMobile = window.innerWidth <= 767; // Adjust the breakpoint as needed
   return isMobile ? "140px" : "100px";
@@ -91,6 +93,20 @@ function App() {
               <Route path="/admin/user/:id/edit" element={<UserEditScreen />} />
               <Route path="/admin/orderlist" element={<OrderListScreen />} />
               <Route path="/admin/banners" element={<BannerUploadScreen />} />
+              <Route
+                path="/admin/categories"
+                element={<CategoryListScreen />}
+              />
+              <Route
+                path="/admin/categories"
+                element={<CategoryListScreen />}
+                exact
+              />
+
+              <Route
+                path="/admin/categories/:id/edit"
+                element={<CategoryEditScreen />}
+              />
               <Route
                 path="/admin/bannerssmall"
                 element={<SmallBannerUploadScreen />}

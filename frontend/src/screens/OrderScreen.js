@@ -24,19 +24,11 @@ const OrderScreen = (history) => {
 
   const orderDetails = useSelector((state) => state.orderDetails);
   const { order, loading, error } = orderDetails;
-
   const coordinates = order?.shippingAddress?.coordinates || {};
   const { latitude: Lat, longitude: Lng } = coordinates;
 
   // Add a check for order and shippingAddress
   const shippingAddress = order?.shippingAddress || {};
-  const {
-    building,
-    address,
-    city,
-    country,
-    coordinates: shippingCoordinates,
-  } = shippingAddress;
 
   // Now you can use building, address, city, country, Lat, and Lng safely
 
@@ -64,9 +56,10 @@ const OrderScreen = (history) => {
       ))
     );
     order.shippingPrice = addDecimals(order.shippingPrice);
-    order.taxPrice = addDecimals(order.taxPrice);
     order.totalPrice = addDecimals(order.totalPrice);
+    order.discountAmount = addDecimals(order.discountAmount);
   }
+
   useEffect(() => {
     if (!userInfo) {
       navigate("/login");
@@ -184,7 +177,7 @@ const OrderScreen = (history) => {
             <br />
             
           <div class="shipping-details">
-          <h1>TAX INVOICE</h1>
+          <h1>INVOICE</h1>
             <h2>Shipping</h2>
             <p>Order No: <strong>${order._id}</strong></p>
             <p><strong>Name:</strong> ${order.user.name}</p>
@@ -247,6 +240,10 @@ const OrderScreen = (history) => {
               <td>AED ${order.itemsPrice}</td>
             </tr>
             <tr>
+              <td>Discount</td>
+              <td>- AED ${order.discountAmount} OFF</td>
+            </tr>
+            <tr>
               <td>Shipping</td>
               <td>
                 ${
@@ -258,10 +255,7 @@ const OrderScreen = (history) => {
                 }
               </td>
             </tr>
-            <tr>
-              <td>VAT</td>
-              <td>AED ${order.taxPrice}</td>
-            </tr>
+          
             <tr>
               <td>Total</td>
               <td><strong>AED ${order.totalPrice}</strong></td>
@@ -465,6 +459,12 @@ const OrderScreen = (history) => {
               </ListGroup.Item>
               <ListGroup.Item>
                 <Row>
+                  <Col>Discount</Col>
+                  <Col>- AED {order.discountAmount} OFF</Col>
+                </Row>
+              </ListGroup.Item>
+              <ListGroup.Item>
+                <Row>
                   <Col>Shipping</Col>
                   <Col>
                     {order && order.shippingPrice ? (
@@ -482,12 +482,7 @@ const OrderScreen = (history) => {
                   </Col>
                 </Row>
               </ListGroup.Item>
-              <ListGroup.Item>
-                <Row>
-                  <Col>VAT</Col>
-                  <Col>AED {order.taxPrice}</Col>
-                </Row>
-              </ListGroup.Item>
+
               <ListGroup.Item>
                 <Row>
                   <Col>Total</Col>

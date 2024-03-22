@@ -15,6 +15,7 @@ import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faEdit, faTrash, faPlus } from "@fortawesome/free-solid-svg-icons";
 import { PRODUCT_CREATE_RESET } from "../constants/productConstants";
 import { CSVLink } from "react-csv";
+import { listCategories } from "../actions/categoryActions";
 
 const ProductListScreen = () => {
   const { pageNumber = 1 } = useParams();
@@ -40,6 +41,13 @@ const ProductListScreen = () => {
 
   const userLogin = useSelector((state) => state.userLogin);
   const { userInfo } = userLogin;
+
+  const categoryList = useSelector((state) => state.categoryList);
+  const { loading: loadingList, error: errorList, categories } = categoryList;
+
+  useEffect(() => {
+    dispatch(listCategories());
+  }, [dispatch]);
 
   const [selectedCategory, setSelectedCategory] = useState("All");
 
@@ -74,6 +82,7 @@ const ProductListScreen = () => {
   const createProductHandler = () => {
     dispatch(createProduct());
   };
+
   const formatDataForCSV = (products) => {
     return products.map((product) => {
       const formattedProduct = {
@@ -153,10 +162,10 @@ const ProductListScreen = () => {
   };
 
   const renderCategoryDropdown = () => {
-    const categories = [
-      ...new Set(products.map((product) => product.category)),
-    ];
-    categories.unshift("All");
+    // Construct an array of category options for the dropdown, including an "All" option.
+    const categoryOptions = loadingList
+      ? [{ name: "All", title: "All" }]
+      : [{ name: "All", title: "All" }, ...categories];
 
     return (
       <div>
@@ -166,9 +175,9 @@ const ProductListScreen = () => {
           value={selectedCategory}
           onChange={(e) => setSelectedCategory(e.target.value)}
         >
-          {categories.map((category) => (
-            <option key={category} value={category}>
-              {category}
+          {categoryOptions.map((category, index) => (
+            <option key={index} value={category.name}>
+              {category.title}
             </option>
           ))}
         </select>
@@ -188,7 +197,7 @@ const ProductListScreen = () => {
         <Col className="d-flex justify-content-end">
           <Button className="my-3" onClick={createProductHandler}>
             <FontAwesomeIcon icon={faPlus} />
-            Create a Product
+            &nbsp;Create a Product
           </Button>
         </Col>
       </Row>

@@ -275,36 +275,10 @@ const Product = ({ product }) => {
             </Button>
           )}
         </div>
-        {/* {cartItem && cartItem.id === cartItemId ? (
-          // If a cart item with the same cartItemId exists, display +/- buttons
-          <div className="d-flex justify-content-around mt-1">
-            <Button
-              onClick={handleDecreaseQty}
-              className="qty-button"
-              variant="primary"
-            >
-              -
-            </Button>
-            <div className="qty-number">{selectedNoOfProducts}</div>
-            <Button
-              onClick={handleIncreaseQty}
-              className="qty-button"
-              variant="primary"
-            >
-              +
-            </Button>
-          </div>
-        ) : (
-          // If the item is not in the cart, display the "Add to Cart" button
-          <Button
-            onClick={addToCartHandler}
-            className="button-primary mt-1 small-button"
-            variant="primary"
-          >
-            Add to Cart
-          </Button>
-        )} */}
       </Card.Body>
+      <Card.Footer className="border-0 m-0 p-0">
+        <small className="text-muted p-1">Incl. of VAT</small>
+      </Card.Footer>
     </Card>
   );
 };

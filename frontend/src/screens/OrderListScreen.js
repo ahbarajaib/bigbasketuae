@@ -6,13 +6,14 @@ import { useDispatch, useSelector } from "react-redux";
 import Message from "../components/Message";
 import Loader from "../components/Loader";
 import { listOrders } from "../actions/orderActions";
+import Paginate from "../components/Paginate";
 
 const OrderListScreen = () => {
   const navigate = useNavigate();
   const dispatch = useDispatch();
 
   const orderList = useSelector((state) => state.orderList);
-  const { loading, error, orders } = orderList;
+  const { loading, error, orders, page, pages } = orderList;
 
   const [selectedPaymentFilter, setSelectedPaymentFilter] = useState("All");
   const [selectedDeliveryFilter, setSelectedDeliveryFilter] = useState("All");
@@ -210,6 +211,7 @@ const OrderListScreen = () => {
           </tbody>
         </Table>
       )}
+      <Paginate pages={pages} page={page} isAdmin={true} />
     </>
   );
 };

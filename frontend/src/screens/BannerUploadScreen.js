@@ -10,6 +10,7 @@ import {
   deleteBanner,
 } from "../actions/bannerActions";
 import axios from "axios";
+import { listCategories } from "../actions/categoryActions";
 
 const BannerUploadScreen = () => {
   const dispatch = useDispatch();
@@ -24,6 +25,13 @@ const BannerUploadScreen = () => {
   const [image, setImage] = useState("");
   const [uploading, setUploading] = useState(false);
   const fileInputRef = useRef(null); // Step 1: Create a ref for the file input
+
+  const categoryList = useSelector((state) => state.categoryList);
+  const { loading: loadingList, error: errorList, categories } = categoryList;
+
+  useEffect(() => {
+    dispatch(listCategories());
+  }, [dispatch]);
 
   const axiosInstance = axios.create({
     baseURL: process.env.REACT_APP_API_URL,
@@ -97,23 +105,11 @@ const BannerUploadScreen = () => {
             onChange={(e) => handleCategoryChange(e)}
           >
             <option value="">Select a category</option>
-            <option value="all">All</option>
-            <option value="spices-and-condiments">
-              SPICES &amp; CONDIMENTS
-            </option>
-            <option value="legumes">LEGUMES</option>
-            <option value="grains">GRAINS</option>
-            <option value="oils-and-ghees">OILS &amp; GHEES</option>
-            <option value="canned-and-jarred-goods">
-              CANNED &amp; JARRED GOODS
-            </option>
-            <option value="dryfruits-nuts-and-chocolates">
-              DRYFRUITS, NUTS &amp; CHOCOLATES
-            </option>
-            <option value="dairy-and-eggs">DAIRY &amp; EGGS</option>
-            <option value="bakery-and-snacks">BAKERY &amp; SNACKS</option>
-            <option value="beverages">BEVERAGES</option>
-            <option value="wholesale">WHOLESALE</option>
+            {categories.map((categoryItem) => (
+              <option key={categoryItem.name} value={categoryItem.name}>
+                {categoryItem.title}
+              </option>
+            ))}
           </Form.Select>
 
           <Form.Group controlId="image" className="mb-2">

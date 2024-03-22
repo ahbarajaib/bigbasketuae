@@ -54,6 +54,10 @@ const PlaceOrderScreen = () => {
     }, 0)
   );
 
+  cart.discountAmount = addDecimals(
+    cart.itemsPrice - cart.discountedItemsPrice
+  );
+
   // Calculate the shipping price based on cart.itemsPrice and cart.discountedItemsPrice
   const smallerPrice = Math.min(cart.itemsPrice, cart.discountedItemsPrice);
 
@@ -83,10 +87,7 @@ const PlaceOrderScreen = () => {
 
   // cart.shippingPrice = addDecimals(smallerPrice > 80 ? 0 : 10);
 
-  cart.taxPrice = addDecimals(Number((0.05 * smallerPrice).toFixed(2)));
-
-  cart.totalPrice =
-    Number(smallerPrice) + Number(cart.shippingPrice) + Number(cart.taxPrice);
+  cart.totalPrice = Number(smallerPrice) + Number(cart.shippingPrice);
   cart.paymentMethod = paymentMethod;
   const orderCreate = useSelector((state) => state.orderCreate);
   const { order, success, error } = orderCreate;
@@ -129,8 +130,8 @@ const PlaceOrderScreen = () => {
         },
         paymentMethod: paymentMethod, // Use the selected payment method
         itemsPrice: cart.items,
+        discountAmount: cart.discountAmount,
         shippingPrice: cart.shippingPrice,
-        taxPrice: cart.taxPrice,
         totalPrice: cart.totalPrice,
       })
     );
@@ -254,6 +255,15 @@ const PlaceOrderScreen = () => {
                   <Col>AED {smallerPrice}</Col>
                 </Row>
               </ListGroup.Item>
+              {cart.discountAmount > 0 && (
+                <ListGroup.Item>
+                  <Row>
+                    <Col>Discount</Col>
+                    <Col>- AED {cart.discountAmount} OFF</Col>
+                  </Row>
+                </ListGroup.Item>
+              )}
+
               <ListGroup.Item>
                 <Row>
                   <Col>Shipping</Col>
@@ -268,12 +278,7 @@ const PlaceOrderScreen = () => {
                   </Col>
                 </Row>
               </ListGroup.Item>
-              <ListGroup.Item>
-                <Row>
-                  <Col>Tax</Col>
-                  <Col>AED {cart.taxPrice}</Col>
-                </Row>
-              </ListGroup.Item>
+
               <ListGroup.Item>
                 <Row>
                   <Col>Total</Col>

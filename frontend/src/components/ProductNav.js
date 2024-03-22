@@ -31,7 +31,7 @@ const ProductNav = () => {
           <Nav className="justify-content-start">
             <Link to="/category/all" className="nav-link smaller-text">
               <FontAwesomeIcon icon={faBars} className="burger-icon" />
-              &nbsp;&nbsp;All Categories
+              &nbsp;&nbsp;All Categoriesss
             </Link>
             <Link
               to="/category/spices-and-condiments"

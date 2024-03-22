@@ -21,6 +21,7 @@ import {
   faChevronLeft,
 } from "@fortawesome/free-solid-svg-icons";
 import BrandProducts from "../components/BrandProducts";
+import { listCategories } from "../actions/categoryActions";
 
 const HomeScreen = () => {
   const location = useLocation();
@@ -31,6 +32,13 @@ const HomeScreen = () => {
   // State of productList from the store
   const productList = useSelector((state) => state.productList);
   const { loading, error, products } = productList;
+
+  const categoryList = useSelector((state) => state.categoryList);
+  const {
+    loading: loadingList,
+    error: errorList,
+    categories: categories,
+  } = categoryList;
 
   const [currentSlide, setCurrentSlide] = useState(0);
 
@@ -44,58 +52,9 @@ const HomeScreen = () => {
     }
   }, [dispatch, searchKeyword]);
 
-  const categories = [
-    {
-      id: 1,
-      title: "Spices & Condiments",
-      name: "spices-and-condiments",
-    },
-    {
-      id: 2,
-      title: "Legumes",
-      name: "legumes",
-    },
-    {
-      id: 3,
-      title: "Grains",
-      name: "grains",
-    },
-    {
-      id: 4,
-      title: "Oils & Ghees",
-      name: "oils-and-ghees",
-    },
-    {
-      id: 5,
-      title: "Canned & Jarred Goods",
-      name: "canned-and-jarred-goods",
-    },
-    {
-      id: 6,
-      title: "Dryfruits, Nuts & Chocolates",
-      name: "dryfruits-nuts-and-chocolates",
-    },
-    {
-      id: 7,
-      title: "Dairy & Eggs",
-      name: "dairy-and-eggs",
-    },
-    {
-      id: 8,
-      title: "Bakery & Snacks",
-      name: "bakery-and-snacks",
-    },
-    {
-      id: 9,
-      title: "Beverages",
-      name: "beverages",
-    },
-    {
-      id: 10,
-      title: "Wholesale",
-      name: "wholesale",
-    },
-  ];
+  useEffect(() => {
+    dispatch(listCategories());
+  }, [dispatch]);
 
   // Update your CustomNextArrow and CustomPrevArrow components
   const CustomNextArrow = (props) => (

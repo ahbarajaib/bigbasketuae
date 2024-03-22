@@ -22,7 +22,7 @@ const BrandProducts = () => {
           </Link>
         </Col>
         <Col md={3} lg={3}>
-          <Link to={`/seaarch/mudhish`}>
+          <Link to={`/search/mudhish`}>
             <Card.Img src={brand3} className="rounded-image" />
           </Link>
         </Col>

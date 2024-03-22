@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useEffect } from "react";
 import { Card, Col } from "react-bootstrap";
 import spices from "../images/spices.jpeg";
 import legumes from "../images/legumes.jpeg";
@@ -12,82 +12,18 @@ import bakery from "../images/bakery.jpeg";
 import wholesale from "../images/wholesale.jpeg";
 import fruits from "../images/fruits.jpeg";
 import meat from "../images/meat.jpeg";
+import { useDispatch, useSelector } from "react-redux";
+import { listCategories } from "../actions/categoryActions";
 
 const Categories = () => {
-  const categories = [
-    {
-      id: 1,
-      title: "Spices & Condiments",
-      name: "spices-and-condiments",
-      image: spices, // Replace this with the actual image path
-    },
-    {
-      id: 2,
-      title: "Legumes",
-      name: "legumes",
-      image: legumes, // Replace this with the actual image path
-    },
-    {
-      id: 3,
-      title: "Grains",
-      name: "grains",
-      image: grains, // Replace this with the actual image path
-    },
-    {
-      id: 4,
-      title: "Oils & Ghees",
-      name: "oils-and-ghees",
-      image: oil, // Replace this with the actual image path
-    },
-    {
-      id: 5,
-      title: "Canned & Jarred Goods",
-      name: "canned-and-jarred-goods",
-      image: canned, // Replace this with the actual image path
-    },
-    {
-      id: 6,
-      title: "Dryfruits, Nuts & Chocolates",
-      name: "dryfruits-nuts-and-chocolates",
-      image: dryfruit, // Replace this with the actual image path
-    },
-    {
-      id: 7,
-      title: "Dairy & Eggs",
-      name: "dairy-and-eggs",
-      image: dairy, // Replace this with the actual image path
-    },
-    {
-      id: 8,
-      title: "Bakery & Snacks",
-      name: "bakery-and-snacks",
-      image: bakery, // Replace this with the actual image path
-    },
-    {
-      id: 9,
-      title: "Beverages",
-      name: "beverages",
-      image: beverages, // Replace this with the actual image path
-    },
-    {
-      id: 10,
-      title: "Wholesale",
-      name: "wholesale",
-      image: wholesale, // Replace this with the actual image path
-    },
-    {
-      id: 11,
-      title: "Coming Soon",
-      name: "fruits-and-vegetables",
-      image: fruits,
-    },
-    {
-      id: 12,
-      title: "Coming Soon",
-      name: "meat-and-fish",
-      image: meat,
-    },
-  ];
+  const dispatch = useDispatch();
+
+  const categoryList = useSelector((state) => state.categoryList);
+  const { loading, error, categories } = categoryList;
+
+  useEffect(() => {
+    dispatch(listCategories());
+  }, [dispatch]);
 
   return (
     <div className="container mt-4">
@@ -95,26 +31,7 @@ const Categories = () => {
         {categories.map((category) => (
           <Col key={category.id} xs={4} sm={3} md={3} lg={2} className="mb-2">
             <Card className="my-3 border-0 text-center">
-              {category.name === "fruits-and-vegetables" ||
-              category.name === "meat-and-fish" ? (
-                <div className="rounded-square mx-auto square-category">
-                  <img
-                    src={category.image}
-                    alt={category.title}
-                    style={{
-                      height: "100px", // Adjust the height for "Coming Soon" categories
-                      width: "100px",
-                      borderRadius: "10px",
-                      marginTop: "10px",
-                    }}
-                  />
-                  <Card.Body>
-                    <Card.Title as="h5" className="mb-0 smaller-text">
-                      {category.title}
-                    </Card.Title>
-                  </Card.Body>
-                </div>
-              ) : (
+              {
                 <a
                   href={`/category/${category.name}`}
                   style={{ display: "block" }}
@@ -131,7 +48,7 @@ const Categories = () => {
                     }}
                   >
                     <img
-                      src={category.image}
+                      src={process.env.REACT_APP_API_URL + category.image}
                       alt={category.title}
                       style={{
                         height: "100%",
@@ -145,7 +62,7 @@ const Categories = () => {
                     </Card.Title>
                   </Card.Body>
                 </a>
-              )}
+              }
             </Card>
           </Col>
         ))}

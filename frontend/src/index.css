@@ -25,11 +25,24 @@ a:hover {
 
 /* To change the text color to #8cc63e */
 header {
-  color: #8cc63e;
+  background-image: linear-gradient(to right, #ffffff 0%, #8cc63e 100%);
+  color: black; /* Adjust text color as needed for readability */
+  /* Other styles for padding, display, etc., based on your design */
 }
 .navbar-light .navbar-brand,
 .navbar-light .navbar-nav .nav-link {
   color: #8cc63e;
+}
+
+.custom-dropdown-item:hover {
+  background-color: #8cc63e; /* Replace with your desired color */
+  color: #ffffff; /* Replace with your desired text color */
+}
+
+.nav-item .dropdown-menu .custom-dropdown-item.active,
+.nav-item .dropdown-menu .custom-dropdown-item:active {
+  background-color: #8cc63e; /* Replace with your desired color */
+  color: #ffffff; /* Replace with your desired text color */
 }
 
 /* To change the color of Product nav item and make it bold */
@@ -169,6 +182,16 @@ header {
   background-color: #8cc63e !important;
   border-color: #8cc63e !important;
   box-shadow: none !important;
+}
+
+.custom-nav-dropdown {
+  border: 1px solid #dee2e6; /* Example gray border, change color as needed */
+  border-radius: 0.25rem; /* Default Bootstrap border-radius */
+}
+
+/* To style the dropdown menu specifically */
+.custom-nav-dropdown .dropdown-menu {
+  border-radius: 0.25rem; /* Ensures the dropdown menu also has rounded corners */
 }
 
 .custom-navbar {
