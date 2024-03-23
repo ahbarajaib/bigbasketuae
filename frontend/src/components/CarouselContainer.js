@@ -3,11 +3,19 @@ import { useDispatch, useSelector } from "react-redux";
 import { viewBanner } from "../actions/bannerActions";
 import Loader from "./Loader";
 import { Carousel } from "react-bootstrap";
+import { listCategories } from "../actions/categoryActions";
 
 function CarouselContainer({ category }) {
   const dispatch = useDispatch();
   const bannerView = useSelector((state) => state.bannerView);
   const { loading, images, error } = bannerView;
+
+  const categoryList = useSelector((state) => state.categoryList);
+  const { categories } = categoryList;
+
+  useEffect(() => {
+    dispatch(listCategories());
+  }, [dispatch]);
 
   // Fetch images when the component mounts or when the category changes
   useEffect(() => {
@@ -26,7 +34,7 @@ function CarouselContainer({ category }) {
   if (error) {
     return <p>Error: {error}</p>;
   }
-
+  console.log(images);
   return (
     <Carousel slide interval={2000}>
       {images.map((image, index) => (

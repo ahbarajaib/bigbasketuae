@@ -10,6 +10,7 @@ import {
   deleteSmallBanner,
 } from "../actions/bannerActions";
 import axios from "axios";
+import { listCategories } from "../actions/categoryActions";
 
 const SmallBannerUploadScreen = () => {
   const dispatch = useDispatch();
@@ -20,6 +21,13 @@ const SmallBannerUploadScreen = () => {
   const smallBannerView = useSelector(
     (state) => state.smallBannerView.categories[category]
   );
+
+  const categoryList = useSelector((state) => state.categoryList);
+  const { categories } = categoryList;
+
+  useEffect(() => {
+    dispatch(listCategories());
+  }, [dispatch]);
 
   // Check if smallBannerView is defined
   const { loading, images, error } = smallBannerView || {};
@@ -107,23 +115,11 @@ const SmallBannerUploadScreen = () => {
             onChange={(e) => handleCategoryChange(e)}
           >
             <option value="">Select a category</option>
-
-            <option value="spices-and-condiments">
-              SPICES &amp; CONDIMENTS
-            </option>
-            <option value="legumes">LEGUMES</option>
-            <option value="grains">GRAINS</option>
-            <option value="oils-and-ghees">OILS &amp; GHEES</option>
-            <option value="canned-and-jarred-goods">
-              CANNED &amp; JARRED GOODS
-            </option>
-            <option value="dryfruits-nuts-and-chocolates">
-              DRYFRUITS, NUTS &amp; CHOCOLATES
-            </option>
-            <option value="dairy-and-eggs">DAIRY &amp; EGGS</option>
-            <option value="bakery-and-snacks">BAKERY &amp; SNACKS</option>
-            <option value="beverages">BEVERAGES</option>
-            <option value="wholesale">WHOLESALE</option>
+            {categories.map((categoryItem) => (
+              <option key={categoryItem.name} value={categoryItem.name}>
+                {categoryItem.title}
+              </option>
+            ))}
           </Form.Select>
 
           <Form.Group controlId="image" className="mb-2">

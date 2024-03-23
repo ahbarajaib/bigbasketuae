@@ -97,11 +97,11 @@ function App() {
                 path="/admin/categories"
                 element={<CategoryListScreen />}
               />
-              <Route
+              {/* <Route
                 path="/admin/categories"
                 element={<CategoryListScreen />}
                 exact
-              />
+              /> */}
 
               <Route
                 path="/admin/categories/:id/edit"
