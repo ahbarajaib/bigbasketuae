@@ -182,25 +182,26 @@ const Header = () => {
               className="custom-nav-dropdown m-0"
             >
               {" "}
-              {categories.map((category) => (
-                <LinkContainer
-                  key={category._id}
-                  to={`/category/${category.name}`}
-                >
-                  <NavDropdown.Item className="custom-dropdown-item">
-                    <img
-                      src={process.env.REACT_APP_API_URL + category.image}
-                      alt={category.title}
-                      style={{
-                        height: "48px%",
-                        width: "48px",
-                      }}
-                    />
-                    &nbsp;&nbsp;
-                    {category.title}
-                  </NavDropdown.Item>
-                </LinkContainer>
-              ))}
+              {categories &&
+                categories.map((category) => (
+                  <LinkContainer
+                    key={category._id}
+                    to={`/category/${category.name}`}
+                  >
+                    <NavDropdown.Item className="custom-dropdown-item">
+                      <img
+                        src={process.env.REACT_APP_API_URL + category.image}
+                        alt={category.title}
+                        style={{
+                          height: "48px%",
+                          width: "48px",
+                        }}
+                      />
+                      &nbsp;&nbsp;
+                      {category.title}
+                    </NavDropdown.Item>
+                  </LinkContainer>
+                ))}
             </NavDropdown>
             {/* Your other Nav items go here */}
           </Nav>

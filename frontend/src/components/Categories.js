@@ -20,52 +20,61 @@ const Categories = () => {
 
   const categoryList = useSelector((state) => state.categoryList);
   const { loading, error, categories } = categoryList;
-
   useEffect(() => {
     dispatch(listCategories());
   }, [dispatch]);
 
+  // Display a loading message or any other component when the data is being fetched
+  if (loading) return <div>Loading categories...</div>;
+
+  // Display an error message if there was an error fetching the categories
+  if (error) return <div>Error: {error}</div>;
+
   return (
     <div className="container mt-4">
       <div className="row justify-content-center">
-        {categories.map((category) => (
-          <Col key={category.id} xs={4} sm={3} md={3} lg={2} className="mb-2">
-            <Card className="my-3 border-0 text-center">
-              {
-                <a
-                  href={`/category/${category.name}`}
-                  style={{ display: "block" }}
-                >
-                  <div
-                    className="rounded-square mx-auto square-category"
-                    style={{
-                      objectFit: "cover",
-                      height: "100px",
-                      width: "100px",
-                      overflow: "hidden",
-                      borderRadius: "10px",
-                      marginTop: "10px",
-                    }}
+        {(categories || []).map(
+          (
+            category // Ensure categories is an array
+          ) => (
+            <Col key={category.id} xs={4} sm={3} md={3} lg={2} className="mb-2">
+              <Card className="my-3 border-0 text-center">
+                {
+                  <a
+                    href={`/category/${category.name}`}
+                    style={{ display: "block" }}
                   >
-                    <img
-                      src={process.env.REACT_APP_API_URL + category.image}
-                      alt={category.title}
+                    <div
+                      className="rounded-square mx-auto square-category"
                       style={{
-                        height: "100%",
-                        width: "100%",
+                        objectFit: "cover",
+                        height: "100px",
+                        width: "100px",
+                        overflow: "hidden",
+                        borderRadius: "10px",
+                        marginTop: "10px",
                       }}
-                    />
-                  </div>
-                  <Card.Body>
-                    <Card.Title as="h5" className="mb-0 smaller-text">
-                      {category.title}
-                    </Card.Title>
-                  </Card.Body>
-                </a>
-              }
-            </Card>
-          </Col>
-        ))}
+                    >
+                      <img
+                        src={process.env.REACT_APP_API_URL + category.image}
+                        alt={category.title}
+                        style={{
+                          height: "100%",
+                          width: "100%",
+                        }}
+                      />
+                    </div>
+                    <Card.Body>
+                      <Card.Title as="h5" className="mb-0 smaller-text">
+                        {category.title}
+                      </Card.Title>
+                    </Card.Body>
+                  </a>
+                }
+              </Card>
+            </Col>
+          )
+        )}
       </div>
       <style>
         {`
