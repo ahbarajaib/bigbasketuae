@@ -152,6 +152,7 @@ const HomeScreen = () => {
               ))}
           </Row>
         ) : (
+          categories &&
           categories.map((category) => (
             <div key={category.id}>
               <Link to={`/category/${category.name}`} key={category.name}>
