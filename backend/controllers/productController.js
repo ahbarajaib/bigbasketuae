@@ -1,5 +1,5 @@
 import Product from "../models/productModel.js";
-
+import Category from "../models/categoryModel.js";
 //express-async-handler is a simple middleware for handling exceptions
 //inside of async express routes an passing them to your express error handlers
 import asyncHandler from "express-async-handler";
@@ -8,9 +8,10 @@ import asyncHandler from "express-async-handler";
 //@route GET /api/products
 //@access Public
 const getProducts = asyncHandler(async (req, res) => {
-  const pageSize = "20";
+  const pageSize = 20; // Ensure this is a number
   const page = Number(req.query.pageNumber) || 1;
 
+  // Assuming the keyword search is for products, not categories
   const keyword = req.query.keyword
     ? {
         name: {
@@ -20,10 +21,19 @@ const getProducts = asyncHandler(async (req, res) => {
       }
     : {};
 
-  const category = req.query.category ? { category: req.query.category } : {};
+  let categoryFilter = {};
+  if (req.query.category) {
+    const category = await Category.findOne({ name: req.query.category });
+    if (category) {
+      categoryFilter = { category: category._id };
+    } else {
+      return res.status(404).json({ message: "Category not found" });
+    }
+  }
 
-  const count = await Product.countDocuments({ ...keyword, ...category });
-  const products = await Product.find({ ...keyword, ...category })
+  const count = await Product.countDocuments({ ...keyword, ...categoryFilter });
+  const products = await Product.find({ ...keyword, ...categoryFilter })
+    .populate("category", "title") // This populates the category field with the title from the Category model
     .limit(pageSize)
     .skip(pageSize * (page - 1));
 
@@ -104,9 +114,6 @@ const createProduct = asyncHandler(async (req, res) => {
   res.status(201).json(createdProduct);
 });
 
-//@desc Update a product
-//@route POUT /api/products/:id
-//@access Private/Admin
 const updateProduct = asyncHandler(async (req, res) => {
   const {
     name,
@@ -118,18 +125,25 @@ const updateProduct = asyncHandler(async (req, res) => {
     countInStock,
     frequentlyBought,
   } = req.body;
+
   const product = await Product.findById(req.params.id);
+
+  // Check if the category exists
+  const categoryExists = await Category.findById(category);
+  if (!categoryExists) {
+    res.status(400);
+    throw new Error("Category not found");
+  }
+
   if (product) {
     product.name = name;
     product.prices = prices;
     product.description = description;
     product.image = image;
     product.brand = brand;
-    product.category = category;
+    product.category = category; // Ensure this is an ObjectId referencing a Category
     product.countInStock = countInStock;
     product.frequentlyBought = frequentlyBought;
-
-    // Log the values of discount and discountedPrice
 
     const updatedProduct = await product.save();
     res.json(updatedProduct);

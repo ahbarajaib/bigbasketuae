@@ -1,53 +1,44 @@
 import mongoose from "mongoose";
-import dotenv from "dotenv";
-import colors from "colors";
-import users from "./data/users.js";
-import products from "./data/products.js";
-import User from "./models/userModel.js";
 import Product from "./models/productModel.js";
-import Order from "./models/orderModel.js";
-import connectDB from "./config/db.js";
+import Category from "./models/categoryModel.js";
 
-dotenv.config();
-connectDB();
+mongoose
+  .connect(
+    "mongodb+srv://admin123:admin123@bigbasketcluster.0jwd0t4.mongodb.net/bigbasket?retryWrites=true&w=majority",
+    {
+      useNewUrlParser: true,
+      useUnifiedTopology: true,
+    }
+  )
+  .then(() => console.log("MongoDB Connected"))
+  .catch((err) => console.log(err));
+async function updateProductCategories() {
+  const products = await Product.find(); // Fetch all products
 
-const importData = async () => {
-  try {
-    //below 3 lines bacause we want to delete all data before seeding
-    await Order.deleteMany();
-    await Product.deleteMany();
-    await User.deleteMany();
+  for (let product of products) {
+    if (typeof product.category === "undefined" || product.category === null) {
+      console.log(
+        `Skipping product ${product.name} as it has no defined category.`
+      );
+      continue; // Skip this iteration and proceed with the next product
+    }
 
-    const createdUsers = await User.insertMany(users);
-    //1st user in user.js is a admin user so [0]._id
-    const adminUser = createdUsers[0]._id;
+    const category = await Category.findOne({ name: product.category });
 
-    const sampleProducts = products.map((product) => {
-      return { ...product, user: adminUser };
-    });
-    await Product.insertMany(sampleProducts);
-
-    process.exit();
-  } catch (error) {
-    process.exit(1);
+    if (category) {
+      product.category = category._id;
+      await product.save();
+      console.log(
+        `Updated product ${product.name} with category ObjectId ${category._id} corresponding to ${category.name}`
+      );
+    } else {
+      console.log(
+        `Category not found for product ${product.name} with category name '${product.category}'`
+      );
+    }
   }
-};
 
-const destroyData = async () => {
-  try {
-    //below 3 lines bacause we want to delete all data before seeding
-    await Order.deleteMany();
-    await Product.deleteMany();
-    await User.deleteMany();
-
-    process.exit();
-  } catch (error) {
-    process.exit(1);
-  }
-};
-
-if (process.argv[2] === "-d") {
-  destroyData();
-} else {
-  importData();
+  console.log("Finished updating products.");
 }
+
+updateProductCategories().then(() => mongoose.disconnect());

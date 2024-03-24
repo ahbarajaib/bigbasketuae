@@ -9,6 +9,7 @@ import FormContainer from "../components/FormContainer";
 import { listProductDetails, updateProduct } from "../actions/productActions";
 import { PRODUCT_UPDATE_RESET } from "../constants/productConstants";
 import Select from "react-select"; // Import the react-select library
+import { listCategories } from "../actions/categoryActions";
 
 const ProductEditScreen = () => {
   const { id } = useParams();
@@ -30,6 +31,13 @@ const ProductEditScreen = () => {
   const productList = useSelector((state) => state.productList);
   const { loading: ListLoading, error: ListError, products } = productList;
 
+  const categoryList = useSelector((state) => state.categoryList);
+  const {
+    loading: loadingCategory,
+    error: errorCategory,
+    categories,
+  } = categoryList;
+
   const productUpdate = useSelector((state) => state.productUpdate);
   const {
     loading: loadingUpdate,
@@ -38,6 +46,7 @@ const ProductEditScreen = () => {
   } = productUpdate;
 
   useEffect(() => {
+    dispatch(listCategories());
     if (successUpdate) {
       dispatch({ type: PRODUCT_UPDATE_RESET });
       navigate("/admin/productlist");
@@ -48,7 +57,7 @@ const ProductEditScreen = () => {
         setName(product.name);
         setImage(product.image);
         setBrand(product.brand);
-        setCategory(product.category);
+        setCategory(product.category); // This will be an ObjectId
         setPrices(product.prices);
         setCountInStock(product.countInStock);
         setDescription(product.description);
@@ -200,6 +209,11 @@ const ProductEditScreen = () => {
     );
   };
 
+  const categoryOptions = categories.map((cat) => ({
+    value: cat._id, // Use _id as the value
+    label: cat.title, // Show title for the user to see
+  }));
+
   return (
     <>
       <Link to="/admin/productlist" className="btn btn-light my-3">
@@ -347,23 +361,11 @@ const ProductEditScreen = () => {
                 value={category}
                 onChange={(e) => setCategory(e.target.value)}
               >
-                <option value="">Select a category</option>
-                <option value="spices-and-condiments">
-                  SPICES &amp; CONDIMENTS
-                </option>
-                <option value="legumes">LEGUMES</option>
-                <option value="grains">GRAINS</option>
-                <option value="oils-and-ghees">OILS &amp; GHEES</option>
-                <option value="canned-and-jarred-goods">
-                  CANNED &amp; JARRED GOODS
-                </option>
-                <option value="dryfruits-nuts-and-chocolates">
-                  DRYFRUITS, NUTS &amp; CHOCOLATES
-                </option>
-                <option value="dairy-and-eggs">DAIRY &amp; EGGS</option>
-                <option value="bakery-and-snacks">BAKERY &amp; SNACKS</option>
-                <option value="beverages">BEVERAGES</option>
-                <option value="wholesale">WHOLESALE</option>
+                {categoryOptions.map((option) => (
+                  <option key={option.value} value={option.value}>
+                    {option.label}
+                  </option>
+                ))}
               </Form.Select>
             </Form.Group>
 

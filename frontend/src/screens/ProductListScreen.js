@@ -249,7 +249,11 @@ const ProductListScreen = () => {
                     >
                       {product.countInStock}
                     </td>
-                    <td>{product.category}</td>
+                    <td>
+                      {product.category
+                        ? product.category.title
+                        : "No Category"}
+                    </td>{" "}
                     <td>{product.brand}</td>
                     <td>
                       <LinkContainer to={`/admin/product/${product._id}/edit`}>
