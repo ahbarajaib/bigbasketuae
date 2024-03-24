@@ -25,6 +25,9 @@ const ProductListScreen = () => {
   const productList = useSelector((state) => state.productList);
   const { loading, error, products, page, pages } = productList;
   const productDelete = useSelector((state) => state.productDelete);
+
+  console.log(products);
+
   const {
     loading: loadingDelete,
     error: errorDelete,
@@ -115,7 +118,6 @@ const ProductListScreen = () => {
       return formattedProduct;
     });
   };
-
   const handleDownloadReports = () => {
     const filteredProducts = products.filter(
       (product) =>
