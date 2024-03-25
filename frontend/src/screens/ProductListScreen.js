@@ -24,10 +24,7 @@ const ProductListScreen = () => {
 
   const productList = useSelector((state) => state.productList);
   const { loading, error, products, page, pages } = productList;
-
   const productDelete = useSelector((state) => state.productDelete);
-
-  console.log(products);
 
   const {
     loading: loadingDelete,
@@ -259,11 +256,18 @@ const ProductListScreen = () => {
                     </td>{" "}
                     <td>{product.brand}</td>
                     <td>
-                      <LinkContainer to={`/admin/product/${product._id}/edit`}>
-                        <Button variant="light" className="btn-sm">
-                          <FontAwesomeIcon icon={faEdit} />
-                        </Button>
-                      </LinkContainer>
+                      <Button
+                        variant="light"
+                        className="btn-sm"
+                        onClick={() =>
+                          navigate(`/admin/product/${product._id}/edit`, {
+                            state: { pageNumber },
+                          })
+                        }
+                      >
+                        <FontAwesomeIcon icon={faEdit} /> Edit
+                      </Button>
+
                       <Button
                         variant="danger"
                         className="btn-sm"

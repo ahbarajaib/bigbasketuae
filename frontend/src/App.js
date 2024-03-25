@@ -7,7 +7,6 @@ import { BrowserRouter as Router, Route, Routes } from "react-router-dom";
 //import from react bootstrap
 import { Container } from "react-bootstrap";
 import Header from "./components/Header";
-import ProductNav from "./components/ProductNav";
 import Footer from "./components/Footer";
 import HomeScreen from "./screens/HomeScreen";
 import ProductScreen from "./screens/ProductScreen";

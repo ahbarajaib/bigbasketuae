@@ -10,15 +10,21 @@ import { listProductDetails, updateProduct } from "../actions/productActions";
 import { PRODUCT_UPDATE_RESET } from "../constants/productConstants";
 import Select from "react-select"; // Import the react-select library
 import { listCategories } from "../actions/categoryActions";
+import { useLocation } from "react-router-dom";
 
 const ProductEditScreen = () => {
   const { id } = useParams();
   const navigate = useNavigate();
+  const location = useLocation();
+  const { pageNumber } = location.state || {}; // Providing a fallback object
+
   const [name, setName] = useState("");
   const [image, setImage] = useState("");
   const [brand, setBrand] = useState("");
   const [category, setCategory] = useState("");
-  const [prices, setPrices] = useState([]);
+  const [prices, setPrices] = useState([
+    { qty: "", units: "gm", price: "", discount: "", discountedPrice: "" },
+  ]);
   const [countInStock, setCountInStock] = useState(0);
   const [description, setDescription] = useState("");
   const [uploading, setUploading] = useState(false);
@@ -49,7 +55,7 @@ const ProductEditScreen = () => {
     dispatch(listCategories());
     if (successUpdate) {
       dispatch({ type: PRODUCT_UPDATE_RESET });
-      navigate("/admin/productlist");
+      navigate(`/admin/productlist/${pageNumber}`);
     } else {
       if (!product.name || product._id !== id) {
         dispatch(listProductDetails(id));
@@ -75,6 +81,39 @@ const ProductEditScreen = () => {
     }))
   );
 
+  const handlePriceChange = (index, field, value) => {
+    setPrices((currentPrices) =>
+      currentPrices.map((price, idx) => {
+        if (idx === index) {
+          const updatedPrice = { ...price, [field]: value };
+
+          // Recalculate discountedPrice if the price or discount changes
+          if (field === "price" || field === "discount") {
+            const discountValue = field === "discount" ? value : price.discount;
+            const priceValue = field === "price" ? value : price.price;
+            updatedPrice.discountedPrice =
+              priceValue * ((100 - discountValue) / 100);
+          }
+
+          return updatedPrice;
+        }
+        return price;
+      })
+    );
+  };
+
+  const addPriceVariant = () => {
+    setPrices((currentPrices) => [
+      ...currentPrices,
+      { qty: "", units: "gm", price: "", discount: "", discountedPrice: "" },
+    ]);
+  };
+
+  const removePriceVariant = (index) => {
+    setPrices((currentPrices) =>
+      currentPrices.filter((_, idx) => idx !== index)
+    );
+  };
   const handleProductSelect = (selectedOption) => {
     console.log("selectedOption", selectedOption);
 
@@ -136,51 +175,6 @@ const ProductEditScreen = () => {
     }
   };
 
-  const handlePriceChange = (index, field, value) => {
-    const updatedPrices = [...prices];
-    const priceEntry = updatedPrices[index];
-
-    // Update the specific field in the price entry
-    priceEntry[field] = value;
-
-    // Calculate the discounted price based on price and discount
-    if (priceEntry.price && priceEntry.discount) {
-      const discountedPrice =
-        priceEntry.price * (1 - priceEntry.discount / 100);
-      priceEntry.discountedPrice = discountedPrice;
-    } else {
-      priceEntry.discountedPrice = 0; // Set a default value if price or discount is missing
-    }
-
-    // Update the state with the modified price entry
-    updatedPrices[index] = priceEntry;
-
-    setPrices(updatedPrices);
-  };
-
-  const handleUnitsChange = (index, field, value) => {
-    const updatedPrices = [...prices];
-    updatedPrices[index] = {
-      ...updatedPrices[index],
-      [field]: value,
-    };
-    setPrices(updatedPrices);
-  };
-
-  const handleQuantityChange = (quantity) => {
-    const updatedPrices = [];
-    for (let i = 0; i < quantity; i++) {
-      updatedPrices.push({
-        qty: 1,
-        units: "gm",
-        price: 1,
-        discountedPrice: 0,
-        discount: 0,
-      });
-    }
-    setPrices(updatedPrices);
-  };
-
   const submitHandler = (e) => {
     e.preventDefault();
 
@@ -239,29 +233,14 @@ const ProductEditScreen = () => {
               ></Form.Control>
             </Form.Group>
 
-            <Form.Group controlId="quantity">
-              <Form.Label>
-                No of product quantities Eg: 500gm, 1kg, 3kg
-              </Form.Label>
-              <Form.Select
-                value={prices.length}
-                onChange={(e) => handleQuantityChange(parseInt(e.target.value))}
-              >
-                <option value="1">1</option>
-                <option value="2">2</option>
-                <option value="3">3</option>
-                <option value="4">4</option>
-              </Form.Select>
-            </Form.Group>
-
             {prices.map((price, index) => (
-              <Row key={index}>
-                <Col xs={3} sm={3} md={3} lg={3}>
-                  <Form.Group controlId={`qty${index}`}>
-                    <Form.Label>Qty {index + 1}</Form.Label>
+              <Row key={index} className="mb-3">
+                <Col xs={2}>
+                  <Form.Group controlId={`qty-${index}`}>
+                    <Form.Label>Qty</Form.Label>
                     <Form.Control
                       type="number"
-                      placeholder="Enter qty"
+                      placeholder="Qty"
                       value={price.qty}
                       onChange={(e) =>
                         handlePriceChange(index, "qty", e.target.value)
@@ -269,14 +248,13 @@ const ProductEditScreen = () => {
                     />
                   </Form.Group>
                 </Col>
-                <Col xs={3} sm={3} md={3} lg={3}>
-                  <Form.Group controlId={`units${index}`}>
-                    <Form.Label>Gm/Ml/Kg/Ltr</Form.Label>
-
+                <Col xs={3}>
+                  <Form.Group controlId={`units-${index}`}>
+                    <Form.Label>Units</Form.Label>
                     <Form.Select
                       value={price.units}
                       onChange={(e) =>
-                        handleUnitsChange(index, "units", e.target.value)
+                        handlePriceChange(index, "units", e.target.value)
                       }
                     >
                       <option value="gm">gm</option>
@@ -289,9 +267,9 @@ const ProductEditScreen = () => {
                     </Form.Select>
                   </Form.Group>
                 </Col>
-                <Col xs={3} sm={3} md={3} lg={3}>
-                  <Form.Group controlId={`price${index}`}>
-                    <Form.Label>Price {index + 1}</Form.Label>
+                <Col xs={3}>
+                  <Form.Group controlId={`price-${index}`}>
+                    <Form.Label>Price</Form.Label>
                     <Form.Control
                       type="number"
                       placeholder="Enter price"
@@ -302,12 +280,12 @@ const ProductEditScreen = () => {
                     />
                   </Form.Group>
                 </Col>
-                <Col xs={3} sm={3} md={3} lg={3}>
-                  <Form.Group controlId={`discount${index}`}>
-                    <Form.Label>Discount {index + 1}</Form.Label>
+                <Col xs={3}>
+                  <Form.Group controlId={`discount-${index}`}>
+                    <Form.Label>Discount (%)</Form.Label>
                     <Form.Control
                       type="number"
-                      placeholder="%"
+                      placeholder="Discount"
                       value={price.discount}
                       onChange={(e) =>
                         handlePriceChange(index, "discount", e.target.value)
@@ -315,8 +293,19 @@ const ProductEditScreen = () => {
                     />
                   </Form.Group>
                 </Col>
+                <Col xs={1} className="align-self-end">
+                  <Button
+                    variant="danger"
+                    onClick={() => removePriceVariant(index)}
+                  >
+                    Remove
+                  </Button>
+                </Col>
               </Row>
             ))}
+            <Button onClick={addPriceVariant} className="mb-3">
+              Add Another Price Variant
+            </Button>
 
             <Form.Group controlId="image">
               <Form.Label>Image</Form.Label>

@@ -20,7 +20,6 @@ import SearchBox from "./SearchBox";
 import { logout } from "../actions/userActions";
 import whatsapp from "../images/whatsapp-logo.png";
 import { LinkContainer } from "react-router-bootstrap";
-import ProductNav from "./ProductNav";
 import { listCategories } from "../actions/categoryActions";
 
 const Header = () => {

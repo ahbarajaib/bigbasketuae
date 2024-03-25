@@ -8,7 +8,7 @@ import asyncHandler from "express-async-handler";
 //@route GET /api/products
 //@access Public
 const getProducts = asyncHandler(async (req, res) => {
-  const pageSize = 20; // Ensure this is a number
+  const pageSize = 25; // Ensure this is a number
   const page = Number(req.query.pageNumber) || 1;
 
   // Assuming the keyword search is for products, not categories
@@ -33,7 +33,7 @@ const getProducts = asyncHandler(async (req, res) => {
 
   const count = await Product.countDocuments({ ...keyword, ...categoryFilter });
   const products = await Product.find({ ...keyword, ...categoryFilter })
-    .populate("category", "title") // This populates the category field with the title from the Category model
+    .populate("category", "name title") // This populates the category field with the title from the Category model
     .limit(pageSize)
     .skip(pageSize * (page - 1));
 
@@ -95,21 +95,21 @@ const deleteProduct = asyncHandler(async (req, res) => {
 //@route POST /api/products/
 //@access Private/Admin
 const createProduct = asyncHandler(async (req, res) => {
+  const category = await Category.findOne({});
   const product = new Product({
     name: "Sample name",
     prices: [
       { qty: 1, units: "gm", price: 1, discountedPrice: 0, discount: 0 },
-      { qty: 1, units: "gm", price: 1, discountedPrice: 0, discount: 0 },
-      { qty: 1, units: "gm", price: 1, discountedPrice: 0, discount: 0 },
-      { qty: 1, units: "gm", price: 1, discountedPrice: 0, discount: 0 },
-    ],
+    ], // Only one price variant
+
     user: req.user._id,
     image: "/images/sample.jpg",
     brand: "Shahi Kohinoor",
-    category: "Sample category",
+    category: category._id,
     countInStock: 0,
     description: "Sample description",
   });
+
   const createdProduct = await product.save();
   res.status(201).json(createdProduct);
 });

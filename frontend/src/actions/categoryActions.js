@@ -23,7 +23,6 @@ export const listCategories = () => async (dispatch) => {
     dispatch({ type: CATEGORY_LIST_REQUEST });
     const { data } = await axiosInstance.get(`/api/categories`);
     //console.log("API Response:", data); // Check the API response structure
-    console.log("API Response:", data); // Ensure this logs an object with a categories key
 
     dispatch({
       type: CATEGORY_LIST_SUCCESS,

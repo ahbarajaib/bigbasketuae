@@ -59,8 +59,11 @@ const ProductScreen = () => {
     }
   }, [product.prices, cartItems, cartItemId]);
   useEffect(() => {
-    dispatch(listProductDetails(id));
+    if (id) {
+      dispatch(listProductDetails(id));
+    }
   }, [dispatch, id]);
+
   useEffect(() => {
     // Check if the product prices array exists and is not empty
     if (product.prices && product.prices.length > 0) {
@@ -74,10 +77,8 @@ const ProductScreen = () => {
       setCartItemId(`${product._id}-${product.prices[0].qty}`);
     }
   }, [product.prices, product._id]);
-  useEffect(() => {
-    // Check if the category is 'all' and conditionally dispatch the action
-    //all displays all the product related code is in getProductByCategory in productController
 
+  useEffect(() => {
     if (product.category && product.category.toLowerCase() === "all") {
       dispatch(categoryProducts(keyword, pageNumber, ""));
     } else {
@@ -85,9 +86,6 @@ const ProductScreen = () => {
     }
   }, [dispatch, keyword, pageNumber, product.category]);
 
-  const similarProducts = products.filter(
-    (prod) => prod.category === product.category
-  );
   const isProductInCart = cartItems.some(
     (item) => item.cartItemId === `${product._id}-${selectedQty}`
   );
@@ -146,8 +144,9 @@ const ProductScreen = () => {
 
   useEffect(() => {
     // Shuffle the products array randomly
-    const shuffledProducts = products.sort(() => Math.random() - 0.5);
+    const shuffledProducts = (products || []).sort(() => Math.random() - 0.5);
     setRandomProducts(shuffledProducts);
+    console.log(shuffledProducts);
   }, [products]);
 
   return (
@@ -429,7 +428,10 @@ const ProductScreen = () => {
               <Row className="d-flex flex-nowrap">
                 {randomProducts.map((product) => (
                   <Col key={product._id} xs={6} sm={6} md={4} lg={3} xl={2}>
-                    <Product product={product} category={product.category} />
+                    <Product
+                      product={product}
+                      category={product.category.name}
+                    />
                   </Col>
                 ))}
               </Row>

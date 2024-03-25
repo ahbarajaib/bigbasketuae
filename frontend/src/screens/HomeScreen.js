@@ -34,17 +34,13 @@ const HomeScreen = () => {
   const { loading, error, products } = productList;
 
   const categoryList = useSelector((state) => state.categoryList);
-  const {
-    loading: loadingList,
-    error: errorList,
-    categories: categories,
-  } = categoryList;
+  const { loading: loadingList, error: errorList, categories } = categoryList;
 
   const [currentSlide, setCurrentSlide] = useState(0);
 
   useEffect(() => {
-    // Fetch products based on search keyword if it exists
-    // Fetch all products if there's no search keyword
+    console.log(products);
+
     if (searchKeyword) {
       dispatch(listProducts(searchKeyword));
     } else {
@@ -162,7 +158,9 @@ const HomeScreen = () => {
                 <Slider {...settings}>
                   {products &&
                     products
-                      .filter((product) => product.category === category.name)
+                      .filter(
+                        (product) => product.category.name === category.name
+                      )
                       .map((product) => (
                         <Product key={product._id} product={product} />
                       ))}

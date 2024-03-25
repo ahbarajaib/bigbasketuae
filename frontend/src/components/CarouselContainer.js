@@ -26,7 +26,6 @@ function CarouselContainer({ category }) {
   if (error) {
     return <p>Error: {error}</p>;
   }
-  console.log(images);
   return (
     <Carousel slide interval={2000}>
       {images.map((image, index) => (
