@@ -95,7 +95,7 @@ const deleteProduct = asyncHandler(async (req, res) => {
 //@route POST /api/products/
 //@access Private/Admin
 const createProduct = asyncHandler(async (req, res) => {
-  const category = await Category.findOne({});
+  const category = await Category.findOne();
   const product = new Product({
     name: "Sample name",
     prices: [
