@@ -119,23 +119,7 @@ const createProduct = asyncHandler(async (req, res) => {
   res.status(201).json(createdProduct);
 });
 
-  const product = new Product({
-    name: "Sample name",
-    prices: [
-      { qty: 1, units: "gm", price: 1, discountedPrice: 0, discount: 0 },
-    ], // Only one price variant
-
-    user: req.user._id,
-    image: "/images/sample.jpg",
-    brand: "Shahi Kohinoor",
-    category: category._id,
-    countInStock: 0,
-    description: "Sample description",
-  });
-
-  const createdProduct = await product.save();
-  res.status(201).json(createdProduct);
-});
+  
 
 const updateProduct = asyncHandler(async (req, res) => {
   const {
