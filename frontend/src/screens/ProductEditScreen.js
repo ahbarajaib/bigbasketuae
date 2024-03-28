@@ -53,6 +53,10 @@ const ProductEditScreen = () => {
 
   useEffect(() => {
     dispatch(listCategories());
+  }, [dispatch]);
+
+  useEffect(() => {
+    dispatch(listCategories());
     if (successUpdate) {
       dispatch({ type: PRODUCT_UPDATE_RESET });
       navigate(`/admin/productlist/`);
