@@ -1,29 +1,66 @@
 import React, { useEffect, useState } from "react";
 import { useNavigate, useParams } from "react-router-dom";
-import { Table, Button, Row, Col } from "react-bootstrap";
-import { LinkContainer } from "react-router-bootstrap";
 import { useDispatch, useSelector } from "react-redux";
 import Message from "../components/Message";
 import Loader from "../components/Loader";
-import Paginate from "../components/Paginate";
 import {
   listProducts,
   deleteProduct,
   createProduct,
 } from "../actions/productActions";
-import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import { faEdit, faTrash, faPlus } from "@fortawesome/free-solid-svg-icons";
 import { PRODUCT_CREATE_RESET } from "../constants/productConstants";
-import { CSVLink } from "react-csv";
 import { listCategories } from "../actions/categoryActions";
+import { DataTable } from "primereact/datatable";
+import { Column } from "primereact/column";
+import { MultiSelect } from "primereact/multiselect";
+import { Dropdown } from "primereact/dropdown";
+import { InputText } from "primereact/inputtext";
+import { FilterMatchMode } from "primereact/api";
+
+import { Button } from "primereact/button";
 
 const ProductListScreen = () => {
   const { pageNumber = 1 } = useParams();
   const navigate = useNavigate();
   const dispatch = useDispatch();
 
+  const [first, setFirst] = useState(0);
+  const [rowsPerPage, setRowsPerPage] = useState(20);
+
+  const [selectedCategories, setSelectedCategories] = useState([]);
+  const [globalFilters, setGlobalFilters] = useState({
+    // Initialize all required filters here
+    name: { value: null, matchMode: FilterMatchMode.STARTS_WITH },
+    category: { value: null, matchMode: FilterMatchMode.IN },
+    // Add other filters as necessary
+  });
+
+  useEffect(() => {
+    const savedFirst = localStorage.getItem("dataTableFirst");
+    if (savedFirst !== null) {
+      setFirst(Number(savedFirst));
+    }
+  }, []);
+
+  // Save the 'first' state to local storage whenever it changes
+  useEffect(() => {
+    localStorage.setItem("dataTableFirst", first.toString());
+  }, [first]);
+
+  useEffect(() => {
+    dispatch(listProducts());
+    dispatch(listCategories());
+  }, [dispatch]);
+
+  const categoryList = useSelector((state) => state.categoryList);
+  const { loading: loadingList, error: errorList, categories } = categoryList;
+
   const productList = useSelector((state) => state.productList);
   const { loading, error, products, page, pages } = productList;
+  const footer = `In total there are ${
+    products ? products.length : 0
+  } products.`;
+
   const productDelete = useSelector((state) => state.productDelete);
 
   const {
@@ -42,15 +79,6 @@ const ProductListScreen = () => {
 
   const userLogin = useSelector((state) => state.userLogin);
   const { userInfo } = userLogin;
-
-  const categoryList = useSelector((state) => state.categoryList);
-  const { loading: loadingList, error: errorList, categories } = categoryList;
-
-  useEffect(() => {
-    dispatch(listCategories());
-  }, [dispatch]);
-
-  const [selectedCategory, setSelectedCategory] = useState("All");
 
   useEffect(() => {
     dispatch({ type: PRODUCT_CREATE_RESET });
@@ -74,6 +102,18 @@ const ProductListScreen = () => {
     pageNumber,
   ]);
 
+  const getFilteredProducts = () => {
+    // If no categories are selected, return all products
+    if (!selectedCategories || selectedCategories.length === 0) {
+      return products;
+    }
+    // Filter products based on selected categories
+    return products.filter(
+      (product) =>
+        product.category && selectedCategories.includes(product.category._id)
+    );
+  };
+
   const deleteHandler = (id) => {
     if (window.confirm("Are you sure?")) {
       dispatch(deleteProduct(id));
@@ -84,206 +124,172 @@ const ProductListScreen = () => {
     dispatch(createProduct());
   };
 
-  const formatDataForCSV = (products) => {
-    return products.map((product) => {
-      const formattedProduct = {
-        Name: product.name,
-        Stock: product.countInStock,
-        Category: product.category,
-        Brand: product.brand,
-
-        NoOfProducts: product.noOfProducts,
-        CountInStock: product.countInStock,
-      };
-
-      // Add prices to the formatted product
-      for (let i = 0; i < 4; i++) {
-        const priceKey = `Prices${i + 1}`;
-        const price = product.prices[i];
-
-        formattedProduct[`${priceKey}Qty`] = price ? price.qty : "";
-        formattedProduct[`${priceKey}NoOfProducts`] = price
-          ? price.noOfProducts
-          : "";
-        formattedProduct[`${priceKey}Price`] = price ? price.price : "";
-        formattedProduct[`${priceKey}DiscountedPrice`] = price
-          ? price.discountedPrice
-          : "";
-        formattedProduct[`${priceKey}Discount`] = price ? price.discount : "";
-        formattedProduct[`${priceKey}Units`] = price ? price.units : "";
-      }
-
-      return formattedProduct;
-    });
-  };
-  const handleDownloadReports = () => {
-    const filteredProducts = products.filter(
-      (product) =>
-        selectedCategory === "All" || product.category === selectedCategory
-    );
-
-    const formattedData = formatDataForCSV(filteredProducts);
-    const headers = [
-      { label: "Name", key: "Name" },
-      { label: "Stock", key: "Stock" },
-      { label: "Category", key: "Category" },
-      { label: "Brand", key: "Brand" },
-
-      { label: "NoOfProducts", key: "NoOfProducts" },
-      { label: "CountInStock", key: "CountInStock" },
-    ];
-
-    // Add headers for Prices 1 to 4
-    for (let i = 1; i <= 4; i++) {
-      headers.push(
-        { label: `Prices${i}Qty`, key: `Prices${i}Qty` },
-        { label: `Prices${i}NoOfProducts`, key: `Prices${i}NoOfProducts` },
-        { label: `Prices${i}Price`, key: `Prices${i}Price` },
-        {
-          label: `Prices${i}DiscountedPrice`,
-          key: `Prices${i}DiscountedPrice`,
-        },
-        { label: `Prices${i}Discount`, key: `Prices${i}Discount` },
-        { label: `Prices${i}Units`, key: `Prices${i}Units` }
-      );
-    }
-
-    // Create a CSVLink component with the generated CSV report
-    const csvReport = {
-      data: formattedData,
-      headers: headers,
-      filename: "products_report.csv",
-    };
-
-    // Create a CSVLink component with the generated CSV report
-    const csvLink = <CSVLink {...csvReport}>&nbsp;Download Report</CSVLink>;
-
-    return csvLink;
-  };
-
-  const renderCategoryDropdown = () => {
-    // Construct an array of category options for the dropdown, including an "All" option.
-    const categoryOptions = loadingList
-      ? [{ name: "All", title: "All" }]
-      : [{ name: "All", title: "All" }, ...categories];
-
+  const imageBodyTemplate = (rowData) => {
     return (
-      <div>
-        <label htmlFor="category">Filter By Category: &nbsp;</label>
-        <select
-          id="category"
-          value={selectedCategory}
-          onChange={(e) => setSelectedCategory(e.target.value)}
+      <img
+        src={`${process.env.REACT_APP_API_URL}${rowData.image}`}
+        alt={rowData.name}
+        style={{ width: "50px", height: "50px" }} // Adjust size as needed
+      />
+    );
+  };
+  const onNameFilterChange = (e) => {
+    const value = e.target.value;
+    setGlobalFilters((prevFilters) => ({
+      ...prevFilters,
+      name: { ...prevFilters.name, value: value },
+    }));
+  };
+
+  const categoryOptions = categories.map((category) => ({
+    label: category.title,
+    value: category._id,
+  }));
+
+  const stockBodyTemplate = (rowData) => {
+    return rowData.countInStock;
+  };
+
+  const header = (
+    <div className="flex justify-content-between align-items-center">
+      <h5 className="m-0">Products</h5>
+      <span className="p-input-icon-left">
+        <i className="pi pi-search" />
+        <InputText
+          type="search"
+          value={globalFilters.name.value || ""}
+          onInput={onNameFilterChange}
+          placeholder="Global Search..."
+          style={{
+            margin: "5px",
+          }}
+        />
+      </span>
+      <MultiSelect
+        value={selectedCategories}
+        options={categoryOptions}
+        onChange={(e) => setSelectedCategories(e.value)}
+        optionLabel="label"
+        placeholder="Select Categories"
+        className="p-column-filter"
+        style={{
+          margin: "5px",
+        }}
+      />
+      <Button
+        label="Create Product"
+        style={{
+          margin: "5px",
+          backgroundColor: "#34A853",
+          color: "white",
+          border: "none",
+          borderRadius: "5px",
+          fontSize: "0.8rem",
+        }}
+        onClick={createProductHandler}
+      />
+    </div>
+  );
+
+  const actionsBodyTemplate = (rowData) => {
+    return (
+      <>
+        <button
+          className="p-button-rounded p-button-success mr-2"
+          style={{
+            marginRight: "5px",
+            backgroundColor: "#34A853",
+            color: "white",
+            border: "none",
+            borderRadius: "4px",
+            padding: "4px 8px",
+            fontSize: "0.8rem", // Adjust font size as needed
+          }}
+          onClick={() => navigate(`/admin/product/${rowData._id}/edit`)}
         >
-          {categoryOptions.map((category, index) => (
-            <option key={index} value={category.name}>
-              {category.title}
-            </option>
-          ))}
-        </select>
-      </div>
+          Edit
+        </button>
+        <button
+          className="p-button-rounded p-button-danger"
+          style={{
+            backgroundColor: "#EA4335",
+            color: "white",
+            border: "none",
+            borderRadius: "4px",
+            padding: "4px 8px",
+            fontSize: "0.8rem", // Adjust font size as needed
+          }}
+          onClick={() => deleteHandler(rowData._id)}
+        >
+          Delete
+        </button>
+      </>
+    );
+  };
+
+  const categoryBodyTemplate = (rowData) => {
+    return rowData.category ? rowData.category.title : "No Category";
+  };
+
+  const categoryFilterTemplate = () => {
+    return (
+      <MultiSelect
+        value={selectedCategories}
+        options={categoryOptions}
+        onChange={(e) => setSelectedCategories(e.value.map((v) => v))}
+        optionLabel="label"
+        placeholder="Select Categories"
+        className="p-column-filter"
+      />
     );
   };
 
   return (
-    <>
-      <Row className="align-items-center">
-        <Col>
-          <h1>Products</h1>
-        </Col>
-        <Col className="d-flex justify-content-start">
-          <button style={{ color: "white" }}>{handleDownloadReports()}</button>
-        </Col>
-        <Col className="d-flex justify-content-end">
-          <Button className="my-3" onClick={createProductHandler}>
-            <FontAwesomeIcon icon={faPlus} />
-            &nbsp;Create a Product
-          </Button>
-        </Col>
-      </Row>
-
-      <Row className="mb-3">
-        <Col>{renderCategoryDropdown()}</Col>
-      </Row>
-
-      {loadingDelete && <Loader />}
-      {errorDelete && <Message variant="danger">{errorDelete}</Message>}
-
-      {loadingCreate && <Loader />}
-      {errorCreate && <Message variant="danger">{errorCreate}</Message>}
-
-      {loading ? (
-        <Loader />
-      ) : error ? (
-        <Message variant="danger">{error}</Message>
-      ) : (
-        <>
-          <Table striped bordered hover responsive className="table-sm">
-            <thead>
-              <tr>
-                <th>ID</th>
-                <th>NAME</th>
-                <th>STOCK</th>
-                <th>CATEGORY</th>
-                <th>BRAND</th>
-                <th></th>
-              </tr>
-            </thead>
-            <tbody>
-              {products
-                .filter(
-                  (product) =>
-                    selectedCategory === "All" ||
-                    product.category === selectedCategory
-                )
-                .map((product) => (
-                  <tr key={product._id}>
-                    <td>{product._id}</td>
-                    <td>{product.name}</td>
-                    <td
-                      style={{
-                        backgroundColor:
-                          product.countInStock < 10 ? "lightcoral" : "inherit",
-                        textAlign: "center",
-                      }}
-                    >
-                      {product.countInStock}
-                    </td>
-                    <td>
-                      {product.category
-                        ? product.category.title
-                        : "No Category"}
-                    </td>{" "}
-                    <td>{product.brand}</td>
-                    <td>
-                      <Button
-                        variant="light"
-                        className="btn-sm"
-                        onClick={() =>
-                          navigate(`/admin/product/${product._id}/edit`, {
-                            state: { pageNumber },
-                          })
-                        }
-                      >
-                        <FontAwesomeIcon icon={faEdit} /> Edit
-                      </Button>
-
-                      <Button
-                        variant="danger"
-                        className="btn-sm"
-                        onClick={() => deleteHandler(product._id)}
-                      >
-                        <FontAwesomeIcon icon={faTrash} />
-                      </Button>
-                    </td>
-                  </tr>
-                ))}
-            </tbody>
-          </Table>
-          <Paginate pages={pages} page={page} isAdmin={true} />
-        </>
-      )}
-    </>
+    <div className="card">
+      <DataTable
+        value={getFilteredProducts()}
+        paginator
+        first={first} // Use the first state here
+        onPage={(e) => {
+          setFirst(e.first);
+          setRowsPerPage(e.rows); // Update rows per page when paginator changes
+        }}
+        header={header}
+        rows={rowsPerPage} // Use state here
+        rowsPerPageOptions={[20, 30, 50]}
+        filters={globalFilters}
+      >
+        <Column
+          field="name"
+          header="Name"
+          filter
+          filterMatchMode="contains"
+          filterHeaderTemplate={
+            <InputText
+              value={globalFilters.name.value || ""}
+              onInput={onNameFilterChange}
+              placeholder="Search by name"
+            />
+          }
+        />
+        <Column header="Image" body={imageBodyTemplate} />
+        <Column
+          header="Category"
+          body={categoryBodyTemplate}
+          filter
+          filterElement={categoryFilterTemplate}
+          showFilterMenu={false} // Disable the filter menu
+        />
+        <Column field="brand" header="Brand" />
+        <Column
+          field="countInStock"
+          header="Stock"
+          body={stockBodyTemplate}
+          sortable
+        />
+        <Column header="Actions" body={actionsBodyTemplate} />
+      </DataTable>
+    </div>
   );
 };
 

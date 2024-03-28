@@ -82,24 +82,10 @@ const ProductEditScreen = () => {
   );
 
   const handlePriceChange = (index, field, value) => {
-    setPrices((currentPrices) =>
-      currentPrices.map((price, idx) => {
-        if (idx === index) {
-          const updatedPrice = { ...price, [field]: value };
-
-          // Recalculate discountedPrice if the price or discount changes
-          if (field === "price" || field === "discount") {
-            const discountValue = field === "discount" ? value : price.discount;
-            const priceValue = field === "price" ? value : price.price;
-            updatedPrice.discountedPrice =
-              priceValue * ((100 - discountValue) / 100);
-          }
-
-          return updatedPrice;
-        }
-        return price;
-      })
+    const updatedPrices = prices.map((price, idx) =>
+      index === idx ? { ...price, [field]: value } : price
     );
+    setPrices(updatedPrices);
   };
 
   const addPriceVariant = () => {
@@ -264,6 +250,7 @@ const ProductEditScreen = () => {
                       <option value="tray">Tray</option>
                       <option value="pack">Pack</option>
                       <option value="piece">Piece/s</option>
+                      <option value="bag">Bag</option>
                     </Form.Select>
                   </Form.Group>
                 </Col>

@@ -11,6 +11,7 @@ import { categoryProducts } from "../actions/productActions";
 import Product from "../components/Product";
 import SEO from "../components/SEO";
 import ReactMarkdown from "react-markdown";
+import { listCategories } from "../actions/categoryActions";
 
 const ProductScreen = () => {
   const { id } = useParams();
@@ -20,6 +21,17 @@ const ProductScreen = () => {
 
   const productDetails = useSelector((state) => state.productDetails);
   const { loading, error, product } = productDetails;
+
+  const categoryDetails = useSelector((state) => state.categoryDetails);
+  const { category } = categoryDetails; // Assuming this contains the fetched category details
+
+  const similarProducts = useSelector((state) => state.productCategory); // Assuming this is used to store similar products based on category
+  const {
+    loading: loadingSimilar,
+    error: errorSimilar,
+    products: similarProductsList,
+  } = similarProducts;
+
   const [selectedQty, setSelectedQty] = useState(
     product.prices && product.prices.length > 0 ? product.prices[0].qty : ""
   );
@@ -65,26 +77,35 @@ const ProductScreen = () => {
   }, [dispatch, id]);
 
   useEffect(() => {
-    // Check if the product prices array exists and is not empty
-    if (product.prices && product.prices.length > 0) {
-      // Set the initial selectedQty to the first value in the prices array
-      setSelectedQty(product.prices[0].qty);
-      // You can also set other related states here if needed
-      setSelectedUnits(product.prices[0].units);
-      setSelectedPrice(product.prices[0].price);
-      setSelectedDiscount(product.prices[0].discount);
-      setSelectedDiscountedPrice(product.prices[0].discountedPrice);
-      setCartItemId(`${product._id}-${product.prices[0].qty}`);
+    if (product && product.prices && product.prices.length > 0) {
+      const initialPrice = product.prices[0];
+      setSelectedQty(initialPrice.qty);
+      setSelectedUnits(initialPrice.units);
+      setSelectedPrice(initialPrice.price);
+      setSelectedDiscount(initialPrice.discount);
+      setSelectedDiscountedPrice(initialPrice.discountedPrice);
+      setCartItemId(`${product._id}-${initialPrice.qty}`);
     }
-  }, [product.prices, product._id]);
+  }, [product]);
+  useEffect(() => {
+    dispatch(listProductDetails(id));
+  }, [dispatch, id]);
 
   useEffect(() => {
-    if (product.category && product.category.toLowerCase() === "all") {
-      dispatch(categoryProducts(keyword, pageNumber, ""));
-    } else {
-      dispatch(categoryProducts(keyword, pageNumber, product.category));
+    if (product && product.category) {
+      dispatch(listCategories()); // Fetch all categories to find the one matching product.category
     }
-  }, [dispatch, keyword, pageNumber, product.category]);
+  }, [dispatch, product]);
+
+  useEffect(() => {
+    // Once categories are loaded, find the current product's category details
+    const currentCategory = category.find(
+      (cat) => cat._id === product.category
+    );
+    if (currentCategory) {
+      dispatch(categoryProducts("", "", currentCategory.name)); // Fetch similar products based on category name or other identifier
+    }
+  }, [category, dispatch, product]);
 
   const isProductInCart = cartItems.some(
     (item) => item.cartItemId === `${product._id}-${selectedQty}`

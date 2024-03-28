@@ -141,16 +141,19 @@ const HomeScreen = () => {
         ) : searchKeyword ? (
           <Row style={{ overflowX: "auto" }}>
             {products &&
-              products.map((product) => (
-                <Col key={product._id} xs={6} sm={6} md={4} lg={3} xl={2}>
-                  <Product key={product._id} product={product} />
-                </Col>
-              ))}
+              products.map(
+                (product) =>
+                  product.category && (
+                    <Col key={product._id} xs={6} sm={6} md={4} lg={3} xl={2}>
+                      <Product key={product._id} product={product} />
+                    </Col>
+                  )
+              )}
           </Row>
         ) : (
           categories &&
           categories.map((category) => (
-            <div key={category.id}>
+            <div key={category._id}>
               <Link to={`/category/${category.name}`} key={category.name}>
                 <CarouselContainerSmall category={category.name} />
               </Link>
@@ -159,7 +162,7 @@ const HomeScreen = () => {
                   {products &&
                     products
                       .filter(
-                        (product) => product.category.name === category.name
+                        (product) => product.category?.name === category.name
                       )
                       .map((product) => (
                         <Product key={product._id} product={product} />

@@ -8,7 +8,7 @@ import asyncHandler from "express-async-handler";
 //@route GET /api/products
 //@access Public
 const getProducts = asyncHandler(async (req, res) => {
-  const pageSize = 25; // Ensure this is a number
+  const pageSize = 1000; // Ensure this is a number
   const page = Number(req.query.pageNumber) || 1;
 
   // Assuming the keyword search is for products, not categories
@@ -101,24 +101,6 @@ const createProduct = asyncHandler(async (req, res) => {
     res.status(400);
     throw new Error("No categories found");
   }
-  const product = new Product({
-    name: "Sample name",
-    prices: [
-      { qty: 1, units: "gm", price: 1, discountedPrice: 0, discount: 0 },
-    ], // Only one price variant
-
-    user: req.user._id,
-    image: "/images/sample.jpg",
-    brand: "Shahi Kohinoor",
-    category: category._id,
-    countInStock: 0,
-    description: "Sample description",
-  });
-
-  const createdProduct = await product.save();
-  res.status(201).json(createdProduct);
-});
-
   const product = new Product({
     name: "Sample name",
     prices: [
