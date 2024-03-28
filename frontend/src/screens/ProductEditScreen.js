@@ -67,7 +67,9 @@ const ProductEditScreen = () => {
         setName(product.name);
         setImage(product.image);
         setBrand(product.brand);
-        setCategory(product.category); // This will be an ObjectId
+        if (categories && categories.length > 0) {
+          setCategory(categories[0]._id);
+        }
         setPrices(product.prices);
         setCountInStock(product.countInStock);
         setDescription(product.description);
