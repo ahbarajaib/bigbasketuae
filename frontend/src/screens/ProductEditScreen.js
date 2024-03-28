@@ -55,7 +55,7 @@ const ProductEditScreen = () => {
     dispatch(listCategories());
     if (successUpdate) {
       dispatch({ type: PRODUCT_UPDATE_RESET });
-      navigate(`/admin/productlist/${pageNumber}`);
+      navigate(`/admin/productlist/`);
     } else {
       if (!product.name || product._id !== id) {
         dispatch(listProductDetails(id));

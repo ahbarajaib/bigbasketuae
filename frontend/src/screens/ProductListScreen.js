@@ -141,10 +141,12 @@ const ProductListScreen = () => {
     }));
   };
 
-  const categoryOptions = categories.map((category) => ({
-    label: category.title,
-    value: category._id,
-  }));
+  const categoryOptions = categories
+    ? categories.map((category) => ({
+        label: category.title,
+        value: category._id,
+      }))
+    : [];
 
   const stockBodyTemplate = (rowData) => {
     return rowData.countInStock;
