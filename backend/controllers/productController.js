@@ -119,11 +119,6 @@ const createProduct = asyncHandler(async (req, res) => {
   res.status(201).json(createdProduct);
 });
 
-<<<<<<< HEAD
-=======
-  
-
->>>>>>> 6dc0bbd9072ab9274cd601b829e44167c0d4256a
 const updateProduct = asyncHandler(async (req, res) => {
   const {
     name,
