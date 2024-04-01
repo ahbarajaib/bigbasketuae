@@ -22,6 +22,7 @@ import {
 } from "@fortawesome/free-solid-svg-icons";
 import BrandProducts from "../components/BrandProducts";
 import { listCategories } from "../actions/categoryActions";
+import { viewAllSmallBanners } from "../actions/bannerActions";
 
 const HomeScreen = () => {
   const location = useLocation();
@@ -35,12 +36,15 @@ const HomeScreen = () => {
 
   const categoryList = useSelector((state) => state.categoryList);
   const { loading: loadingList, error: errorList, categories } = categoryList;
+  const {
+    loading: loadingBanners,
+    banners,
+    error: errorBanners,
+  } = useSelector((state) => state.allSmallBanners);
 
   const [currentSlide, setCurrentSlide] = useState(0);
 
   useEffect(() => {
-    console.log(products);
-
     if (searchKeyword) {
       dispatch(listProducts(searchKeyword));
     } else {
@@ -49,8 +53,14 @@ const HomeScreen = () => {
   }, [dispatch, searchKeyword]);
 
   useEffect(() => {
+    dispatch(viewAllSmallBanners()); // Fetch all small banners once
+    if (searchKeyword) {
+      dispatch(listProducts(searchKeyword));
+    } else {
+      dispatch(listProducts());
+    }
     dispatch(listCategories());
-  }, [dispatch]);
+  }, [dispatch, searchKeyword]);
 
   // Update your CustomNextArrow and CustomPrevArrow components
   const CustomNextArrow = (props) => (
@@ -154,8 +164,14 @@ const HomeScreen = () => {
           categories &&
           categories.map((category) => (
             <div key={category._id}>
-              <Link to={`/category/${category.name}`} key={category.name}>
-                <CarouselContainerSmall category={category.name} />
+              <Link to={`/category/${category.name}`}>
+                {/* Pass corresponding images to CarouselContainerSmall */}
+                <CarouselContainerSmall
+                  images={
+                    banners.find((banner) => banner.category === category.name)
+                      ?.imagePaths || []
+                  }
+                />
               </Link>
               <Row className="d-flex flex-nowrap" style={{ overflowX: "auto" }}>
                 <Slider {...settings}>

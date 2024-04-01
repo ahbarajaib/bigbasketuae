@@ -47,11 +47,6 @@ const ProductListScreen = () => {
     localStorage.setItem("dataTableFirst", first.toString());
   }, [first]);
 
-  useEffect(() => {
-    dispatch(listProducts());
-    dispatch(listCategories());
-  }, [dispatch]);
-
   const categoryList = useSelector((state) => state.categoryList);
   const { loading: loadingList, error: errorList, categories } = categoryList;
 
@@ -77,6 +72,11 @@ const ProductListScreen = () => {
     product: createdProduct,
   } = productCreate;
 
+  useEffect(() => {
+    dispatch(listProducts());
+    dispatch(listCategories());
+  }, [dispatch, successDelete, successCreate]);
+
   const userLogin = useSelector((state) => state.userLogin);
   const { userInfo } = userLogin;
 
@@ -90,7 +90,7 @@ const ProductListScreen = () => {
     if (successCreate) {
       navigate(`/admin/product/${createdProduct._id}/edit`);
     } else {
-      dispatch(listProducts("", pageNumber));
+      dispatch(listProducts(""));
     }
   }, [
     dispatch,
@@ -245,7 +245,13 @@ const ProductListScreen = () => {
       />
     );
   };
+  if (loading || loadingDelete || loadingCreate) {
+    return <Loader />;
+  }
 
+  if (error) {
+    return <Message variant="danger">{error}</Message>;
+  }
   return (
     <div className="card">
       <DataTable

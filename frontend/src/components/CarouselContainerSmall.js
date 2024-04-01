@@ -1,33 +1,14 @@
-import React, { useEffect } from "react";
-import { useDispatch, useSelector } from "react-redux";
-import { viewSmallBanner } from "../actions/bannerActions";
+import React from "react";
 import Loader from "./Loader";
 import { Carousel } from "react-bootstrap";
 
-const CarouselContainerSmall = React.memo(({ category }) => {
-  const dispatch = useDispatch();
-  const smallBannerView = useSelector(
-    (state) => state.smallBannerView.categories[category]
-  );
-  const { loading, images, error } = smallBannerView || {};
+// Adjust the component to accept 'images' as a prop
+const CarouselContainerSmall = React.memo(({ images }) => {
+  // You can remove the Redux hooks and useEffect as the component no longer needs to fetch data
 
-  useEffect(() => {
-    if (category) {
-      dispatch(viewSmallBanner(category));
-    }
-  }, [dispatch, category]);
-
-  if (loading) {
-    return <Loader />;
-  }
-
-  if (error) {
-    return <p>Error: {error}</p>;
-  }
-
-  // Check if images is an array before using map
-  if (!Array.isArray(images)) {
-    return <p>Error: Images is not an array</p>;
+  if (!images || images.length === 0) {
+    // If there are no images, you can decide to return a loader, an empty fragment, or a placeholder
+    return <Loader />; // or <></> for an empty fragment
   }
 
   return (

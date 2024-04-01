@@ -211,6 +211,19 @@ const uploadSmallBanner = asyncHandler(async (req, res) => {
   }
 });
 
+// @desc    Fetch all small banners
+// @route   GET /api/small-banners/all
+// @access  Public
+const getAllSmallBanners = asyncHandler(async (req, res) => {
+  try {
+    const smallBanners = await SmallBanner.find({});
+    res.json(smallBanners);
+  } catch (error) {
+    console.error(error);
+    res.status(500).json({ message: "Server Error" });
+  }
+});
+
 // @desc    View small banner by category
 // @route   GET /api/small-banners/:category
 // @access  Public
@@ -264,6 +277,7 @@ const deleteSmallBanner = asyncHandler(async (req, res) => {
 export {
   uploadSmallBanner,
   deleteSmallBanner,
+  getAllSmallBanners,
   getSmallBanner,
   uploadBanner,
   getBanner,

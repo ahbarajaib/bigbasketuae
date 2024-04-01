@@ -12,6 +12,9 @@ import {
   SMALL_BANNER_UPLOAD_REQUEST,
   SMALL_BANNER_UPLOAD_SUCCESS,
   SMALL_BANNER_UPLOAD_FAIL,
+  ALL_SMALL_BANNER_VIEW_REQUEST,
+  ALL_SMALL_BANNER_VIEW_SUCCESS,
+  ALL_SMALL_BANNER_VIEW_FAIL,
   SMALL_BANNER_VIEW_REQUEST,
   SMALL_BANNER_VIEW_SUCCESS,
   SMALL_BANNER_VIEW_FAIL,
@@ -131,6 +134,25 @@ export const uploadSmallBanner = (formData) => async (dispatch, getState) => {
   } catch (error) {
     dispatch({
       type: SMALL_BANNER_UPLOAD_FAIL,
+      payload:
+        error.response && error.response.data.message
+          ? error.response.data.message
+          : error.message,
+    });
+  }
+};
+
+export const viewAllSmallBanners = () => async (dispatch) => {
+  try {
+    dispatch({ type: "ALL_SMALL_BANNER_VIEW_REQUEST" });
+    const { data } = await axiosInstance.get(`/api/smallbanners/all`);
+    dispatch({
+      type: "ALL_SMALL_BANNER_VIEW_SUCCESS",
+      payload: data,
+    });
+  } catch (error) {
+    dispatch({
+      type: "ALL_SMALL_BANNER_VIEW_FAIL",
       payload:
         error.response && error.response.data.message
           ? error.response.data.message

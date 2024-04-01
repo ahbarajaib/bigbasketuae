@@ -46,6 +46,7 @@ import {
   smallBannerViewReducer,
   smallBannerUploadReducer,
   smallBannerDeleteReducer,
+  allSmallBannersReducer,
 } from "./reducers/bannerReducers";
 
 const reducer = combineReducers({
@@ -84,6 +85,7 @@ const reducer = combineReducers({
   bannerUpload: bannerUploadReducer,
   bannerDelete: bannerDeleteReducer,
 
+  allSmallBanners: allSmallBannersReducer,
   smallBannerView: smallBannerViewReducer,
   smallBannerUpload: smallBannerUploadReducer,
   smallBannerDelete: smallBannerDeleteReducer,

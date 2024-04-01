@@ -76,8 +76,19 @@ export const smallBannerUploadReducer = (state = {}, action) => {
 };
 
 // initialState with an object to store images for each category
-const initialState = {
-  categories: {},
+const initialState = { loading: true, banners: [], error: null };
+
+export const allSmallBannersReducer = (state = initialState, action) => {
+  switch (action.type) {
+    case "ALL_SMALL_BANNER_VIEW_REQUEST":
+      return { ...state, loading: true };
+    case "ALL_SMALL_BANNER_VIEW_SUCCESS":
+      return { loading: false, banners: action.payload, error: null };
+    case "ALL_SMALL_BANNER_VIEW_FAIL":
+      return { loading: false, error: action.payload, banners: [] };
+    default:
+      return state;
+  }
 };
 
 export const smallBannerViewReducer = (state = initialState, action) => {
