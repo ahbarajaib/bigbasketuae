@@ -42,7 +42,8 @@ export const uploadBanner = (formData) => async (dispatch, getState) => {
     };
 
     const { data } = await axiosInstance.post("/api/banners", formData, config);
-
+    console.log(data);
+    console.log(data.imagePath);
     dispatch({ type: BANNER_UPLOAD_SUCCESS, payload: data.imagePath });
   } catch (error) {
     dispatch({
@@ -129,6 +130,7 @@ export const uploadSmallBanner = (formData) => async (dispatch, getState) => {
       formData,
       config
     );
+    console.log(data);
 
     dispatch({ type: SMALL_BANNER_UPLOAD_SUCCESS, payload: data.imagePath });
   } catch (error) {
@@ -144,15 +146,15 @@ export const uploadSmallBanner = (formData) => async (dispatch, getState) => {
 
 export const viewAllSmallBanners = () => async (dispatch) => {
   try {
-    dispatch({ type: "ALL_SMALL_BANNER_VIEW_REQUEST" });
+    dispatch({ type: ALL_SMALL_BANNER_VIEW_REQUEST });
     const { data } = await axiosInstance.get(`/api/smallbanners/all`);
     dispatch({
-      type: "ALL_SMALL_BANNER_VIEW_SUCCESS",
+      type: ALL_SMALL_BANNER_VIEW_SUCCESS,
       payload: data,
     });
   } catch (error) {
     dispatch({
-      type: "ALL_SMALL_BANNER_VIEW_FAIL",
+      type: ALL_SMALL_BANNER_VIEW_FAIL,
       payload:
         error.response && error.response.data.message
           ? error.response.data.message

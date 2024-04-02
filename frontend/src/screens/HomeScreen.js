@@ -164,8 +164,8 @@ const HomeScreen = () => {
           categories &&
           categories.map((category) => (
             <div key={category._id}>
-              <Link to={`/category/${category.name}`}>
-                {/* Pass corresponding images to CarouselContainerSmall */}
+              <Link to={`/category/${category.name}`} key={category.name}>
+                {/* Pass the images for this category to CarouselContainerSmall */}
                 <CarouselContainerSmall
                   images={
                     banners.find((banner) => banner.category === category.name)

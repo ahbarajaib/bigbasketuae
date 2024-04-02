@@ -2,67 +2,51 @@ import React, { useState, useEffect, useRef } from "react";
 import { useNavigate } from "react-router-dom";
 import { Col, Form, Table, Button } from "react-bootstrap";
 import Loader from "../components/Loader";
+import Message from "../components/Message";
 import FormContainer from "../components/FormContainer";
 import { useSelector, useDispatch } from "react-redux";
 import {
-  uploadBanner,
-  viewSmallBanner,
+  uploadSmallBanner,
   deleteSmallBanner,
+  viewAllSmallBanners,
 } from "../actions/bannerActions";
-import axios from "axios";
 import { listCategories } from "../actions/categoryActions";
 
 const SmallBannerUploadScreen = () => {
   const dispatch = useDispatch();
-
   const navigate = useNavigate();
-  const userInfo = useSelector((state) => state.userLogin.userInfo);
+
   const [category, setCategory] = useState("");
-  const smallBannerView = useSelector(
-    (state) => state.smallBannerView.categories[category]
-  );
+
+  const userInfo = useSelector((state) => state.userLogin.userInfo);
+  const allSmallBanners = useSelector((state) => state.allSmallBanners);
+  const { loading, banners, error } = allSmallBanners;
 
   const categoryList = useSelector((state) => state.categoryList);
   const { categories } = categoryList;
 
-  useEffect(() => {
-    dispatch(listCategories());
-  }, [dispatch]);
-
-  // Check if smallBannerView is defined
-  const { loading, images, error } = smallBannerView || {};
-
-  const [selectedFileName, setSelectedFileName] = useState("");
-
-  const [image, setImage] = useState("");
+  const [selectedCategory, setSelectedCategory] = useState("");
   const [uploading, setUploading] = useState(false);
-  const fileInputRef = useRef(null); // Step 1: Create a ref for the file input
-
-  const axiosInstance = axios.create({
-    baseURL: process.env.REACT_APP_API_URL,
-  });
-  useEffect(() => {
-    if (!userInfo) {
-      navigate("/login");
-    }
-  }, [navigate, userInfo]);
 
   useEffect(() => {
-    if (category) {
-      dispatch(viewSmallBanner(category));
+    if (!userInfo) navigate("/login");
+    else {
+      dispatch(listCategories());
+      dispatch(viewAllSmallBanners());
     }
-  }, [dispatch, category]);
-  // Handle Upload function
+  }, [dispatch, navigate, userInfo]);
+
   const handleUpload = async (e) => {
     e.preventDefault();
     const file = e.target.files[0];
+    if (!file) return;
 
     const formData = new FormData();
-    formData.append("category", category);
+    formData.append("category", selectedCategory); // Make sure this is not empty
+
     formData.append("image", file);
-
+    console.log(selectedCategory);
     setUploading(true);
-
     try {
       const config = {
         headers: {
@@ -71,120 +55,95 @@ const SmallBannerUploadScreen = () => {
         },
       };
 
-      // Include a query parameter for the bannerType
-      const { data } = await axiosInstance.post(
-        `/api/smallbanners`,
-        formData,
-        config
-      );
-      setSelectedFileName(data);
-      setImage(data);
+      await dispatch(uploadSmallBanner(formData, config));
       setUploading(false);
-      fileInputRef.current.value = "";
-      dispatch(viewSmallBanner(category));
+      dispatch(viewAllSmallBanners()); // Refresh the banners
     } catch (error) {
-      console.error(error);
+      console.error("Error uploading small banner:", error);
       setUploading(false);
     }
   };
 
-  const handleDelete = (category, imagePath) => {
+  const handleDelete = async (category, imagePath) => {
     if (window.confirm("Are you sure you want to delete this banner?")) {
-      dispatch(deleteSmallBanner(category, imagePath));
-      dispatch(viewSmallBanner(category)); // Dispatch the action again
-    }
-  };
-
-  const handleCategoryChange = (e) => {
-    const selectedCategory = e.target.value;
-    setCategory(selectedCategory);
-
-    // Dispatch action to fetch all small banners for the selected category
-    if (selectedCategory) {
-      dispatch(viewSmallBanner(selectedCategory));
+      await dispatch(deleteSmallBanner(category, imagePath));
+      dispatch(viewAllSmallBanners()); // Refresh the banners
     }
   };
 
   return (
     <>
       <FormContainer>
-        <h1>Upload</h1>
-        <Form onSubmit={handleUpload}>
-          <Form.Select
-            value={category}
-            onChange={(e) => handleCategoryChange(e)}
-          >
-            <option value="">Select a category</option>
-            {categories.map((categoryItem) => (
-              <option key={categoryItem.name} value={categoryItem.name}>
-                {categoryItem.title}
-              </option>
-            ))}
-          </Form.Select>
+        <h1>Upload Small Banner</h1>
+        <Form>
+          <Form.Group controlId="category">
+            <Form.Label>Category</Form.Label>
+            <Form.Select
+              value={selectedCategory}
+              onChange={(e) => setSelectedCategory(e.target.value)}
+            >
+              <option value="">Select Category</option>
+              {categories.map((cat) => (
+                <option key={cat._id} value={cat.name}>
+                  {cat.title}
+                </option>
+              ))}
+            </Form.Select>
+          </Form.Group>
 
-          <Form.Group controlId="image" className="mb-2">
+          <Form.Group controlId="image" className="my-3">
             <Form.Label>Image</Form.Label>
-            <Col>
-              <Form.Control
-                type="file"
-                id="image-file"
-                label="Choose File"
-                onChange={handleUpload}
-                ref={fileInputRef}
-              />
-            </Col>
-            {selectedFileName && (
-              <Col className="mt-2">
-                <Form.Control
-                  type="text"
-                  placeholder="Selected File"
-                  readOnly
-                  value={selectedFileName}
-                />
-              </Col>
-            )}
+            <Form.Control
+              type="file"
+              onChange={(e) => handleUpload(e, selectedCategory)}
+              disabled={!selectedCategory}
+            />
             {uploading && <Loader />}
           </Form.Group>
         </Form>
       </FormContainer>
-      <Col>
-        {loading ? (
-          <Loader />
-        ) : error ? (
-          <p>{error}</p>
-        ) : (
-          <Table striped bordered hover responsive className="table-sm">
-            <thead>
-              <tr>
-                <th>Image</th>
-                <th>Action</th>
-              </tr>
-            </thead>
-            <tbody>
-              {images &&
-                images.map((image) => (
-                  <tr key={image}>
+
+      {loading ? (
+        <Loader />
+      ) : error ? (
+        <Message variant="danger">{error}</Message>
+      ) : (
+        <Table striped bordered hover responsive className="table-sm">
+          <thead>
+            <tr>
+              <th>Image</th>
+              <th>Category</th>
+              <th>Action</th>
+            </tr>
+          </thead>
+          <tbody>
+            {banners
+              .filter((banner) => banner.category === selectedCategory)
+              .flatMap((banner) =>
+                banner.imagePaths.map((imagePath) => (
+                  <tr key={imagePath}>
                     <td>
                       <img
-                        src={`${process.env.REACT_APP_API_URL}/banners/small/${image}`}
-                        alt="Uploaded"
-                        style={{ maxHeight: "24px" }}
+                        src={`${process.env.REACT_APP_API_URL}/banners/small/${imagePath}`}
+                        alt="Banner"
+                        style={{ width: "100px" }}
                       />
                     </td>
+                    <td>{banner.category}</td>
                     <td>
                       <Button
                         variant="danger"
-                        onClick={() => handleDelete(category, image)}
+                        onClick={() => handleDelete(banner.category, imagePath)}
                       >
                         Delete
                       </Button>
                     </td>
                   </tr>
-                ))}
-            </tbody>
-          </Table>
-        )}
-      </Col>
+                ))
+              )}
+          </tbody>
+        </Table>
+      )}
     </>
   );
 };

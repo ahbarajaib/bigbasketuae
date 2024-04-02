@@ -61,11 +61,7 @@ const BannerUploadScreen = () => {
         },
       };
 
-      const { data } = await axiosInstance.post(
-        "/api/banners",
-        formData,
-        config
-      );
+      const { data } = await axiosInstance.post("/api/banners", formData);
 
       setSelectedFileName(data);
       setImage(data);

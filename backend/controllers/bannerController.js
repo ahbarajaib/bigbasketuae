@@ -29,6 +29,7 @@ const storage = multer.diskStorage({
 const smallStorage = multer.diskStorage({
   destination: function (req, file, cb) {
     const category = req.body.category || "uncategorized";
+    console.log(req.body);
     const uploadPath = path.join("banners", "small", category); // Adjust this line
 
     if (!fs.existsSync(uploadPath)) {
@@ -174,7 +175,6 @@ const uploadSmallBanner = asyncHandler(async (req, res) => {
 
       const imagePath = req.file.path.replace(/\\/g, "/");
       const category = req.body.category;
-
       const pathSegments = imagePath.split("/");
       const finalImagePath = `${category}/${
         pathSegments[pathSegments.length - 1]
