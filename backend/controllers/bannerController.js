@@ -212,7 +212,7 @@ const uploadSmallBanner = asyncHandler(async (req, res) => {
 });
 
 // @desc    Fetch all small banners
-// @route   GET /api/small-banners/all
+// @route   GET /api/smallbanners/all
 // @access  Public
 const getAllSmallBanners = asyncHandler(async (req, res) => {
   try {
