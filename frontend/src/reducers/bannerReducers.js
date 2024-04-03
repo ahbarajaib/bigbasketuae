@@ -90,7 +90,6 @@ export const allSmallBannersReducer = (state = initialState, action) => {
       return state;
   }
 };
-
 export const smallBannerViewReducer = (state = initialState, action) => {
   switch (action.type) {
     case SMALL_BANNER_VIEW_REQUEST:

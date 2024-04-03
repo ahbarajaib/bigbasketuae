@@ -18,7 +18,7 @@ const BannerUploadScreen = () => {
   const userInfo = useSelector((state) => state.userLogin.userInfo);
   const bannerView = useSelector((state) => state.bannerView);
   const { loading, images, error } = bannerView;
-
+  console.log(images);
   const [category, setCategory] = useState("");
   const [selectedFileName, setSelectedFileName] = useState("");
 
@@ -61,12 +61,17 @@ const BannerUploadScreen = () => {
         },
       };
 
-      const { data } = await axiosInstance.post("/api/banners", formData);
+      const { data } = await axiosInstance.post(
+        "/api/banners",
+        formData,
+        config
+      );
 
       setSelectedFileName(data);
       setImage(data);
       setUploading(false);
       fileInputRef.current.value = "";
+      await dispatch(uploadBanner(formData, config));
       dispatch(viewBanner(category));
     } catch (error) {
       console.error(error);

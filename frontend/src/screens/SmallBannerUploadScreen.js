@@ -21,11 +21,10 @@ const SmallBannerUploadScreen = () => {
   const userInfo = useSelector((state) => state.userLogin.userInfo);
   const allSmallBanners = useSelector((state) => state.allSmallBanners);
   const { loading, banners, error } = allSmallBanners;
-
+  console.log(banners);
   const categoryList = useSelector((state) => state.categoryList);
   const { categories } = categoryList;
 
-  const [selectedCategory, setSelectedCategory] = useState("");
   const [uploading, setUploading] = useState(false);
 
   useEffect(() => {
@@ -42,10 +41,10 @@ const SmallBannerUploadScreen = () => {
     if (!file) return;
 
     const formData = new FormData();
-    formData.append("category", selectedCategory); // Make sure this is not empty
+    formData.append("category", category); // Make sure this is not empty
 
     formData.append("image", file);
-    console.log(selectedCategory);
+    console.log(category);
     setUploading(true);
     try {
       const config = {
@@ -64,6 +63,16 @@ const SmallBannerUploadScreen = () => {
     }
   };
 
+  const handleCategoryChange = (e) => {
+    const selectedCategory = e.target.value;
+    setCategory(selectedCategory);
+    if (selectedCategory) {
+      dispatch(viewAllSmallBanners());
+    }
+    // Save the selected category to localStorage
+    localStorage.setItem("selectedCategory", selectedCategory);
+  };
+
   const handleDelete = async (category, imagePath) => {
     if (window.confirm("Are you sure you want to delete this banner?")) {
       await dispatch(deleteSmallBanner(category, imagePath));
@@ -79,12 +88,12 @@ const SmallBannerUploadScreen = () => {
           <Form.Group controlId="category">
             <Form.Label>Category</Form.Label>
             <Form.Select
-              value={selectedCategory}
-              onChange={(e) => setSelectedCategory(e.target.value)}
+              value={category}
+              onChange={(e) => handleCategoryChange(e)}
             >
               <option value="">Select Category</option>
               {categories.map((cat) => (
-                <option key={cat._id} value={cat.name}>
+                <option key={cat.name} value={cat.name}>
                   {cat.title}
                 </option>
               ))}
@@ -95,8 +104,8 @@ const SmallBannerUploadScreen = () => {
             <Form.Label>Image</Form.Label>
             <Form.Control
               type="file"
-              onChange={(e) => handleUpload(e, selectedCategory)}
-              disabled={!selectedCategory}
+              onChange={(e) => handleUpload(e, category)}
+              disabled={!category}
             />
             {uploading && <Loader />}
           </Form.Group>
@@ -118,7 +127,7 @@ const SmallBannerUploadScreen = () => {
           </thead>
           <tbody>
             {banners
-              .filter((banner) => banner.category === selectedCategory)
+              .filter((banner) => banner.category === category)
               .flatMap((banner) =>
                 banner.imagePaths.map((imagePath) => (
                   <tr key={imagePath}>
