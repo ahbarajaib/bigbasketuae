@@ -19,7 +19,7 @@ const getCategoryById = asyncHandler(async (req, res) => {
     res.json(category);
   } else {
     res.status(404);
-    throw new Error("Product not found");
+    throw new Error("Category not found");
   }
 });
 
@@ -60,7 +60,7 @@ const deleteCategory = asyncHandler(async (req, res) => {
     res.json({ message: "Category removed" });
   } else {
     res.status(404);
-    throw new Error("Cattegory not found");
+    throw new Error("Category not found");
   }
 });
 

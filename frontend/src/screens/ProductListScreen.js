@@ -8,6 +8,7 @@ import {
   deleteProduct,
   createProduct,
 } from "../actions/productActions";
+import { CSVLink } from "react-csv";
 import { PRODUCT_CREATE_RESET } from "../constants/productConstants";
 import { listCategories } from "../actions/categoryActions";
 import { DataTable } from "primereact/datatable";
@@ -46,6 +47,7 @@ const ProductListScreen = () => {
   useEffect(() => {
     localStorage.setItem("dataTableFirst", first.toString());
   }, [first]);
+  const [selectedCategory, setSelectedCategory] = useState("All");
 
   const categoryList = useSelector((state) => state.categoryList);
   const { loading: loadingList, error: errorList, categories } = categoryList;
@@ -102,6 +104,73 @@ const ProductListScreen = () => {
     pageNumber,
   ]);
 
+  // Function to dynamically generate headers based on product prices
+  const generateCSVHeaders = () => {
+    let maxPrices = 0;
+    products.forEach((product) => {
+      if (product.prices.length > maxPrices) {
+        maxPrices = product.prices.length;
+      }
+    });
+
+    const headers = [
+      { label: "Name", key: "name" },
+      { label: "Category", key: "category" },
+      { label: "Stock", key: "stock" },
+      { label: "Brand", key: "brand" },
+    ];
+
+    for (let i = 0; i < maxPrices; i++) {
+      headers.push(
+        { label: `Price ${i + 1} - Qty`, key: `price${i + 1}Qty` },
+        { label: `Price ${i + 1} - Units`, key: `price${i + 1}Units` },
+        {
+          label: `Price ${i + 1} - Regular Price`,
+          key: `price${i + 1}Regular`,
+        },
+        { label: `Price ${i + 1} - Discount`, key: `price${i + 1}Discount` } // Changed from Discounted Price to Discount
+      );
+    }
+
+    return headers;
+  };
+
+  // Prepare data for CSV
+  const csvData = products
+    .filter(
+      (product) =>
+        selectedCategory === "All" ||
+        (product.category && product.category._id === selectedCategory)
+    )
+    .map((product) => {
+      const row = {
+        name: product.name,
+        category: product.category ? product.category.title : "No Category",
+        stock: product.countInStock,
+        brand: product.brand,
+      };
+
+      product.prices.forEach((price, index) => {
+        row[`price${index + 1}Qty`] = price.qty;
+        row[`price${index + 1}Units`] = price.units;
+        row[`price${index + 1}Regular`] = price.price;
+        row[`price${index + 1}Discount`] = price.discount; // Now includes discount instead of discounted price
+      });
+
+      return row;
+    });
+
+  const csvHeaders = generateCSVHeaders();
+
+  const csvReport = {
+    filename: "Product_Report.csv",
+    headers: csvHeaders,
+    data: csvData,
+  };
+
+  if (loading) return <Loader />;
+  if (error) return <Message variant="danger">{error}</Message>;
+
   const getFilteredProducts = () => {
     // If no categories are selected, return all products
     if (!selectedCategories || selectedCategories.length === 0) {
@@ -155,6 +224,25 @@ const ProductListScreen = () => {
   const header = (
     <div className="flex justify-content-between align-items-center">
       <h5 className="m-0">Products</h5>
+      <select
+        value={selectedCategory}
+        onChange={(e) => setSelectedCategory(e.target.value)}
+        style={{ margin: "10px", padding: "5px" }} // Adjust the padding and margin as needed
+      >
+        <option value="All">All Categories</option>
+        {categories.map((category) => (
+          <option key={category._id} value={category._id}>
+            {category.title}
+          </option>
+        ))}
+      </select>
+      <CSVLink
+        {...csvReport}
+        className="btn btn-primary"
+        style={{ margin: "10px", padding: "5px" }} // Adjust the padding and margin as needed
+      >
+        Download
+      </CSVLink>
       <span className="p-input-icon-left">
         <i className="pi pi-search" />
         <InputText

@@ -1,6 +1,6 @@
 import express from "express";
 const router = express.Router();
-
+import { protect, admin } from "../middleware/authMiddleware.js";
 import {
   getCategories,
   getCategoryById,
@@ -8,8 +8,6 @@ import {
   updateCategory,
   deleteCategory,
 } from "../controllers/categoryController.js";
-
-import { protect, admin } from "../middleware/authMiddleware.js";
 
 router.route("/").get(getCategories).post(protect, admin, createCategory);
 router

@@ -25,7 +25,12 @@ const productSchema = mongoose.Schema(
       required: true,
       ref: "Category",
     },
-
+    promotions: [
+      {
+        type: mongoose.Schema.Types.ObjectId,
+        ref: "Promotion",
+      },
+    ],
     description: {
       type: String,
       required: true,

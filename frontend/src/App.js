@@ -40,6 +40,7 @@ import Payment from "./screens/Payment";
 import Completion from "./screens/Completion";
 import SelectPaymentScreen from "./screens/SelectPaymentScreen";
 import CategoryEditScreen from "./screens/CategoryEditScreen";
+import PromotionListScreen from "./screens/PromotionListScreen";
 const getMarginTop = () => {
   const isMobile = window.innerWidth <= 767; // Adjust the breakpoint as needed
   return isMobile ? "140px" : "100px";
@@ -109,6 +110,10 @@ function App() {
               <Route
                 path="/admin/bannerssmall"
                 element={<SmallBannerUploadScreen />}
+              />
+              <Route
+                path="/admin/promotionlist"
+                element={<PromotionListScreen />}
               />
 
               <Route
