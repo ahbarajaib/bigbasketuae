@@ -44,12 +44,15 @@ const getProducts = asyncHandler(async (req, res) => {
 //@route GET /api/products/:id
 //@access Public
 const getProductById = asyncHandler(async (req, res) => {
-  const product = await Product.findById(req.params.id);
+  const product = await Product.findById(req.params.id).populate(
+    "category",
+    "title"
+  ); // Populate the category details
+
   if (product) {
     res.json(product);
   } else {
-    //this goes to the errorMiddleware
-    res.status(404); //we can also disregard this so by default error 500 will show
+    res.status(404);
     throw new Error("Product not found");
   }
 });

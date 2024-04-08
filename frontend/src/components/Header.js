@@ -99,9 +99,14 @@ const Header = () => {
                     id="username"
                   >
                     <LinkContainer to="/profile">
-                      <NavDropdown.Item>Profile</NavDropdown.Item>
+                      <NavDropdown.Item className="custom-dropdown-item">
+                        Profile
+                      </NavDropdown.Item>
                     </LinkContainer>
-                    <NavDropdown.Item onClick={logoutHandler}>
+                    <NavDropdown.Item
+                      onClick={logoutHandler}
+                      className="custom-dropdown-item"
+                    >
                       Logout
                     </NavDropdown.Item>
                   </NavDropdown>
@@ -131,25 +136,39 @@ const Header = () => {
                     id="adminmenu"
                   >
                     <LinkContainer to="/admin/userList">
-                      <NavDropdown.Item>Users</NavDropdown.Item>
+                      <NavDropdown.Item className="custom-dropdown-item">
+                        Users
+                      </NavDropdown.Item>
                     </LinkContainer>
                     <LinkContainer to="/admin/productlist">
-                      <NavDropdown.Item>Products</NavDropdown.Item>
+                      <NavDropdown.Item className="custom-dropdown-item">
+                        Products
+                      </NavDropdown.Item>
                     </LinkContainer>
                     <LinkContainer to="/admin/orderlist">
-                      <NavDropdown.Item>Orders</NavDropdown.Item>
+                      <NavDropdown.Item className="custom-dropdown-item">
+                        Orders
+                      </NavDropdown.Item>
                     </LinkContainer>
                     <LinkContainer to="/admin/categories">
-                      <NavDropdown.Item>Categories</NavDropdown.Item>
+                      <NavDropdown.Item className="custom-dropdown-item">
+                        Categories
+                      </NavDropdown.Item>
                     </LinkContainer>
                     <LinkContainer to="/admin/banners">
-                      <NavDropdown.Item>Banners</NavDropdown.Item>
+                      <NavDropdown.Item className="custom-dropdown-item">
+                        Banners
+                      </NavDropdown.Item>
                     </LinkContainer>
                     <LinkContainer to="/admin/bannerssmall">
-                      <NavDropdown.Item>Small Banners</NavDropdown.Item>
+                      <NavDropdown.Item className="custom-dropdown-item">
+                        Small Banners
+                      </NavDropdown.Item>
                     </LinkContainer>
                     <LinkContainer to="/admin/promotionlist">
-                      <NavDropdown.Item>Promotions</NavDropdown.Item>
+                      <NavDropdown.Item className="custom-dropdown-item">
+                        Promotions
+                      </NavDropdown.Item>
                     </LinkContainer>
                   </NavDropdown>
                 )}

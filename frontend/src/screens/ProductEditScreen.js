@@ -89,10 +89,30 @@ const ProductEditScreen = () => {
   );
 
   const handlePriceChange = (index, field, value) => {
-    const updatedPrices = prices.map((price, idx) =>
-      index === idx ? { ...price, [field]: value } : price
+    setPrices(
+      prices.map((price, idx) => {
+        if (index === idx) {
+          const updatedPrice = { ...price, [field]: value };
+
+          // Check if we're updating the price or the discount
+          if (field === "price" || field === "discount") {
+            // Assume a discount value of '0' if it is not yet set
+            const discountValue =
+              field === "discount" ? value : price.discount || 0;
+            const priceValue = field === "price" ? value : price.price;
+
+            // Calculate the discounted price
+            const discountedPrice = (priceValue * (100 - discountValue)) / 100;
+
+            // Update the discounted price
+            updatedPrice.discountedPrice = discountedPrice.toFixed(2); // Keeping two decimal places
+          }
+
+          return updatedPrice;
+        }
+        return price;
+      })
     );
-    setPrices(updatedPrices);
   };
 
   const addPriceVariant = () => {

@@ -226,7 +226,7 @@ const ProductScreen = () => {
               <ListGroup variant="flush">
                 <ListGroup.Item>
                   <h3>{product.name}</h3>
-                  <p>{product.category}</p>
+                  <p>{product.category?.title || product.category}</p>{" "}
                 </ListGroup.Item>
                 <ListGroup.Item className="text-muted">
                   Brand:&nbsp;

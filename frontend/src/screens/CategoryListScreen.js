@@ -91,7 +91,6 @@ const CategoryListScreen = () => {
         <Table striped bordered hover responsive className="table-sm">
           <thead>
             <tr>
-              <th>ID</th>
               <th>Title</th>
               <th>Name</th>
               <th>Image</th>
@@ -102,7 +101,6 @@ const CategoryListScreen = () => {
             {Array.isArray(categories) ? (
               categories.map((category) => (
                 <tr key={category._id}>
-                  <td>{category._id}</td>
                   <td>{category.title}</td>
 
                   <td>{category.name}</td>

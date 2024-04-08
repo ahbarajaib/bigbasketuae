@@ -23,25 +23,25 @@ a:hover {
   text-decoration: underline;
 }
 
-/* To change the text color to #8cc63e */
+/* To change the text color to #139745 */
 header {
-  background-image: linear-gradient(to right, #ffffff 0%, #8cc63e 100%);
+  background-image: linear-gradient(to right, #ffffff 0%, #139745 100%);
   color: black; /* Adjust text color as needed for readability */
   /* Other styles for padding, display, etc., based on your design */
 }
 .navbar-light .navbar-brand,
 .navbar-light .navbar-nav .nav-link {
-  color: #8cc63e;
+  color: #139745;
 }
 
 .custom-dropdown-item:hover {
-  background-color: #8cc63e; /* Replace with your desired color */
+  background-color: #139745; /* Replace with your desired color */
   color: #ffffff; /* Replace with your desired text color */
 }
 
 .nav-item .dropdown-menu .custom-dropdown-item.active,
 .nav-item .dropdown-menu .custom-dropdown-item:active {
-  background-color: #8cc63e; /* Replace with your desired color */
+  background-color: #139745; /* Replace with your desired color */
   color: #ffffff; /* Replace with your desired text color */
 }
 
@@ -187,9 +187,9 @@ header {
 /* all buttons */
 .button-primary {
   background-color: #fff;
-  border: 2px solid #8cc63e; /* Green color for the outline */
+  border: 2px solid #139745; /* Green color for the outline */
   border-radius: 20px;
-  color: #8cc63e; /* Green color for the text */
+  color: #139745; /* Green color for the text */
   font-size: 18px;
   font-weight: bold;
   padding: 10px 20px;
@@ -209,7 +209,7 @@ header {
 }
 
 .button-primary:hover {
-  background-color: #8cc63e; /* Green color on hover */
+  background-color: #139745; /* Green color on hover */
   color: #fff; /* White text on hover */
   outline: none; /* Remove the outline on hover */
   box-shadow: none;
@@ -220,8 +220,8 @@ header {
 }
 
 .btn-product:active {
-  background-color: #8cc63e !important;
-  border-color: #8cc63e !important;
+  background-color: #139745 !important;
+  border-color: #139745 !important;
   box-shadow: none !important;
 }
 
@@ -243,7 +243,7 @@ header {
   font-size: 12px; /* Set the font size to your desired small size */
 }
 .qty-button {
-  background-color: #8cc63e;
+  background-color: #139745;
   border: none;
 }
 /* Product.css */

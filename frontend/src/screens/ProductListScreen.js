@@ -57,7 +57,7 @@ const ProductListScreen = () => {
   const footer = `In total there are ${
     products ? products.length : 0
   } products.`;
-
+  console.log(products);
   const productDelete = useSelector((state) => state.productDelete);
 
   const {
