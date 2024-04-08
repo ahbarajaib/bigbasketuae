@@ -25,10 +25,7 @@ import { listCategories } from "../actions/categoryActions";
 const Header = () => {
   const dispatch = useDispatch();
   const userLogin = useSelector((state) => state.userLogin);
-  const [Lat, setLat] = useState(null);
-  const [Lng, setLng] = useState(null);
-  const [locationClicked, setLocationClicked] = useState(false);
-  const [address, setAddress] = useState("");
+
   const { userInfo } = userLogin;
   const cart = useSelector((state) => state.cart);
   const { cartItems } = cart;

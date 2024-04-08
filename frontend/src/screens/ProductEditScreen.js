@@ -67,9 +67,10 @@ const ProductEditScreen = () => {
         setName(product.name);
         setImage(product.image);
         setBrand(product.brand);
-        if (categories && categories.length > 0) {
-          setCategory(categories[0]._id);
-        }
+        setCategory(product.category);
+        // if (categories && categories.length > 0) {
+        //   setCategory(categories[0]._id);
+        // }
         setPrices(product.prices);
         setCountInStock(product.countInStock);
         setDescription(product.description);
@@ -257,6 +258,7 @@ const ProductEditScreen = () => {
                       <option value="pack">Pack</option>
                       <option value="piece">Piece/s</option>
                       <option value="bag">Bag</option>
+                      <option value="box">Box</option>
                     </Form.Select>
                   </Form.Group>
                 </Col>

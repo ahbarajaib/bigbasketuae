@@ -115,6 +115,47 @@ header {
     margin-bottom: 5px; /* Adjust the margin as needed */
   }
 }
+/* categories */
+.category-card {
+  position: relative;
+  cursor: pointer;
+  overflow: hidden;
+  border-radius: 8px; /* Rounded corners */
+  margin: 15px; /* Space between cards */
+  transition: box-shadow 0.3s ease-out, transform 0.3s ease-out; /* Smooth transition for shadow and lift */
+}
+
+.image-container {
+  position: relative;
+  width: 100%; /* Full width of the container */
+  padding-top: 100%; /* Keeps it square */
+  margin: 0 auto; /* Center the square if needed */
+}
+
+.category-image {
+  position: absolute;
+  top: 10%; /* 10% from top to create 80% height centered */
+  left: 10%; /* 10% from left to create 80% width centered */
+  right: 10%; /* 10% from right to maintain the center alignment */
+  bottom: 10%; /* 10% from bottom to maintain the center alignment */
+  width: 80%;
+  height: 80%;
+  object-fit: cover;
+  margin: auto; /* This will help in centering the image */
+}
+
+.category-card:hover {
+  transform: translateY(-5px); /* Slight lift */
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2); /* Soft shadow for depth */
+}
+
+.text {
+  font-size: 14px; /* Adjust font size here */
+  color: #333; /* Text color */
+  text-align: center;
+  padding: 12px 0; /* Increased padding for more space below image */
+}
+
 /* Center the text below the icon on small and medium screens */
 @media (max-width: 991px) {
   .signin-link {

@@ -45,6 +45,7 @@ const getMarginTop = () => {
   const isMobile = window.innerWidth <= 767; // Adjust the breakpoint as needed
   return isMobile ? "140px" : "100px";
 };
+
 function App() {
   return (
     <Router>
