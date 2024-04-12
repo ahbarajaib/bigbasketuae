@@ -208,6 +208,17 @@ header {
   box-shadow: none;
 }
 
+/* styles.css */
+.custom-button {
+  background-color: #139745; /* Green color */
+  border-color: #117a30; /* Darker green for border for some contrast */
+}
+
+.custom-button:hover {
+  background-color: #117a30; /* Slightly darker green on hover */
+  border-color: #0c5a22;
+}
+
 .button-primary:hover {
   background-color: #139745; /* Green color on hover */
   color: #fff; /* White text on hover */

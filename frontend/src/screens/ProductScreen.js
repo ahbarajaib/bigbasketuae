@@ -226,12 +226,28 @@ const ProductScreen = () => {
               <ListGroup variant="flush">
                 <ListGroup.Item>
                   <h3>{product.name}</h3>
-                  <p>{product.category?.title || product.category}</p>{" "}
+                  {product.subtitle && product.subtitle.trim() !== "" && (
+                    <p style={{ fontSize: "18px" }}>{product.subtitle}</p>
+                  )}
+                  <p style={{ fontSize: "16px", color: "#666" }}>
+                    {product.category?.title || product.category}
+                  </p>
                 </ListGroup.Item>
+
                 <ListGroup.Item className="text-muted">
                   Brand:&nbsp;
                   {product.brand}
                 </ListGroup.Item>
+                {product.countryOfOrigin &&
+                  product.countryOfOrigin.trim() !== "" && (
+                    <ListGroup.Item>
+                      <span style={{ fontWeight: "500" }}>
+                        Country Of Origin:
+                      </span>
+                      &nbsp;
+                      {product.countryOfOrigin}
+                    </ListGroup.Item>
+                  )}
                 <ListGroup.Item>
                   <Row className="flex-wrap align-items-center">
                     {product.prices &&

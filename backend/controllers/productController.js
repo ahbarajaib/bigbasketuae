@@ -116,6 +116,8 @@ const createProduct = asyncHandler(async (req, res) => {
     category: category._id,
     countInStock: 0,
     description: "Sample description",
+    subitle: req.body.subtitle || undefined, // Set only if provided, otherwise undefined
+    countryOfOrigin: req.body.countryOfOrigin || undefined, // Set only if provided, otherwise undefined
   });
 
   const createdProduct = await product.save();
@@ -132,6 +134,8 @@ const updateProduct = asyncHandler(async (req, res) => {
     category,
     countInStock,
     frequentlyBought,
+    subtitle,
+    countryOfOrigin,
   } = req.body;
 
   const product = await Product.findById(req.params.id);
@@ -152,7 +156,8 @@ const updateProduct = asyncHandler(async (req, res) => {
     product.category = category; // Ensure this is an ObjectId referencing a Category
     product.countInStock = countInStock;
     product.frequentlyBought = frequentlyBought;
-
+    product.countryOfOrigin = countryOfOrigin;
+    product.subtitle = subtitle;
     const updatedProduct = await product.save();
     res.json(updatedProduct);
   } else {

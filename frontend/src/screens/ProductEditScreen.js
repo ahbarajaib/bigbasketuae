@@ -25,6 +25,13 @@ const ProductEditScreen = () => {
   const [prices, setPrices] = useState([
     { qty: "", units: "gm", price: "", discount: "", discountedPrice: "" },
   ]);
+
+  const [countryOfOrigin, setCountryOfOrigin] = useState("");
+
+  const [showCountryInput, setShowCountryInput] = useState(false);
+  const [subtitle, setSubtitle] = useState("");
+  const [showSubtitleInput, setShowSubtitleInput] = useState(false);
+
   const [countInStock, setCountInStock] = useState(0);
   const [description, setDescription] = useState("");
   const [uploading, setUploading] = useState(false);
@@ -56,7 +63,6 @@ const ProductEditScreen = () => {
   }, [dispatch]);
 
   useEffect(() => {
-    dispatch(listCategories());
     if (successUpdate) {
       dispatch({ type: PRODUCT_UPDATE_RESET });
       navigate(`/admin/productlist/`);
@@ -68,15 +74,19 @@ const ProductEditScreen = () => {
         setImage(product.image);
         setBrand(product.brand);
         setCategory(product.category);
-        // if (categories && categories.length > 0) {
-        //   setCategory(categories[0]._id);
-        // }
         setPrices(product.prices);
         setCountInStock(product.countInStock);
         setDescription(product.description);
+        // Set the switch based on if countryOfOrigin is present or not
+        const hasCountryOfOrigin = Boolean(product.countryOfOrigin);
+        setShowCountryInput(hasCountryOfOrigin);
+        setCountryOfOrigin(product.countryOfOrigin || "");
+        const hasSubtitle = Boolean(product.subtitle);
+        setShowSubtitleInput(hasSubtitle);
+        setSubtitle(product.subtitle || "");
       }
     }
-  }, [dispatch, navigate, id, product, successUpdate]);
+  }, [product, dispatch, id, navigate, successUpdate]);
 
   //This is new
 
@@ -87,6 +97,12 @@ const ProductEditScreen = () => {
       value: { id: product._id, name: product.name, variant },
     }))
   );
+
+  const handleCountryChange = (e) => {
+    const value = e.target.value;
+
+    setCountryOfOrigin(value);
+  };
 
   const handlePriceChange = (index, field, value) => {
     setPrices(
@@ -159,7 +175,7 @@ const ProductEditScreen = () => {
   };
 
   //Above is new
-
+  console.log(product);
   const axiosInstance = axios.create({
     baseURL: process.env.REACT_APP_API_URL,
   });
@@ -191,6 +207,13 @@ const ProductEditScreen = () => {
   const submitHandler = (e) => {
     e.preventDefault();
 
+    if (!showCountryInput) {
+      setCountryOfOrigin(""); // Clear country of origin if switch is turned off
+    }
+    if (!showSubtitleInput) {
+      setSubtitle("");
+    }
+
     // Prepare the prices array with multiple price entries
     const newPrices = prices.map((p) => ({
       qty: p.qty,
@@ -212,10 +235,11 @@ const ProductEditScreen = () => {
         description,
         countInStock,
         selectedProducts,
+        countryOfOrigin: showCountryInput ? countryOfOrigin : null, // Set to null if switch is off
+        subtitle: showSubtitleInput ? subtitle : null,
       })
     );
   };
-
   const categoryOptions = categories.map((cat) => ({
     value: cat._id, // Use _id as the value
     label: cat.title, // Show title for the user to see
@@ -235,7 +259,8 @@ const ProductEditScreen = () => {
         ) : error ? (
           <Message variant="danger">{error}</Message>
         ) : (
-          <Form onSubmit={submitHandler}>
+          <Form onSubmit={submitHandler} key={product._id || "new"}>
+            {" "}
             <Form.Group controlId="name">
               <Form.Label>Name</Form.Label>
               <Form.Control
@@ -243,9 +268,34 @@ const ProductEditScreen = () => {
                 placeholder="Enter name"
                 value={name}
                 onChange={(e) => setName(e.target.value)}
+                className="mb-3"
               ></Form.Control>
             </Form.Group>
+            <Form.Group controlId="subtitle">
+              <Form.Check
+                type="switch"
+                id="subtitle-switch"
+                label={showSubtitleInput ? "Hide Subtitle" : "Add Subtitle"}
+                checked={showSubtitleInput}
+                onChange={(e) => {
+                  setShowSubtitleInput(e.target.checked);
 
+                  if (!e.target.checked) {
+                    setSubtitle(""); // Clear country of origin if switch is turned off
+                  }
+                }}
+                className="mb-3"
+              />
+              {showSubtitleInput && (
+                <Form.Control
+                  type="text"
+                  placeholder="Enter subtitle"
+                  value={subtitle}
+                  onChange={(e) => setSubtitle(e.target.value)}
+                  className="mb-3"
+                ></Form.Control>
+              )}
+            </Form.Group>
             {prices.map((price, index) => (
               <Row key={index} className="mb-3">
                 <Col xs={2}>
@@ -258,6 +308,7 @@ const ProductEditScreen = () => {
                       onChange={(e) =>
                         handlePriceChange(index, "qty", e.target.value)
                       }
+                      className="mb-3"
                     />
                   </Form.Group>
                 </Col>
@@ -269,6 +320,7 @@ const ProductEditScreen = () => {
                       onChange={(e) =>
                         handlePriceChange(index, "units", e.target.value)
                       }
+                      className="mb-3"
                     >
                       <option value="gm">gm</option>
                       <option value="kg">kg</option>
@@ -292,6 +344,7 @@ const ProductEditScreen = () => {
                       onChange={(e) =>
                         handlePriceChange(index, "price", e.target.value)
                       }
+                      className="mb-3"
                     />
                   </Form.Group>
                 </Col>
@@ -305,6 +358,7 @@ const ProductEditScreen = () => {
                       onChange={(e) =>
                         handlePriceChange(index, "discount", e.target.value)
                       }
+                      className="mb-3"
                     />
                   </Form.Group>
                 </Col>
@@ -318,10 +372,9 @@ const ProductEditScreen = () => {
                 </Col>
               </Row>
             ))}
-            <Button onClick={addPriceVariant} className="mb-3">
+            <Button onClick={addPriceVariant} className="custom-button mb-3">
               Add Another Price Variant
             </Button>
-
             <Form.Group controlId="image">
               <Form.Label>Image</Form.Label>
               <Form.Control
@@ -329,16 +382,17 @@ const ProductEditScreen = () => {
                 placeholder="Enter image url"
                 value={image}
                 onChange={(e) => setImage(e.target.value)}
+                className="mb-3"
               ></Form.Control>
               <Form.Control
                 type="file"
                 id="image-file"
                 label="Choose File"
                 onChange={uploadFileHandler}
+                className="mb-3"
               />
               {uploading && <Loader />}
             </Form.Group>
-
             <Form.Group controlId="brand">
               <Form.Label>Brand</Form.Label>
               <Form.Control
@@ -346,9 +400,37 @@ const ProductEditScreen = () => {
                 placeholder="Enter brand"
                 value={brand}
                 onChange={(e) => setBrand(e.target.value)}
+                className="mb-3"
               ></Form.Control>
             </Form.Group>
-
+            <Form.Group controlId="countryOfOriginSwitch">
+              <Form.Check
+                type="switch"
+                id="countryOfOrigin-switch"
+                label={
+                  showCountryInput
+                    ? "Hide Country of Origin"
+                    : "Add Country of Origin"
+                }
+                checked={showCountryInput}
+                onChange={(e) => {
+                  setShowCountryInput(e.target.checked);
+                  if (!e.target.checked) {
+                    setCountryOfOrigin(""); // Clear country of origin if switch is turned off
+                  }
+                }}
+                className="mb-3"
+              />
+              {showCountryInput && (
+                <Form.Control
+                  type="text"
+                  placeholder="Enter country of origin"
+                  value={countryOfOrigin}
+                  onChange={(e) => setCountryOfOrigin(e.target.value)}
+                  className="mb-3"
+                ></Form.Control>
+              )}
+            </Form.Group>
             <Form.Group controlId="countInStock">
               <Form.Label>Count In Stock</Form.Label>
               <Form.Control
@@ -356,14 +438,15 @@ const ProductEditScreen = () => {
                 placeholder="Enter countInStock"
                 value={countInStock}
                 onChange={(e) => setCountInStock(e.target.value)}
+                className="mb-3"
               ></Form.Control>
             </Form.Group>
-
             <Form.Group controlId="category">
               <Form.Label>Category</Form.Label>
               <Form.Select
                 value={category}
                 onChange={(e) => setCategory(e.target.value)}
+                className="mb-3"
               >
                 {categoryOptions.map((option) => (
                   <option key={option.value} value={option.value}>
@@ -372,7 +455,6 @@ const ProductEditScreen = () => {
                 ))}
               </Form.Select>
             </Form.Group>
-
             <Form.Group controlId="description">
               <Form.Label>Description</Form.Label>
               <Form.Control
@@ -381,6 +463,7 @@ const ProductEditScreen = () => {
                 placeholder="Enter description"
                 value={description}
                 onChange={(e) => setDescription(e.target.value)}
+                className="mb-3"
               ></Form.Control>
             </Form.Group>
             <Form.Group controlId="autocomplete">
@@ -391,10 +474,10 @@ const ProductEditScreen = () => {
                 onChange={(selectedOptions) =>
                   handleProductSelect(selectedOptions)
                 }
+                className="mb-3"
               />
             </Form.Group>
-
-            <Row>
+            <Row className="mb-3">
               {selectedProducts &&
                 selectedProducts.map((selectedProduct, index) => (
                   <Col key={index}>
@@ -414,8 +497,7 @@ const ProductEditScreen = () => {
                   </Col>
                 ))}
             </Row>
-
-            <Button type="submit" variant="primary">
+            <Button type="submit" variant="success">
               Update
             </Button>
           </Form>
