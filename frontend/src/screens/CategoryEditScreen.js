@@ -89,6 +89,14 @@ const CategoryEditScreen = () => {
     }
   };
 
+  const handleTitleChange = (e) => {
+    const newTitle = e.target.value;
+    setTitle(newTitle);
+
+    const newName = newTitle.replace(/\s+/g, "").toLowerCase();
+    setName(newName);
+  };
+
   const submitHandler = (e) => {
     e.preventDefault();
     dispatch(
@@ -122,23 +130,17 @@ const CategoryEditScreen = () => {
                 type="text"
                 placeholder="Enter title"
                 value={title}
-                onChange={(e) => setTitle(e.target.value)}
+                onChange={handleTitleChange}
               ></Form.Control>
             </Form.Group>
             <Form.Group controlId="name">
               <Form.Label>Name</Form.Label>
               <Form.Control
                 type="text"
-                placeholder="Enter name"
+                placeholder="URL-friedly name"
                 value={name}
-                onChange={(e) =>
-                  setName(e.target.value.replace(/\s+/g, "").toLowerCase())
-                }
-                isInvalid={!!name && (/\s/.test(name) || /[A-Z]/.test(name))}
+                readOnly
               ></Form.Control>
-              <Form.Text className="text-muted">
-                Enter a name using lowercase letters without spaces.
-              </Form.Text>
             </Form.Group>
 
             <Form.Group controlId="image">
