@@ -1,7 +1,6 @@
 import Product from "../models/productModel.js";
 import Category from "../models/categoryModel.js";
-//express-async-handler is a simple middleware for handling exceptions
-//inside of async express routes an passing them to your express error handlers
+import Promotion from "../models/promotionModel.js";
 import asyncHandler from "express-async-handler";
 
 //@desc Fetch all products
@@ -10,30 +9,35 @@ import asyncHandler from "express-async-handler";
 const getProducts = asyncHandler(async (req, res) => {
   const pageSize = 1000; // Ensure this is a number
   const page = Number(req.query.pageNumber) || 1;
-
-  // Assuming the keyword search is for products, not categories
-  const keyword = req.query.keyword
-    ? {
-        name: {
-          $regex: req.query.keyword,
-          $options: "i",
-        },
-      }
-    : {};
+  const { keyword = "", category, promotion } = req.query;
+  console.log("promotion from getProducts", promotion);
+  let queryFilters = {};
+  if (keyword) {
+    queryFilters.name = { $regex: keyword, $options: "i" };
+  }
 
   let categoryFilter = {};
-  if (req.query.category) {
-    const category = await Category.findOne({ name: req.query.category });
-    if (category) {
-      categoryFilter = { category: category._id };
+  if (category) {
+    const categoryDoc = await Category.findOne({ name: category });
+    if (categoryDoc) {
+      queryFilters.category = categoryDoc._id;
     } else {
       return res.status(404).json({ message: "Category not found" });
     }
   }
+  if (promotion) {
+    const promotionDoc = await Promotion.findOne({ name: promotion });
+    if (promotionDoc) {
+      queryFilters.promotion = promotionDoc._id;
+    } else {
+      return res.status(404).json({ message: "Promotion not found" });
+    }
+  }
 
-  const count = await Product.countDocuments({ ...keyword, ...categoryFilter });
-  const products = await Product.find({ ...keyword, ...categoryFilter })
-    .populate("category", "name title") // This populates the category field with the title from the Category model
+  const count = await Product.countDocuments(queryFilters);
+  const products = await Product.find(queryFilters)
+    .populate("category", "name title")
+    .populate("promotion", "name title")
     .limit(pageSize)
     .skip(pageSize * (page - 1));
 
@@ -44,11 +48,9 @@ const getProducts = asyncHandler(async (req, res) => {
 //@route GET /api/products/:id
 //@access Public
 const getProductById = asyncHandler(async (req, res) => {
-  const product = await Product.findById(req.params.id).populate(
-    "category",
-    "title"
-  ); // Populate the category details
-
+  const product = await Product.findById(req.params.id)
+    .populate("category", "title")
+    .populate("promotion", "title"); // Populate the promotions field with the name from the Promotion model
   if (product) {
     res.json(product);
   } else {
@@ -64,7 +66,6 @@ const getProductByCategory = asyncHandler(async (req, res) => {
   try {
     // URL decode category parameter
     const category = decodeURIComponent(req.params.category);
-
     let products;
     if (category.toLowerCase() === "all") {
       products = await Product.find({});
@@ -75,6 +76,31 @@ const getProductByCategory = asyncHandler(async (req, res) => {
     res.json(products);
   } catch (error) {
     console.error(error);
+    res.status(500).json({ message: "Server Error" });
+  }
+});
+
+// Backend controller to fetch products by promotion
+const getProductByPromotion = asyncHandler(async (req, res) => {
+  const promotionName = decodeURIComponent(req.params.promotion);
+  try {
+    // Find the promotion document first to get its ObjectId
+    const promotion = await Promotion.findOne({ name: promotionName });
+    if (!promotion) {
+      return res.status(404).json({ message: "Promotion not found" });
+    }
+
+    // Use the ObjectId of the promotion to find products
+    const products = await Product.find({ promotion: promotion._id }).populate(
+      "promotion"
+    );
+    if (products.length) {
+      res.json(products);
+    } else {
+      res.status(404).json({ message: "No products found for this promotion" });
+    }
+  } catch (error) {
+    console.error("Server Error: ", error);
     res.status(500).json({ message: "Server Error" });
   }
 });
@@ -132,13 +158,21 @@ const updateProduct = asyncHandler(async (req, res) => {
     image,
     brand,
     category,
+    promotion,
     countInStock,
     frequentlyBought,
     subtitle,
     countryOfOrigin,
+    // Added promotions to the destructured fields
   } = req.body;
+  console.log("Promotion ID received:", promotion);
 
   const product = await Product.findById(req.params.id);
+
+  if (!product) {
+    res.status(404);
+    throw new Error("Product not found");
+  }
 
   // Check if the category exists
   const categoryExists = await Category.findById(category);
@@ -147,23 +181,30 @@ const updateProduct = asyncHandler(async (req, res) => {
     throw new Error("Category not found");
   }
 
-  if (product) {
-    product.name = name;
-    product.prices = prices;
-    product.description = description;
-    product.image = image;
-    product.brand = brand;
-    product.category = category; // Ensure this is an ObjectId referencing a Category
-    product.countInStock = countInStock;
-    product.frequentlyBought = frequentlyBought;
-    product.countryOfOrigin = countryOfOrigin;
-    product.subtitle = subtitle;
-    const updatedProduct = await product.save();
-    res.json(updatedProduct);
+  if (promotion) {
+    const promotionExists = await Promotion.findById(promotion);
+    if (!promotionExists) {
+      res.status(400).throw(new Error("Promotion not found"));
+    }
+    product.promotion = promotion;
   } else {
-    res.status(404);
-    throw new Error("Product not found");
+    product.promotion = null; // Explicitly setting `promotion` to `null` if none provided
   }
+
+  product.name = name;
+  product.prices = prices;
+  product.description = description;
+  product.image = image;
+  product.brand = brand;
+  product.category = category; // Ensure this is an ObjectId referencing a Category
+  product.promotion = promotion; // Ensure this is an ObjectId referencing a Promotion
+  product.countInStock = countInStock;
+  product.frequentlyBought = frequentlyBought;
+  product.subtitle = subtitle;
+  product.countryOfOrigin = countryOfOrigin;
+
+  const updatedProduct = await product.save();
+  res.json(updatedProduct);
 });
 
 export {
@@ -173,4 +214,5 @@ export {
   createProduct,
   updateProduct,
   getProductByCategory,
+  getProductByPromotion,
 };

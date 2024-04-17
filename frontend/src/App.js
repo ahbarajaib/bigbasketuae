@@ -41,9 +41,11 @@ import Completion from "./screens/Completion";
 import SelectPaymentScreen from "./screens/SelectPaymentScreen";
 import CategoryEditScreen from "./screens/CategoryEditScreen";
 import PromotionListScreen from "./screens/PromotionListScreen";
+import PromotionEditScreen from "./screens/PromotionEditScreen";
+import ProductPromotionScreen from "./screens/ProductPromotionScreen";
 const getMarginTop = () => {
   const isMobile = window.innerWidth <= 767; // Adjust the breakpoint as needed
-  return isMobile ? "140px" : "100px";
+  return isMobile ? "140px" : "140px";
 };
 
 function App() {
@@ -88,6 +90,10 @@ function App() {
                 path="/category/:category"
                 element={<ProductCategoryScreen />}
               />
+              <Route
+                path="/promotion/:promotion"
+                element={<ProductPromotionScreen />}
+              />
 
               <Route path="/cart/:id?" element={<CartScreen />} />
               <Route path="/admin/userlist" element={<UserListScreen />} />
@@ -98,11 +104,6 @@ function App() {
                 path="/admin/categories"
                 element={<CategoryListScreen />}
               />
-              {/* <Route
-                path="/admin/categories"
-                element={<CategoryListScreen />}
-                exact
-              /> */}
 
               <Route
                 path="/admin/categories/:id/edit"
@@ -113,10 +114,13 @@ function App() {
                 element={<SmallBannerUploadScreen />}
               />
               <Route
-                path="/admin/promotionlist"
+                path="/admin/promotions"
                 element={<PromotionListScreen />}
               />
-
+              <Route
+                path="/admin/promotions/:id/edit"
+                element={<PromotionEditScreen />}
+              />
               <Route
                 path="/admin/productlist"
                 element={<ProductListScreen />}

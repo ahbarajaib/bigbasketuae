@@ -18,6 +18,9 @@ import {
   PRODUCT_CATEGORY_REQUEST,
   PRODUCT_CATEGORY_SUCCESS,
   PRODUCT_CATEGORY_FAIL,
+  PRODUCT_PROMOTION_REQUEST,
+  PRODUCT_PROMOTION_SUCCESS,
+  PRODUCT_PROMOTION_FAIL,
 } from "../constants/productConstants";
 
 const axiosInstance = axios.create({ baseURL: process.env.REACT_APP_API_URL });
@@ -69,6 +72,52 @@ export const categoryProducts =
       });
     }
   };
+
+export const promotionProducts =
+  (keyword = "", pageNumber = "", promotion = "") =>
+  async (dispatch) => {
+    try {
+      dispatch({ type: PRODUCT_PROMOTION_REQUEST });
+
+      const { data } = await axiosInstance.get(
+        `/api/products?keyword=${keyword}&pageNumber=${pageNumber}&promotion=${promotion}`
+      );
+      console.log(" promotionProducts ", data);
+
+      dispatch({
+        type: PRODUCT_PROMOTION_SUCCESS,
+        payload: data,
+      });
+    } catch (error) {
+      dispatch({
+        type: PRODUCT_PROMOTION_FAIL,
+        payload:
+          error.response && error.response.data.message
+            ? error.response.data.message
+            : error.message,
+      });
+    }
+  };
+
+export const listProductsByPromotion = (promotion) => async (dispatch) => {
+  try {
+    console.log("promotion", promotion);
+    dispatch({ type: PRODUCT_PROMOTION_REQUEST });
+    const { data } = await axiosInstance.get(
+      `/api/products/promotion/${promotion}`
+    );
+    console.log(data.products);
+    dispatch({ type: PRODUCT_PROMOTION_SUCCESS, payload: data.products }); // Assuming 'data.products' is your array
+  } catch (error) {
+    dispatch({
+      type: PRODUCT_PROMOTION_FAIL,
+      payload:
+        error.response && error.response.data.message
+          ? error.response.data.message
+          : error.message,
+    });
+  }
+};
 
 export const listProductDetails = (id) => async (dispatch) => {
   try {
@@ -198,6 +247,7 @@ export const updateProduct = (product) => async (dispatch, getState) => {
       },
     };
     //{} because we are making a post request but not sending any data
+    console.log(product);
     const { data } = await axiosInstance.put(
       `/api/products/${product._id}`,
       product,

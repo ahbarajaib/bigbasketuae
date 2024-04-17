@@ -19,6 +19,9 @@ import {
   PRODUCT_CATEGORY_REQUEST,
   PRODUCT_CATEGORY_SUCCESS,
   PRODUCT_CATEGORY_FAIL,
+  PRODUCT_PROMOTION_REQUEST,
+  PRODUCT_PROMOTION_SUCCESS,
+  PRODUCT_PROMOTION_FAIL,
 } from "../constants/productConstants";
 
 export const productListReducer = (state = { products: [] }, action) => {
@@ -54,6 +57,27 @@ export const productCategoryReducer = (state = { products: [] }, action) => {
         page: action.payload.page,
       };
     case PRODUCT_CATEGORY_FAIL:
+      return { loading: false, error: action.payload };
+    default:
+      return state;
+  }
+};
+
+export const productPromotionReducer = (
+  state = { products: [], loading: false },
+  action
+) => {
+  switch (action.type) {
+    case PRODUCT_PROMOTION_REQUEST:
+      return { loading: true, products: [] };
+    case PRODUCT_PROMOTION_SUCCESS:
+      return {
+        loading: false,
+        products: action.payload.products,
+        pages: action.payload.pages,
+        page: action.payload.page,
+      };
+    case PRODUCT_PROMOTION_FAIL:
       return { loading: false, error: action.payload };
     default:
       return state;

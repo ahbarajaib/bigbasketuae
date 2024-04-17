@@ -19,6 +19,8 @@ const ProductCategoryScreen = () => {
     seoData.find((data) => data.slugUrl === category) || {};
 
   const productCategory = useSelector((state) => state.productCategory);
+  const { loading, error, products, page, pages } = productCategory;
+
   function formatCategoryName(category) {
     // List of words to exclude from capitalization
     const excludedWords = ["and"];
@@ -34,11 +36,7 @@ const ProductCategoryScreen = () => {
       })
       .join(" ");
   }
-  const formattedCategoryName = formatCategoryName(category);
-  const seoTitle = `${formattedCategoryName} | Big Basket UAE`;
-  const seoDescription = `Explore our wide range of products in ${formattedCategoryName}. Find everything you need in this category and enjoy great prices and quality.`;
 
-  const { loading, error, products, page, pages } = productCategory;
   useEffect(() => {
     // Check if the category is 'all' and conditionally dispatch the action
     //all displays all the product related code is in getProductByCategory in productController

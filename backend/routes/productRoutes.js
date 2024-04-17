@@ -7,6 +7,7 @@ import {
   createProduct,
   updateProduct,
   getProductByCategory,
+  getProductByPromotion,
 } from "../controllers/productController.js";
 
 import { protect, admin } from "../middleware/authMiddleware.js";
@@ -20,5 +21,6 @@ router
   .put(protect, admin, updateProduct);
 
 router.route("/category/:category").get(getProductByCategory);
+router.route("/promotion/:promotion").get(getProductByPromotion);
 
 export default router;

@@ -165,7 +165,7 @@ const Header = () => {
                         Small Banners
                       </NavDropdown.Item>
                     </LinkContainer>
-                    <LinkContainer to="/admin/promotionlist">
+                    <LinkContainer to="/admin/promotions">
                       <NavDropdown.Item className="custom-dropdown-item">
                         Promotions
                       </NavDropdown.Item>

@@ -5,7 +5,7 @@ const promotionSchema = mongoose.Schema(
     name: {
       type: String,
       required: true,
-      default: "Sample Promotion",
+      default: "sample-promotion",
     },
     title: {
       type: String,

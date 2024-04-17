@@ -11,6 +11,7 @@ import { PRODUCT_UPDATE_RESET } from "../constants/productConstants";
 import Select from "react-select"; // Import the react-select library
 import { listCategories } from "../actions/categoryActions";
 import { useLocation } from "react-router-dom";
+import { listPromotions } from "../actions/promotionActions";
 
 const ProductEditScreen = () => {
   const { id } = useParams();
@@ -21,7 +22,8 @@ const ProductEditScreen = () => {
   const [name, setName] = useState("");
   const [image, setImage] = useState("");
   const [brand, setBrand] = useState("");
-  const [category, setCategory] = useState("");
+  const [category, setCategory] = useState({ _id: "", title: "" });
+  const [promotion, setPromotion] = useState({ _id: "", title: "" });
   const [prices, setPrices] = useState([
     { qty: "", units: "gm", price: "", discount: "", discountedPrice: "" },
   ]);
@@ -35,9 +37,7 @@ const ProductEditScreen = () => {
   const [countInStock, setCountInStock] = useState(0);
   const [description, setDescription] = useState("");
   const [uploading, setUploading] = useState(false);
-
   const dispatch = useDispatch();
-
   const productDetails = useSelector((state) => state.productDetails);
   const { loading, error, product } = productDetails;
 
@@ -58,8 +58,12 @@ const ProductEditScreen = () => {
     success: successUpdate,
   } = productUpdate;
 
+  const promotionList = useSelector((state) => state.promotionList);
+  const { promotions } = promotionList;
+
   useEffect(() => {
     dispatch(listCategories());
+    dispatch(listPromotions());
   }, [dispatch]);
 
   useEffect(() => {
@@ -73,7 +77,8 @@ const ProductEditScreen = () => {
         setName(product.name);
         setImage(product.image);
         setBrand(product.brand);
-        setCategory(product.category);
+        setCategory(product.category || { _id: "", title: "" });
+        setPromotion(product.promotion || { _id: "", title: "" });
         setPrices(product.prices);
         setCountInStock(product.countInStock);
         setDescription(product.description);
@@ -88,8 +93,6 @@ const ProductEditScreen = () => {
     }
   }, [product, dispatch, id, navigate, successUpdate]);
 
-  //This is new
-
   const [selectedProducts, setSelectedProducts] = useState([]);
   const productOptions = products.flatMap((product) =>
     product.prices.map((variant) => ({
@@ -97,12 +100,6 @@ const ProductEditScreen = () => {
       value: { id: product._id, name: product.name, variant },
     }))
   );
-
-  const handleCountryChange = (e) => {
-    const value = e.target.value;
-
-    setCountryOfOrigin(value);
-  };
 
   const handlePriceChange = (index, field, value) => {
     setPrices(
@@ -174,8 +171,6 @@ const ProductEditScreen = () => {
     }
   };
 
-  //Above is new
-  console.log(product);
   const axiosInstance = axios.create({
     baseURL: process.env.REACT_APP_API_URL,
   });
@@ -224,25 +219,31 @@ const ProductEditScreen = () => {
     }));
     console.log("Selected Products:", selectedProducts); // Add this line
 
-    dispatch(
-      updateProduct({
-        _id: id,
-        name,
-        prices: newPrices,
-        image,
-        brand,
-        category,
-        description,
-        countInStock,
-        selectedProducts,
-        countryOfOrigin: showCountryInput ? countryOfOrigin : null, // Set to null if switch is off
-        subtitle: showSubtitleInput ? subtitle : null,
-      })
-    );
+    const updatedProduct = {
+      _id: id,
+      name,
+      prices: newPrices,
+      image,
+      brand,
+      category,
+      promotion, // This should be a single ID based on your model
+      description,
+      countInStock,
+      selectedProducts, // Make sure this is what you intend to send
+      countryOfOrigin: showCountryInput ? countryOfOrigin : undefined,
+      subtitle: showSubtitleInput ? subtitle : undefined,
+    };
+
+    dispatch(updateProduct(updatedProduct));
   };
   const categoryOptions = categories.map((cat) => ({
     value: cat._id, // Use _id as the value
     label: cat.title, // Show title for the user to see
+  }));
+
+  const promotionOptions = promotions.map((promo) => ({
+    value: promo._id, // Use _id as the value
+    label: promo.title, // Show title for the user to see
   }));
 
   return (
@@ -444,8 +445,13 @@ const ProductEditScreen = () => {
             <Form.Group controlId="category">
               <Form.Label>Category</Form.Label>
               <Form.Select
-                value={category}
-                onChange={(e) => setCategory(e.target.value)}
+                value={category._id}
+                onChange={(e) => {
+                  const selectedCat = categories.find(
+                    (cat) => cat._id === e.target.value
+                  );
+                  setCategory(selectedCat || { _id: "", title: "" });
+                }}
                 className="mb-3"
               >
                 {categoryOptions.map((option) => (
@@ -465,6 +471,27 @@ const ProductEditScreen = () => {
                 onChange={(e) => setDescription(e.target.value)}
                 className="mb-3"
               ></Form.Control>
+            </Form.Group>
+            <Form.Group controlId="promotion">
+              <Form.Label>Promotion</Form.Label>
+              <Form.Select
+                value={promotion ? promotion._id : ""}
+                onChange={(e) => {
+                  setPromotion(
+                    e.target.value
+                      ? promotions.find((promo) => promo._id === e.target.value)
+                      : null
+                  );
+                }}
+                className="mb-3"
+              >
+                <option value="">No Promotion</option>
+                {promotions.map((promo) => (
+                  <option key={promo._id} value={promo._id}>
+                    {promo.title}
+                  </option>
+                ))}
+              </Form.Select>
             </Form.Group>
             <Form.Group controlId="autocomplete">
               <Form.Label>Frequently Bought Together</Form.Label>

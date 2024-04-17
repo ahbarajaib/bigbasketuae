@@ -16,6 +16,7 @@ import userRoutes from "./routes/userRoutes.js";
 import orderRoutes from "./routes/orderRoutes.js";
 import uploadRoutes from "./routes/uploadRoutes.js";
 import categoryImageRoutes from "./routes/categoryImageRoutes.js";
+import promotionImageRoutes from "./routes/promotionImageRoutes.js";
 import bannerRoutes from "./routes/bannerRoutes.js";
 import smallBannerRoutes from "./routes/smallBannerRoutes.js";
 import categoryRoutes from "./routes/categoryRoutes.js";
@@ -94,6 +95,7 @@ app.use("/api/users", userRoutes);
 app.use("/api/orders", orderRoutes);
 app.use("/api/upload", uploadRoutes);
 app.use("/api/uploadcategory", categoryImageRoutes);
+app.use("/api/uploadpromotion", promotionImageRoutes);
 app.use("/api/banners", bannerRoutes);
 app.use("/api/smallbanners", smallBannerRoutes);
 app.use("/api/categories", categoryRoutes);
@@ -155,15 +157,9 @@ app.use(notFound);
 app.use(errorHandler);
 const PORT = process.env.PORT || 5000;
 
-  // Read the SSL certificate and key files
-  const privateKey = fs.readFileSync('/etc/letsencrypt/live/bigbasketuae.com/privkey.pem', 'utf8');
-  const certificate = fs.readFileSync('/etc/letsencrypt/live/bigbasketuae.com/fullchain.pem', 'utf8');
-  const credentials = { key: privateKey, cert: certificate };
-
-  // Create an HTTPS server
-  const httpsServer = https.createServer(credentials, app);
-
- // Start the HTTPS server
-  httpsServer.listen(PORT, () => {
-    console.log(`Server running in ${process.env.NODE_ENV} mode on port ${PORT} (HTTPS)`.yellow.bold);
-  });
+app.listen(
+  PORT,
+  console.log(
+    `Server running in ${process.env.NODE_ENV} mode on port ${PORT}`.yellow.bold
+  )
+);

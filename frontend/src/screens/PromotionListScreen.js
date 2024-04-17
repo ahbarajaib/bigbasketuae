@@ -1,51 +1,53 @@
-import React, { useEffect } from "react";
+import React, { useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
-import { Table, Button, Row, Col } from "react-bootstrap";
+import { Table, Button, Row, Col, Form } from "react-bootstrap";
 import { LinkContainer } from "react-router-bootstrap";
 import { useNavigate } from "react-router-dom";
 import Message from "../components/Message";
 import Loader from "../components/Loader";
 import {
-  listCategories,
-  deleteCategory,
-  createCategory,
-} from "../actions/categoryActions";
+  listPromotions,
+  deletePromotion,
+  createPromotion,
+  togglePromotionActive,
+} from "../actions/promotionActions";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faEdit, faTrash, faPlus } from "@fortawesome/free-solid-svg-icons";
-import { CATEGORY_CREATE_RESET } from "../constants/categoryConstants";
+import { PROMOTION_CREATE_RESET } from "../constants/promotionConstants";
 
-const CategoryListScreen = () => {
+const PromotionListScreen = () => {
   const navigate = useNavigate();
   const dispatch = useDispatch();
 
-  const categoryList = useSelector((state) => state.categoryList);
-  const { loading, error, categories } = categoryList;
+  const promotionList = useSelector((state) => state.promotionList);
+  const { loading, error, promotions } = promotionList;
+  const [updateTrigger, setUpdateTrigger] = useState(false);
 
-  const categoryCreate = useSelector((state) => state.categoryCreate);
+  const promotionCreate = useSelector((state) => state.promotionCreate);
   const {
     loading: loadingCreate,
     error: errorCreate,
     success: successCreate,
-    category: createdCategory,
-  } = categoryCreate;
+    promotion: createdPromotion,
+  } = promotionCreate;
 
-  const categoryDelete = useSelector((state) => state.categoryDelete);
-  const { success: successDelete } = categoryDelete;
+  const promotionDelete = useSelector((state) => state.promotionDelete);
+  const { success: successDelete } = promotionDelete;
 
   const userLogin = useSelector((state) => state.userLogin);
   const { userInfo } = userLogin;
 
   useEffect(() => {
-    dispatch({ type: CATEGORY_CREATE_RESET });
+    dispatch({ type: PROMOTION_CREATE_RESET });
 
     if (!userInfo || !userInfo.isAdmin) {
       navigate("/login");
     }
 
     if (successCreate) {
-      navigate(`/admin/categories/${createdCategory._id}/edit`);
+      navigate(`/admin/promotions/${createdPromotion._id}/edit`);
     } else {
-      dispatch(listCategories());
+      dispatch(listPromotions());
     }
   }, [
     dispatch,
@@ -53,85 +55,103 @@ const CategoryListScreen = () => {
     userInfo,
     successDelete,
     successCreate,
-    createdCategory,
+    createdPromotion,
   ]);
   useEffect(() => {
-    dispatch(listCategories());
-  }, [dispatch, successDelete]);
+    dispatch(listPromotions());
+  }, [dispatch, successDelete, updateTrigger]);
 
   const deleteHandler = (id) => {
     if (window.confirm("Are you sure?")) {
-      dispatch(deleteCategory(id));
+      dispatch(deletePromotion(id));
     }
   };
 
-  const createCategoryHandler = () => {
-    dispatch(createCategory());
+  const createPromotionHandler = () => {
+    dispatch(createPromotion({}));
+  };
+
+  const toggleActiveHandler = (promotion) => {
+    dispatch(togglePromotionActive(promotion._id));
+    // Trigger a re-render
+    setUpdateTrigger((prev) => !prev);
   };
 
   return (
     <>
       <Row className="align-items-center">
         <Col>
-          <h1>Categories</h1>
+          <h1>Promotions</h1>
         </Col>
-        <Col className="d-flex justify-content-end">
-          <Button className="my-3" onClick={createCategoryHandler}>
-            <FontAwesomeIcon icon={faPlus} />
-            Create a category
+        <Col className="text-right">
+          <Button className="my-3" onClick={createPromotionHandler}>
+            <FontAwesomeIcon icon={faPlus} /> Create Promotion
           </Button>
         </Col>
       </Row>
-
+      {loadingCreate && <Loader />}
+      {errorCreate && <Message variant="danger">{errorCreate}</Message>}
       {loading ? (
         <Loader />
       ) : error ? (
         <Message variant="danger">{error}</Message>
       ) : (
-        <Table striped bordered hover responsive className="table-sm">
+        <Table
+          striped
+          bordered
+          hover
+          responsive
+          className="table-sm"
+          key={updateTrigger}
+        >
           <thead>
             <tr>
-              <th>Title</th>
-              <th>Image</th>
-              <th>Action</th>
+              <th>TITLE</th>
+              <th>NAME</th>
+              <th>IMAGE</th>
+              <th>ACTIVE</th>
+              <th>ACTION</th>
             </tr>
           </thead>
           <tbody>
-            {Array.isArray(categories) ? (
-              categories.map((category) => (
-                <tr key={category._id}>
-                  <td>{category.title}</td>
+            {promotions.map((promotion) => (
+              <tr key={promotion._id}>
+                <td>{promotion.title}</td>
 
-                  <td>
-                    <img
-                      src={process.env.REACT_APP_API_URL + category.image}
-                      alt={category.name}
-                      style={{ width: "50px" }}
-                    />
-                  </td>
-                  <td>
-                    <LinkContainer
-                      to={`/admin/categories/${category._id}/edit`}
-                    >
-                      <Button variant="light" className="btn-sm">
-                        <FontAwesomeIcon icon={faEdit} />
-                      </Button>
-                    </LinkContainer>
-                    <Button
-                      variant="danger"
-                      className="btn-sm"
-                      onClick={() => deleteHandler(category._id)}
-                    >
-                      <FontAwesomeIcon icon={faTrash} />
+                <td>{promotion.name}</td>
+                <td>
+                  <img
+                    src={process.env.REACT_APP_API_URL + promotion.image}
+                    alt={promotion.name}
+                    style={{ width: "100px" }}
+                    className="img-thumbnail"
+                  />
+                </td>
+                <td>
+                  <Form.Check
+                    type="switch"
+                    id={promotion._id}
+                    label=""
+                    checked={promotion.isActive}
+                    onChange={() => toggleActiveHandler(promotion)}
+                  />
+                </td>
+                <td>
+                  <LinkContainer to={`/admin/promotions/${promotion._id}/edit`}>
+                    <Button variant="light" className="btn-sm">
+                      <FontAwesomeIcon icon={faEdit} />
                     </Button>
-                  </td>
-                </tr>
-              ))
-            ) : (
-              <tr>
-                <td colSpan="4">No categories found.</td>
+                  </LinkContainer>
+                  <Button
+                    variant="danger"
+                    className="btn-sm"
+                    onClick={() => deleteHandler(promotion._id)}
+                  >
+                    <FontAwesomeIcon icon={faTrash} />
+                  </Button>
+                </td>
               </tr>
-            )}
+            ))}
           </tbody>
         </Table>
       )}
@@ -139,4 +159,4 @@ const CategoryListScreen = () => {
   );
 };
 
-export default CategoryListScreen;
+export default PromotionListScreen;
