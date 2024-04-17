@@ -30,9 +30,8 @@ const ProductPromotionScreen = () => {
   }
 
   useEffect(() => {
-    console.log("Fetching promotion products for:", promotion);
     dispatch(promotionProducts(keyword, pageNumber, promotion));
-  }, [dispatch, promotion]);
+  }, [dispatch, keyword, pageNumber, promotion]);
 
   return (
     <div>
