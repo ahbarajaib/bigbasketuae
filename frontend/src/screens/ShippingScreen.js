@@ -10,8 +10,8 @@ import MapView from "../components/Map";
 const ShippingScreen = () => {
   const defaultCity = "Dubai";
   const defaultCountry = "United Arab Emirates";
-  const cart = useSelector((state) => state.cart);
-  const { shippingAddress } = cart;
+  const cartItems = useSelector((state) => state.cart);
+  const { shippingAddress } = cartItems;
   const [locationClicked, setLocationClicked] = useState(false);
   const [Lat, setLat] = useState(null);
   const [Lng, setLng] = useState(null);
@@ -161,7 +161,11 @@ const ShippingScreen = () => {
           <MapView />
         </div>
         <Form onSubmit={submitHandler}>
-          <Button onClick={locationHandler} disabled={loadingLocation}>
+          <Button
+            variant="success"
+            onClick={locationHandler}
+            disabled={loadingLocation}
+          >
             {loadingLocation ? (
               <>
                 <Spinner
@@ -224,8 +228,8 @@ const ShippingScreen = () => {
           <div className="d-grid gap-2" style={{ marginTop: "20px" }}>
             <Button
               type="submit"
-              variant="primary"
-              className="button-primary btn-block"
+              variant="success"
+              className=" btn-block btn-lg"
             >
               Continue
             </Button>

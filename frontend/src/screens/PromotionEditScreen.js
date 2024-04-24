@@ -31,7 +31,6 @@ const PromotionEditScreen = () => {
     error: errorDetails,
     promotion,
   } = promotionDetails;
-  console.log(promotion);
   const promotionList = useSelector((state) => state.promotionList);
   const { loading, error, promotions } = promotionList;
 

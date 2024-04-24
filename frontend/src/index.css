@@ -250,21 +250,15 @@ header {
   background-color: #fff;
   padding-left: 20px;
 }
-.small-button {
-  font-size: 12px; /* Set the font size to your desired small size */
-}
+
 .qty-button {
   background-color: #139745;
   border: none;
 }
 /* Product.css */
 
-.product-card {
-  transition: border 0.2s ease-in-out; /* Add transition for smooth effect */
-}
-
 .product-card:hover {
-  border: 2px solid #007bff; /* Add a strong border on hover with your desired color */
+  border: 2px solid #139745; /* Add a strong border on hover with your desired color */
 }
 
 /* Below is for productNav text to make it smaller */
@@ -559,4 +553,216 @@ button {
 
 .rounded-image {
   border-radius: 10px; /* Adjust this value to get the desired roundness */
+}
+
+.custom-checkbox .form-check-input:checked {
+  background-color: #139745;
+  border-color: #139745;
+}
+
+.brand-btn {
+  background-color: #139745;
+  border-color: #139745;
+}
+
+.brand-btn:hover {
+  background-color: #0f7a3c;
+  border-color: #0e6934;
+}
+
+.custom-form-control {
+  background-color: #fff; /* Light background for input */
+  border: 1px solid #ccc; /* Subtle borders for inputs */
+  border-radius: 4px; /* Rounded corners for the input fields */
+  padding: 10px 12px; /* Comfortable padding inside inputs */
+  font-size: 16px; /* Slightly larger font size for better readability */
+}
+
+.custom-form-control:focus {
+  border-color: #139745; /* Highlight input when focused */
+  box-shadow: 0 0 8px rgba(19, 151, 69, 0.2); /* Subtle shadow on focus */
+}
+
+.custom-form-label {
+  font-size: 18px; /* Larger label size for clarity */
+  color: #333; /* Darker color for better readability */
+  margin-bottom: 5px; /* Space between label and input field */
+}
+
+/* Applying margin and padding for overall spacing */
+.form-group {
+  margin-bottom: 1rem; /* Consistent bottom margin */
+}
+
+@media (max-width: 768px) {
+  .custom-form-control,
+  .custom-form-label {
+    font-size: 14px; /* Smaller font size for mobile devices */
+  }
+}
+
+/* Footer */
+@media (max-width: 576px) {
+  .footer-link {
+    font-size: 14px;
+    padding: 8px 0;
+  }
+
+  .social-link {
+    font-size: 16px; /* Adjust the font size as needed */
+    color: #fff; /* Set the text color (white, in this case) */
+    text-decoration: none; /* Remove underline from links */
+  }
+
+  .social-link:hover {
+    text-decoration: underline; /* Optionally add an underline on hover */
+  }
+
+  .social-icon {
+    font-size: 24px; /* Adjust the font size of the icons as needed */
+    vertical-align: middle; /* Align icons with the text vertically */
+  }
+}
+
+.quantity-selector {
+  display: flex;
+  align-items: center;
+}
+
+.quantity-button {
+  width: 30px;
+  height: 30px;
+  font-size: 1rem;
+  background-color: transparent;
+  border: none;
+  color: black;
+  margin: 0 5px; /* Adjust margin as needed */
+}
+
+.quantity-input {
+  width: 30px; /* Adjust width as needed */
+  height: 30px;
+  text-align: center; /* Center align the text */
+  border: 1px solid #ced4da; /* Add a border for visual separation */
+  border-radius: 5px; /* Add some border radius for a rounded appearance */
+}
+
+/* In your custom CSS file */
+.btn-custom:hover,
+.btn-custom:active,
+.btn-custom:focus {
+  background-color: #8fd27e !important; /* Use your desired color */
+  border-color: #8fd27e !important; /* Match border color if needed */
+  box-shadow: none !important; /* Removes the glow effect */
+}
+
+/* Custom Dropdown Toggle Styles */
+.custom-dropdown-toggle {
+  background-color: #f8f9fa !important; /* Change to match your bg-neutral-200 */
+  color: black !important; /* Text color */
+  border: 0 !important; /* Remove border */
+}
+
+/* Custom Dropdown Menu Styles */
+.custom-dropdown-item {
+  color: black !important; /* Text color for dropdown items */
+  background-color: #f8f9fa !important; /* Background color for dropdown items */
+}
+
+/* Custom Active Dropdown Item Styles */
+.custom-dropdown-item.active,
+.custom-dropdown-item:active {
+  background-color: #e2e6ea !important; /* Lighter gray for active item, replace as needed */
+}
+
+/* Custom Styles for the discount badge */
+.discount-badge-on-button {
+  background-color: #feb9b9 !important; /* Pink background */
+  padding: 2px 4px;
+  color: #610000; /* Dark red text */
+  position: relative;
+  right: -10px; /* Adjust if necessary */
+}
+
+.two-line-clamp {
+  display: -webkit-box;
+  -webkit-box-orient: vertical;
+  -webkit-line-clamp: 2; /* Number of lines you want to display */
+  overflow: hidden;
+  text-overflow: ellipsis;
+  height: 3em; /* Adjust based on your line-height */
+  line-height: 1.5em; /* Adjust based on your design */
+}
+
+.custom-radio .form-check-input:checked {
+  background-color: #28a745;
+  border-color: #28a745;
+}
+
+.custom-radio .form-check-input {
+  width: 25px;
+  height: 25px;
+}
+.custom-radio .form-check-label {
+  line-height: 35px;
+}
+.checkout-steps-link {
+  color: #139745;
+  font-weight: 600; /* Bootstrap's .bg-success color */
+}
+
+/* Footer Background */
+.footer {
+  background-color: #d5d5d5; /* Lighter shade */
+}
+
+/* Footer Text */
+.footer-text {
+  color: #232221; /* .bg-neutral-100 for high contrast */
+}
+
+.payment-icons {
+  display: flex;
+  justify-content: space-between;
+  width: 100%; /* Adjust as needed */
+}
+
+.payment-icon {
+  width: 120px; /* Adjust as needed */
+  height: auto;
+}
+
+.social-icons {
+  display: flex;
+  justify-content: space-between;
+  width: 100%; /* Adjust as needed */
+}
+
+.social-icon {
+  width: 50px; /* Adjust as needed */
+  height: auto;
+}
+
+.btn:disabled {
+  background-color: #8fd27e;
+}
+.btn-lg:disabled {
+  background-color: #8fd27e;
+}
+.border-change {
+  border: 1px solid #8fd27e;
+  box-shadow: #8fd27e 2px 2px 4px 4px;
+}
+
+.rounded-lg {
+  border-radius: 1rem; /* Adjust radius as needed */
+}
+
+.large-checkbox .form-check-input {
+  transform: scale(1.5);
+}
+
+.large-checkbox .form-check-input:checked {
+  background-color: #139745;
+  border-color: #139745;
 }

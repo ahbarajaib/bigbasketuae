@@ -12,6 +12,7 @@ import Select from "react-select"; // Import the react-select library
 import { listCategories } from "../actions/categoryActions";
 import { useLocation } from "react-router-dom";
 import { listPromotions } from "../actions/promotionActions";
+import { set } from "mongoose";
 
 const ProductEditScreen = () => {
   const { id } = useParams();
@@ -29,21 +30,18 @@ const ProductEditScreen = () => {
   ]);
 
   const [countryOfOrigin, setCountryOfOrigin] = useState("");
-
   const [showCountryInput, setShowCountryInput] = useState(false);
   const [subtitle, setSubtitle] = useState("");
   const [showSubtitleInput, setShowSubtitleInput] = useState(false);
-
   const [countInStock, setCountInStock] = useState(0);
   const [description, setDescription] = useState("");
+  const [frequentlyBought, setFrequentlyBought] = useState([]);
   const [uploading, setUploading] = useState(false);
   const dispatch = useDispatch();
   const productDetails = useSelector((state) => state.productDetails);
   const { loading, error, product } = productDetails;
-
   const productList = useSelector((state) => state.productList);
   const { loading: ListLoading, error: ListError, products } = productList;
-
   const categoryList = useSelector((state) => state.categoryList);
   const {
     loading: loadingCategory,
@@ -71,7 +69,7 @@ const ProductEditScreen = () => {
       dispatch({ type: PRODUCT_UPDATE_RESET });
       navigate(`/admin/productlist/`);
     } else {
-      if (!product.name || product._id !== id) {
+      if (!product || !product.name || product._id !== id) {
         dispatch(listProductDetails(id));
       } else {
         setName(product.name);
@@ -82,6 +80,7 @@ const ProductEditScreen = () => {
         setPrices(product.prices);
         setCountInStock(product.countInStock);
         setDescription(product.description);
+        setFrequentlyBought(product.frequentlyBought || []);
         // Set the switch based on if countryOfOrigin is present or not
         const hasCountryOfOrigin = Boolean(product.countryOfOrigin);
         setShowCountryInput(hasCountryOfOrigin);
@@ -93,14 +92,15 @@ const ProductEditScreen = () => {
     }
   }, [product, dispatch, id, navigate, successUpdate]);
 
-  const [selectedProducts, setSelectedProducts] = useState([]);
   const productOptions = products.flatMap((product) =>
     product.prices.map((variant) => ({
       label: `${product.name} ${variant.qty}${variant.units}`,
-      value: { id: product._id, name: product.name, variant },
+      value: {
+        productId: product._id,
+        variantId: variant._id, // Make sure _id is available in your variant objects
+      },
     }))
   );
-
   const handlePriceChange = (index, field, value) => {
     setPrices(
       prices.map((price, idx) => {
@@ -140,35 +140,25 @@ const ProductEditScreen = () => {
       currentPrices.filter((_, idx) => idx !== index)
     );
   };
-  const handleProductSelect = (selectedOption) => {
-    console.log("selectedOption", selectedOption);
+  const handleProductSelect = (selectedOptions) => {
+    const newItems = selectedOptions.map((option) => ({
+      _id: Math.random().toString(36).substr(2, 9), // Temporary ID
+      productId: option.value.productId,
+      variantId: option.value.variantId,
+      name: products.find((p) => p._id === option.value.productId)?.name,
+      variant:
+        products
+          .find((p) => p._id === option.value.productId)
+          ?.prices.find((v) => v._id === option.value.variantId) || {},
+    }));
 
-    if (selectedOption && selectedOption.length > 0) {
-      const productInfo = selectedOption[0].value;
+    setFrequentlyBought((currentItems) => [...currentItems, ...newItems]);
+  };
 
-      console.log("productInfo", productInfo);
-
-      setSelectedProducts((prevSelectedProducts) => {
-        const updatedProducts = [
-          ...prevSelectedProducts,
-          {
-            id: productInfo?.id,
-            name: productInfo?.name,
-            variant: {
-              qty: productInfo?.variant?.qty || 0,
-              units: productInfo?.variant?.units || "",
-              price: productInfo?.variant?.price || 0,
-              discountedPrice: productInfo?.variant?.discountedPrice || 0,
-              discount: productInfo?.variant?.discount || 0,
-            },
-          },
-        ];
-
-        console.log("updatedProducts", updatedProducts);
-
-        return updatedProducts;
-      });
-    }
+  const handleRemove = (fbId) => {
+    setFrequentlyBought((currentItems) =>
+      currentItems.filter((item) => item._id !== fbId)
+    );
   };
 
   const axiosInstance = axios.create({
@@ -211,13 +201,13 @@ const ProductEditScreen = () => {
 
     // Prepare the prices array with multiple price entries
     const newPrices = prices.map((p) => ({
+      _id: p._id,
       qty: p.qty,
       units: p.units,
       price: p.price,
       discountedPrice: p.discountedPrice,
       discount: p.discount,
     }));
-    console.log("Selected Products:", selectedProducts); // Add this line
 
     const updatedProduct = {
       _id: id,
@@ -225,25 +215,20 @@ const ProductEditScreen = () => {
       prices: newPrices,
       image,
       brand,
-      category,
-      promotion, // This should be a single ID based on your model
+      category: category._id, // Ensure you are sending the ID only
+      promotion: promotion ? promotion._id : null, // Send null if no promotion is selected
       description,
       countInStock,
-      selectedProducts, // Make sure this is what you intend to send
+      frequentlyBought, // Make sure this is what you intend to send
       countryOfOrigin: showCountryInput ? countryOfOrigin : undefined,
       subtitle: showSubtitleInput ? subtitle : undefined,
     };
-
     dispatch(updateProduct(updatedProduct));
+    console.log("Submitting product update:", updatedProduct);
   };
   const categoryOptions = categories.map((cat) => ({
     value: cat._id, // Use _id as the value
     label: cat.title, // Show title for the user to see
-  }));
-
-  const promotionOptions = promotions.map((promo) => ({
-    value: promo._id, // Use _id as the value
-    label: promo.title, // Show title for the user to see
   }));
 
   return (
@@ -477,11 +462,10 @@ const ProductEditScreen = () => {
               <Form.Select
                 value={promotion ? promotion._id : ""}
                 onChange={(e) => {
-                  setPromotion(
-                    e.target.value
-                      ? promotions.find((promo) => promo._id === e.target.value)
-                      : null
+                  const selectedPromo = promotions.find(
+                    (promo) => promo._id === e.target.value
                   );
+                  setPromotion(selectedPromo || null); // Set to null if no promotion is selected, ensuring backend compatibility
                 }}
                 className="mb-3"
               >
@@ -498,31 +482,39 @@ const ProductEditScreen = () => {
               <Select
                 options={productOptions}
                 isMulti
-                onChange={(selectedOptions) =>
-                  handleProductSelect(selectedOptions)
-                }
+                onChange={handleProductSelect}
                 className="mb-3"
               />
             </Form.Group>
             <Row className="mb-3">
-              {selectedProducts &&
-                selectedProducts.map((selectedProduct, index) => (
-                  <Col key={index}>
-                    {/* Make sure this key is unique */}
-                    {selectedProduct && (
-                      <>
-                        <h5>{selectedProduct.name}</h5>
-                        {selectedProduct.variant && (
-                          <div>
-                            {selectedProduct.variant.qty}{" "}
-                            {selectedProduct.variant.units} - AED{" "}
-                            {selectedProduct.variant.price}
-                          </div>
-                        )}
-                      </>
-                    )}
+              {frequentlyBought.map((fbItem, index) => {
+                return (
+                  <Col md={12} key={fbItem._id || index} className="mb-3">
+                    <div
+                      style={{
+                        display: "flex",
+                        alignItems: "center",
+                        justifyContent: "space-between",
+                      }}
+                    >
+                      <p>
+                        {fbItem.productId.name || "Product Unavailable"} |
+                        {fbItem.variant && fbItem.variant.price != null
+                          ? `${fbItem.variant.qty || "N/A"} ${
+                              fbItem.variant.units || "N/A"
+                            } | AED ${fbItem.variant.price.toFixed(2)}`
+                          : "Information not available"}
+                      </p>
+                      <Button
+                        variant="danger"
+                        onClick={() => handleRemove(fbItem._id)}
+                      >
+                        x
+                      </Button>
+                    </div>
                   </Col>
-                ))}
+                );
+              })}
             </Row>
             <Button type="submit" variant="success">
               Update

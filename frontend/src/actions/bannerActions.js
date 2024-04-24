@@ -42,8 +42,6 @@ export const uploadBanner = (formData) => async (dispatch, getState) => {
     };
 
     const { data } = await axiosInstance.post("/api/banners", formData, config);
-    console.log(data);
-    console.log(data.imagePath);
     dispatch({ type: BANNER_UPLOAD_SUCCESS, payload: data.imagePath });
   } catch (error) {
     dispatch({
@@ -130,7 +128,6 @@ export const uploadSmallBanner = (formData) => async (dispatch, getState) => {
       formData,
       config
     );
-    console.log(data);
 
     dispatch({ type: SMALL_BANNER_UPLOAD_SUCCESS, payload: data.imagePath });
   } catch (error) {

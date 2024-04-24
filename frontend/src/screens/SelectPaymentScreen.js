@@ -7,8 +7,7 @@ import { useSelector } from "react-redux";
 
 const SelectPaymentScreen = () => {
   const navigate = useNavigate();
-  const cart = useSelector((state) => state.cart);
-
+  const cartItems = useSelector((state) => state.cart);
   // State to keep track of the selected payment method
   const [selectedPaymentMethod, setSelectedPaymentMethod] = useState("");
 
@@ -25,13 +24,13 @@ const SelectPaymentScreen = () => {
       });
     } else if (selectedPaymentMethod === "BringSwipingMachine") {
       const order = await createOrder({
-        orderItems: cart.cartItems,
-        shippingAddress: cart.shippingAddress,
+        orderItems: cartItems.cartItems,
+        shippingAddress: cartItems.shippingAddress,
         paymentMethod: "Bring Swiping Machine",
-        itemsPrice: cart.itemsPrice,
-        shippingPrice: cart.shippingPrice,
-        taxPrice: cart.taxPrice,
-        totalPrice: cart.totalPrice,
+        itemsPrice: cartItems.itemsPrice,
+        shippingPrice: cartItems.shippingPrice,
+        taxPrice: cartItems.taxPrice,
+        totalPrice: cartItems.totalPrice,
       });
       navigate("/placeorder", {
         state: { paymentMethod: "Bring Swiping Machine" },
@@ -57,7 +56,8 @@ const SelectPaymentScreen = () => {
               <Form.Group className="text-left mb-2">
                 <Form.Check
                   type="radio"
-                  label="Card Payment"
+                  className="custom-radio"
+                  label="&nbsp;&nbsp; Card Payment"
                   name="paymentMethod"
                   value="CardPayment"
                   onChange={handlePaymentMethodChange}
@@ -66,7 +66,8 @@ const SelectPaymentScreen = () => {
               <Form.Group className="text-left mb-2">
                 <Form.Check
                   type="radio"
-                  label="Bring Swiping Machine"
+                  className="custom-radio"
+                  label="&nbsp;&nbsp; Bring Swiping Machine"
                   name="paymentMethod"
                   value="BringSwipingMachine"
                   onChange={handlePaymentMethodChange}
@@ -76,7 +77,8 @@ const SelectPaymentScreen = () => {
               <Form.Group className="text-left mb-2">
                 <Form.Check
                   type="radio"
-                  label="Cash on Delivery"
+                  className="custom-radio"
+                  label="&nbsp;&nbsp; Cash on Delivery"
                   name="paymentMethod"
                   value="CashOnDelivery"
                   onChange={handlePaymentMethodChange}
@@ -87,7 +89,7 @@ const SelectPaymentScreen = () => {
             {selectedPaymentMethod && (
               <Button
                 onClick={handleProceedToPayment}
-                variant="primary"
+                variant="success"
                 className="btn-block mt-3"
                 style={{ width: "200px" }}
               >

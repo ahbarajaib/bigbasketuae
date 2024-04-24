@@ -157,17 +157,30 @@ app.use(notFound);
 app.use(errorHandler);
 const PORT = process.env.PORT || 5000;
 
-   // Read the SSL certificate and key files
-  const privateKey = fs.readFileSync('/etc/letsencrypt/live/bigbasketuae.com/privkey.pem', 'utf8');
-  const certificate = fs.readFileSync('/etc/letsencrypt/live/bigbasketuae.com/fullchain.pem', 'utf8');
-  const credentials = { key: privateKey, cert: certificate };
+if (process.env.USE_SSL === "true") {
+  // Setup for HTTPS server
+  const privateKey = fs.readFileSync(
+    "/etc/letsencrypt/live/yourdomain.com/privkey.pem",
+    "utf8"
+  );
+  const certificate = fs.readFileSync(
+    "/etc/letsencrypt/live/yourdomain.com/fullchain.pem",
+    "utf8"
+  );
+  const ca = fs.readFileSync(
+    "/etc/letsencrypt/live/yourdomain.com/chain.pem",
+    "utf8"
+  );
 
-  // Create an HTTPS server
+  const credentials = { key: privateKey, cert: certificate, ca: ca };
   const httpsServer = https.createServer(credentials, app);
 
- // Start the HTTPS server
   httpsServer.listen(PORT, () => {
-    console.log(`Server running in ${process.env.NODE_ENV} mode on port ${PORT} (HTTPS)`.yellow.bold);
+    console.log(`HTTPS Server running on port ${PORT}`);
   });
-
-
+} else {
+  // Setup for HTTP server
+  app.listen(PORT, () => {
+    console.log(`HTTP Server running on port ${PORT}`);
+  });
+}

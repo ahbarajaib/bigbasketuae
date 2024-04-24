@@ -3,101 +3,86 @@ import { Link } from "react-router-dom";
 import { Card, Button, Dropdown } from "react-bootstrap";
 import { addToCart, removeFromCart } from "../actions/cartActions";
 import { useDispatch, useSelector } from "react-redux";
+import QuantitySelector from "./QuantitySelector";
+import QuantityDropdown from "./QuantityDropdown";
 
 const Product = ({ product }) => {
-  const [selectedQty, setSelectedQty] = useState(
-    product.prices && product.prices.length > 0 ? product.prices[0].qty : ""
-  );
-
-  const [selectedUnits, setSelectedUnits] = useState(
-    product.prices && product.prices.length > 0 ? product.prices[0].units : ""
-  );
-  const [selectedPrice, setSelectedPrice] = useState(
-    product.prices && product.prices.length > 0 ? product.prices[0].price : ""
-  );
-  const [selectedDiscount, setSelectedDiscount] = useState(
-    product.prices && product.prices.length > 0
-      ? product.prices[0].discount
-      : ""
-  );
-  const [selectedDiscountedPrice, setSelectedDiscountedPrice] = useState(
-    product.prices && product.prices.length > 0
-      ? product.prices[0].discountedPrice
-      : ""
-  );
-  const [selectedNoOfProducts, setSelectedNoOfProducts] = useState(1); // Initialize to 0
+  const [selectedPriceVariant, setSelectedPriceVariant] = useState(null);
   const [cartItemId, setCartItemId] = useState("");
 
   const cartItems = useSelector((state) => state.cart.cartItems);
   const dispatch = useDispatch();
   useEffect(() => {
-    // const cartItem = cartItems.find((item) => item.product === product._id);
-    const cartItem = cartItems.find((item) => item.cartItemId === cartItemId);
-    if (cartItem) {
-      setSelectedNoOfProducts(cartItem.variant.selectedNoOfProducts);
+    // If a cart item ID is set, find the corresponding item in the cart
+    if (cartItemId && selectedPriceVariant) {
+      const cartItem = cartItems.find((item) => item.cartItemId === cartItemId);
+      // If the cart item exists and the quantity is different, update the selected variant
+      if (cartItem && cartItem.quantity !== selectedPriceVariant.noOfProducts) {
+        setSelectedPriceVariant((prev) => ({
+          ...prev,
+          noOfProducts: cartItem.quantity,
+        }));
+      }
     }
-  }, [product.prices, cartItems, product._id, selectedQty, cartItemId]);
+  }, [cartItems, cartItemId, selectedPriceVariant]);
 
-  const isProductInCart = cartItems.some(
-    (item) => item.cartItemId === `${product._id}-${selectedQty}`
-  );
+  useEffect(() => {
+    if (product && product.prices && product.prices.length > 0) {
+      setSelectedPriceVariant({
+        ...product.prices[0],
+        noOfProducts: 1, // Setting initial quantity of selected variant
+      });
+    }
+  }, [product]);
+
+  const isProductInCart = (cartItemId) => {
+    return cartItems.some((item) => item.cartItemId === cartItemId);
+  };
 
   const addToCartHandler = () => {
-    const cartItemId = `${product._id}-${selectedQty}`;
-
-    // If quantity is 0, add to cart with quantity 1
-    const variant = {
-      selectedQty,
-      selectedPrice,
-      selectedDiscount,
-      selectedDiscountedPrice,
-      selectedUnits,
-      selectedNoOfProducts,
-    };
-    if (isProductInCart) {
-      // If the product is in the cart, remove it
-      dispatch(removeFromCart(cartItemId));
-    } else {
-      // If the product is not in the cart, add it
-      dispatch(addToCart(product, variant, cartItemId));
-    }
-  };
-  const handleQtySelect = (
-    qty,
-    noOfProducts,
-    units,
-    price,
-    discount,
-    discountedPrice
-  ) => {
-    setSelectedQty(qty);
-    setSelectedNoOfProducts(noOfProducts);
-    setSelectedUnits(units);
-    setSelectedPrice(price);
-    setSelectedDiscount(discount);
-    setSelectedDiscountedPrice(discountedPrice);
-    const newCartItemId = `${product._id}-${qty}`;
-    setCartItemId(newCartItemId);
-  };
-
-  const handleDecreaseQty = () => {
-    if (selectedNoOfProducts > 1) {
-      setSelectedNoOfProducts(selectedNoOfProducts - 1);
-
-      // Update the cart quantity using the cartItemId
-      //dispatch(updateCartQuantity(cartItemId, selectedNoOfProducts - 1));
+    if (selectedPriceVariant) {
+      const cartItemId = `${product._id}-${selectedPriceVariant._id}`; // Ensure unique IDs are used
+      const cartItem = {
+        product: product,
+        variant: {
+          ...selectedPriceVariant,
+          product_id: product._id, // Include the product ID inside the variant for easy reference
+        },
+        cartItemId: cartItemId,
+      };
+      // This checks if the item is already in the cart
+      if (isProductInCart(cartItemId)) {
+        dispatch(removeFromCart(cartItemId));
+      } else {
+        dispatch(addToCart(cartItem)); // Pass the entire cartItem object
+      }
     }
   };
 
-  const handleIncreaseQty = () => {
-    if (selectedNoOfProducts < product.countInStock) {
-      setSelectedNoOfProducts(selectedNoOfProducts + 1);
+  const decreaseQty = () => {
+    if (selectedPriceVariant && selectedPriceVariant.noOfProducts > 1) {
+      setSelectedPriceVariant((prevVariant) => ({
+        ...prevVariant,
+        noOfProducts: prevVariant.noOfProducts - 1,
+      }));
+    }
+  };
+
+  const increaseQty = () => {
+    if (
+      selectedPriceVariant &&
+      selectedPriceVariant.noOfProducts < product.countInStock
+    ) {
+      setSelectedPriceVariant((prevVariant) => ({
+        ...prevVariant,
+        noOfProducts: prevVariant.noOfProducts + 1,
+      }));
     }
   };
 
   return (
-    <Card className="my-3 rounded product-card">
-      {selectedDiscount > 0 && (
+    <Card className="my-1 rounded product-card">
+      {selectedPriceVariant && selectedPriceVariant.discount > 0 && (
         <span
           className="discount-badge"
           style={{
@@ -106,7 +91,7 @@ const Product = ({ product }) => {
             color: "#610000",
           }}
         >
-          {selectedDiscount}% OFF
+          {selectedPriceVariant && selectedPriceVariant.discount}% OFF
         </span>
       )}
       <Link to={`/product/${product?._id}`} style={{ display: "block" }}>
@@ -122,60 +107,41 @@ const Product = ({ product }) => {
           loading="lazy"
         />
       </Link>
-      <Card.Body className="text-center d-flex flex-column">
+      <Card.Body className="text-center d-flex flex-column p-2">
         <Link to={`/product/${product?._id}`}>
-          <Card.Title as="div" style={{ minHeight: "60px", fontWeight: "600" }}>
+          <Card.Title
+            as="div"
+            className="two-line-clamp"
+            style={{ fontWeight: "600" }}
+          >
             {product?.name}
           </Card.Title>
         </Link>
         <Card.Subtitle
           as="div"
-          className="text-muted"
+          className="text-muted mb-2"
           style={{ fontSize: "0.75rem" }}
         >
           {product?.brand}
         </Card.Subtitle>
-
-        <div className="d-flex flex-column">
-          <div className="w-100 mb-2">
-            <Dropdown size="sm">
-              <Dropdown.Toggle
-                style={{
-                  fontSize: "0.75rem",
-                  backgroundColor: "white",
-                  color: "black",
-                  marginTop: "0.25rem",
-                }}
-                variant="secondary"
-                id="quantity-dropdown"
-              >
-                {selectedQty ? `${selectedQty} ${selectedUnits}` : "Select Qty"}
-              </Dropdown.Toggle>
-              <Dropdown.Menu style={{ fontSize: "0.75rem" }}>
-                {product?.prices &&
-                  product.prices.map((price) => (
-                    <Dropdown.Item
-                      key={price.qty}
-                      active={selectedQty === price.qty} // Set 'active' based on selectedQty
-                      onClick={() =>
-                        handleQtySelect(
-                          price.qty,
-                          price.noOfProducts,
-                          price.units,
-                          price.price,
-                          price.discount,
-                          price.discountedPrice
-                        )
-                      }
-                    >
-                      {price.qty} {price.units}
-                    </Dropdown.Item>
-                  ))}
-              </Dropdown.Menu>
-            </Dropdown>
+        <div className="row">
+          <div className="col-sm m-0 p-0">
+            <QuantityDropdown
+              product={product}
+              selectedPriceVariant={selectedPriceVariant}
+              setSelectedPriceVariant={setSelectedPriceVariant}
+            />
           </div>
-
-          <div className="w-100 text-right">
+          <div className="col-sm m-0 p-0">
+            <QuantitySelector
+              selectedPriceVariant={selectedPriceVariant}
+              increaseQty={increaseQty}
+              decreaseQty={decreaseQty}
+            />
+          </div>
+        </div>
+        <div>
+          <div className="w-100 text-right pt-4 pb-2">
             <div className="price-container d-flex justify-content-center">
               <Card.Text
                 as="p"
@@ -184,24 +150,28 @@ const Product = ({ product }) => {
               >
                 AED{" "}
                 {(
-                  (selectedDiscount > 0
-                    ? selectedDiscountedPrice
-                    : selectedPrice) *
-                  (selectedNoOfProducts > 0 ? selectedNoOfProducts : 1)
+                  (selectedPriceVariant && selectedPriceVariant.discount > 0
+                    ? selectedPriceVariant.discountedPrice
+                    : selectedPriceVariant
+                    ? selectedPriceVariant.price
+                    : 0) *
+                  (selectedPriceVariant ? selectedPriceVariant.noOfProducts : 1)
                 ).toFixed(2)}
               </Card.Text>
 
-              {product?.prices[0]?.discount > 0 ? (
+              {selectedPriceVariant && selectedPriceVariant.discount > 0 ? (
                 <Card.Text
                   as="p"
                   className="original-price"
                   style={{ marginBottom: "0", fontSize: "0.7em" }}
                 >
                   &nbsp;
-                  {typeof selectedPrice === "number"
+                  {typeof selectedPriceVariant.price === "number"
                     ? (
-                        selectedPrice *
-                        (selectedNoOfProducts > 0 ? selectedNoOfProducts : 1)
+                        selectedPriceVariant.price *
+                        (selectedPriceVariant.noOfProducts > 0
+                          ? selectedPriceVariant.noOfProducts
+                          : 1)
                       ).toFixed(2)
                     : ""}
                 </Card.Text>
@@ -211,74 +181,32 @@ const Product = ({ product }) => {
         </div>
         <div className="d-flex justify-content-between align-items-center mt-2">
           {/* - button */}
-          <div className="d-flex align-items-center">
-            {/* - button */}
-            <Button
-              onClick={handleDecreaseQty}
-              variant="primary"
-              style={{
-                width: "30px",
-                height: "30px",
-                fontSize: "1rem", // Adjust font size as needed
-                backgroundColor: "transparent",
-                border: "none",
-                color: "black",
-                marginRight: "2px", // Adjust the margin as needed
-              }}
-            >
-              -
-            </Button>
-
-            {/* Quantity display */}
-            <div className="qty-number" style={{ fontSize: "1rem" }}>
-              {selectedNoOfProducts}
-            </div>
-
-            {/* + button */}
-            <Button
-              onClick={handleIncreaseQty}
-              variant="primary"
-              style={{
-                width: "30px",
-                height: "30px",
-                fontSize: "1rem", // Adjust font size as needed
-                backgroundColor: "transparent",
-                border: "none",
-                color: "black",
-                marginLeft: "2px", // Adjust the margin as needed
-              }}
-            >
-              +
-            </Button>
-          </div>
-
-          {/* "Add" button */}
-          {isProductInCart ? (
-            // Display the trash can icon if the product is in the cart
+          {product &&
+          selectedPriceVariant &&
+          isProductInCart(`${product._id}-${selectedPriceVariant._id}`) ? (
             <Button
               onClick={addToCartHandler}
-              className="button-primary small-button"
-              variant="primary"
-              style={{ fontSize: "1rem", padding: "5px 10px" }}
+              className=""
+              variant="danger"
+              style={{ width: "100%" }} // Add custom styles
             >
-              <i className="fas fa-trash"></i>
+              Remove
             </Button>
           ) : (
-            // Display the "Add" button if the product is not in the cart
             <Button
               onClick={addToCartHandler}
-              className="button-primary small-button"
-              variant="primary"
-              style={{ fontSize: "1rem", padding: "5px 10px" }}
+              className=""
+              variant="success"
+              style={{ width: "100%" }} // Add custom styles
             >
               Add
             </Button>
           )}
         </div>
       </Card.Body>
-      <Card.Footer className="border-0 m-0 p-0">
+      {/* <Card.Footer className="border-0 m-0 p-0">
         <small className="text-muted p-1">Incl. of VAT</small>
-      </Card.Footer>
+      </Card.Footer> */}
     </Card>
   );
 };

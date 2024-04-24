@@ -12,6 +12,7 @@ import Product from "../components/Product";
 import SEO from "../components/SEO";
 import ReactMarkdown from "react-markdown";
 import { listCategories } from "../actions/categoryActions";
+import ProductFrequent from "../components/ProductFrequent";
 
 const ProductScreen = () => {
   const { id } = useParams();
@@ -21,55 +22,38 @@ const ProductScreen = () => {
 
   const productDetails = useSelector((state) => state.productDetails);
   const { loading, error, product } = productDetails;
-
+  console.log(product);
+  const currentCategoryName = product?.category?.name;
+  const frequentlyBought = product.frequentlyBought;
   const categoryDetails = useSelector((state) => state.categoryDetails);
   const { category } = categoryDetails; // Assuming this contains the fetched category details
 
-  const similarProducts = useSelector((state) => state.productCategory); // Assuming this is used to store similar products based on category
-  const {
-    loading: loadingSimilar,
-    error: errorSimilar,
-    products: similarProductsList,
-  } = similarProducts;
+  const [selectedPriceVariant, setSelectedPriceVariant] = useState(null);
 
-  const [selectedQty, setSelectedQty] = useState(
-    product.prices && product.prices.length > 0 ? product.prices[0].qty : ""
-  );
-
-  const [selectedUnits, setSelectedUnits] = useState(
-    product.prices && product.prices.length > 0 ? product.prices[0].units : ""
-  );
-  const [selectedPrice, setSelectedPrice] = useState(
-    product.prices && product.prices.length > 0 ? product.prices[0].price : ""
-  );
-  const [selectedDiscount, setSelectedDiscount] = useState(
-    product.prices && product.prices.length > 0
-      ? product.prices[0].discount
-      : ""
-  );
-  const [selectedDiscountedPrice, setSelectedDiscountedPrice] = useState(
-    product.prices && product.prices.length > 0
-      ? product.prices[0].discountedPrice
-      : ""
-  );
-  const [selectedNoOfProducts, setSelectedNoOfProducts] = useState(1); // Initialize to 0
   const [cartItemId, setCartItemId] = useState("");
-
+  const [selectedProducts, setSelectedProducts] = useState(new Set());
   const cartItems = useSelector((state) => state.cart.cartItems);
   const productCategory = useSelector((state) => state.productCategory);
-
   const {
     loading: categoryLoading,
     error: categoryError,
     products,
   } = productCategory;
-
   useEffect(() => {
-    const cartItem = cartItems.find((item) => item.cartItemId === cartItemId);
-    if (cartItem) {
-      setSelectedNoOfProducts(cartItem.variant.selectedNoOfProducts);
+    // If a cart item ID is set, find the corresponding item in the cart
+    if (cartItemId && selectedPriceVariant) {
+      const cartItem = cartItems.find((item) => item.cartItemId === cartItemId);
+
+      // If the cart item exists and the quantity is different, update the selected variant
+      if (cartItem && cartItem.quantity !== selectedPriceVariant.noOfProducts) {
+        setSelectedPriceVariant((prev) => ({
+          ...prev,
+          noOfProducts: cartItem.quantity,
+        }));
+      }
     }
-  }, [product.prices, cartItems, cartItemId]);
+  }, [cartItems, cartItemId, selectedPriceVariant]);
+
   useEffect(() => {
     if (id) {
       dispatch(listProductDetails(id));
@@ -78,15 +62,13 @@ const ProductScreen = () => {
 
   useEffect(() => {
     if (product && product.prices && product.prices.length > 0) {
-      const initialPrice = product.prices[0];
-      setSelectedQty(initialPrice.qty);
-      setSelectedUnits(initialPrice.units);
-      setSelectedPrice(initialPrice.price);
-      setSelectedDiscount(initialPrice.discount);
-      setSelectedDiscountedPrice(initialPrice.discountedPrice);
-      setCartItemId(`${product._id}-${initialPrice.qty}`);
+      setSelectedPriceVariant({
+        ...product.prices[0],
+        noOfProducts: 1, // Setting initial quantity of selected variant
+      });
     }
   }, [product]);
+
   useEffect(() => {
     dispatch(listProductDetails(id));
   }, [dispatch, id]);
@@ -98,67 +80,87 @@ const ProductScreen = () => {
   }, [dispatch, product]);
 
   useEffect(() => {
-    // Once categories are loaded, find the current product's category details
-    const currentCategory = category.find(
-      (cat) => cat._id === product.category
-    );
-    if (currentCategory) {
-      dispatch(categoryProducts("", "", currentCategory.name)); // Fetch similar products based on category name or other identifier
+    if (currentCategoryName) {
+      dispatch(categoryProducts(currentCategoryName));
     }
-  }, [category, dispatch, product]);
+  }, [dispatch, currentCategoryName]);
 
-  const isProductInCart = cartItems.some(
-    (item) => item.cartItemId === `${product._id}-${selectedQty}`
-  );
+  // const addToCartHandler = (index) => {
+  //   const variant = priceVariants[index];
+  //   const cartItemId = `${product._id}-${variant.qty}`;
+  //   dispatch(addToCart(product, variant, cartItemId));
+  // };
+
+  const increaseQty = () => {
+    if (
+      selectedPriceVariant &&
+      selectedPriceVariant.noOfProducts < product.countInStock
+    ) {
+      setSelectedPriceVariant((prevVariant) => ({
+        ...prevVariant,
+        noOfProducts: prevVariant.noOfProducts + 1,
+      }));
+    }
+  };
+
+  const decreaseQty = () => {
+    if (selectedPriceVariant && selectedPriceVariant.noOfProducts > 1) {
+      setSelectedPriceVariant((prevVariant) => ({
+        ...prevVariant,
+        noOfProducts: prevVariant.noOfProducts - 1,
+      }));
+    }
+  };
+
+  const handleCheckboxChange = (product) => {
+    setSelectedProducts((prevSelectedProducts) => {
+      const newSelection = new Map(prevSelectedProducts);
+      if (newSelection.has(product._id)) {
+        newSelection.delete(product._id);
+      } else {
+        newSelection.set(product._id, product);
+      }
+      return newSelection;
+    });
+  };
+
+  const bulkAddToCart = () => {
+    selectedProducts.forEach((product, productId) => {
+      const cartItemId = `${product.productId._id}-${product.variantId}`; // Ensure unique IDs are used
+      const cartItem = {
+        product: product.productId,
+        variant: {
+          ...product.variant,
+          product_id: product.productId._id, // Include the product ID inside the variant for easy reference
+        },
+        cartItemId: cartItemId,
+      };
+      dispatch(addToCart(cartItem)); // Pass the entire cartItem object
+    });
+  };
 
   const addToCartHandler = () => {
-    const cartItemId = `${product._id}-${selectedQty}`;
-    // If quantity is 0, add to cart with quantity 1
-    const variant = {
-      selectedQty,
-      selectedPrice,
-      selectedDiscount,
-      selectedDiscountedPrice,
-      selectedUnits,
-      selectedNoOfProducts,
-    };
-    if (isProductInCart) {
-      // If the product is in the cart, remove it
-      dispatch(removeFromCart(cartItemId));
-    } else {
-      // If the product is not in the cart, add it
-      dispatch(addToCart(product, variant, cartItemId));
+    if (selectedPriceVariant) {
+      const cartItemId = `${product._id}-${selectedPriceVariant._id}`; // Ensure unique IDs are used
+      const cartItem = {
+        product: product,
+        variant: {
+          ...selectedPriceVariant,
+          product_id: product._id, // Include the product ID inside the variant for easy reference
+        },
+        cartItemId: cartItemId,
+      };
+      // This checks if the item is already in the cart
+      if (isProductInCart(cartItemId)) {
+        dispatch(removeFromCart(cartItemId));
+      } else {
+        dispatch(addToCart(cartItem)); // Pass the entire cartItem object
+      }
     }
   };
 
-  const handleQtySelect = (
-    qty,
-    noOfProducts,
-    units,
-    price,
-    discount,
-    discountedPrice
-  ) => {
-    setSelectedQty(qty);
-    setSelectedNoOfProducts(noOfProducts);
-    setSelectedUnits(units);
-    setSelectedPrice(price);
-    setSelectedDiscount(discount);
-    setSelectedDiscountedPrice(discountedPrice);
-    const newCartItemId = `${product._id}-${qty}`;
-    setCartItemId(newCartItemId);
-  };
-
-  const handleDecreaseQty = () => {
-    if (selectedNoOfProducts > 1) {
-      setSelectedNoOfProducts(selectedNoOfProducts - 1);
-    }
-  };
-
-  const handleIncreaseQty = () => {
-    if (selectedNoOfProducts < product.countInStock) {
-      setSelectedNoOfProducts(selectedNoOfProducts + 1);
-    }
+  const isProductInCart = (cartItemId) => {
+    return cartItems.some((item) => item.cartItemId === cartItemId);
   };
 
   const [randomProducts, setRandomProducts] = useState([]);
@@ -167,7 +169,6 @@ const ProductScreen = () => {
     // Shuffle the products array randomly
     const shuffledProducts = (products || []).sort(() => Math.random() - 0.5);
     setRandomProducts(shuffledProducts);
-    console.log(shuffledProducts);
   }, [products]);
 
   return (
@@ -203,7 +204,8 @@ const ProductScreen = () => {
                 }}
               />
 
-              {selectedDiscount > 0 && (
+              {/* Check if there is a discount on the selected variant and display a badge if there is */}
+              {selectedPriceVariant && selectedPriceVariant.discount > 0 && (
                 <span
                   className="discount-badge"
                   style={{
@@ -217,7 +219,7 @@ const ProductScreen = () => {
                     paddingRight: "4px",
                   }}
                 >
-                  {selectedDiscount}% OFF
+                  {selectedPriceVariant.discount}% OFF
                 </span>
               )}
             </Col>
@@ -251,9 +253,9 @@ const ProductScreen = () => {
                 <ListGroup.Item>
                   <Row className="flex-wrap align-items-center">
                     {product.prices &&
-                      product.prices.map((price) => (
+                      product.prices.map((price, index) => (
                         <Col
-                          key={price.qty}
+                          key={index} // Changed from price.qty to index for uniqueness
                           xs={3}
                           sm={3}
                           md={6}
@@ -262,21 +264,18 @@ const ProductScreen = () => {
                         >
                           <Button
                             variant={
-                              selectedQty === price.qty
+                              selectedPriceVariant &&
+                              selectedPriceVariant._id === price._id
                                 ? "primary"
                                 : "outline-primary"
                             }
-                            className="btn-product responsive-button"
+                            className="btn responsive-button "
                             onClick={() =>
-                              handleQtySelect(
-                                price.qty,
-                                price.noOfProducts,
-                                price.units,
-                                price.price,
-                                price.discount,
-                                price.discountedPrice
-                              )
-                            }
+                              setSelectedPriceVariant({
+                                ...price,
+                                noOfProducts: 1,
+                              })
+                            } // Simplified to set the selected variant directly
                             style={{
                               width: "100%",
                               position: "relative",
@@ -316,35 +315,39 @@ const ProductScreen = () => {
 
                 <ListGroup.Item>
                   <div className="price-container d-flex justify-content-center">
-                    <Card.Text
-                      as="h4"
-                      className="mr-2"
-                      style={{ marginBottom: "0" }}
-                    >
-                      AED{" "}
-                      {(
-                        (selectedDiscount > 0
-                          ? selectedDiscountedPrice
-                          : selectedPrice) *
-                        (selectedNoOfProducts > 0 ? selectedNoOfProducts : 1)
-                      ).toFixed(2)}
-                    </Card.Text>
-                    {selectedDiscount > 0 && (
-                      <Card.Text
-                        as="p"
-                        className="original-price"
-                        style={{ marginBottom: "0", fontSize: "0.7em" }}
-                      >
-                        &nbsp;
-                        {typeof selectedPrice === "number"
-                          ? (
-                              selectedPrice *
-                              (selectedNoOfProducts > 0
-                                ? selectedNoOfProducts
+                    {selectedPriceVariant && (
+                      <>
+                        <Card.Text
+                          as="h4"
+                          className="mr-2"
+                          style={{ marginBottom: "0" }}
+                        >
+                          AED{" "}
+                          {(
+                            (selectedPriceVariant.discount > 0
+                              ? selectedPriceVariant.discountedPrice
+                              : selectedPriceVariant.price) *
+                            (selectedPriceVariant.noOfProducts > 0
+                              ? selectedPriceVariant.noOfProducts
+                              : 1)
+                          ).toFixed(2)}
+                        </Card.Text>
+                        {selectedPriceVariant.discount > 0 && (
+                          <Card.Text
+                            as="p"
+                            className="original-price"
+                            style={{ marginBottom: "0", fontSize: "0.7em" }}
+                          >
+                            &nbsp;
+                            {(
+                              selectedPriceVariant.price *
+                              (selectedPriceVariant.noOfProducts > 0
+                                ? selectedPriceVariant.noOfProducts
                                 : 1)
-                            ).toFixed(2)
-                          : ""}
-                      </Card.Text>
+                            ).toFixed(2)}
+                          </Card.Text>
+                        )}
+                      </>
                     )}
                   </div>
                 </ListGroup.Item>
@@ -356,38 +359,39 @@ const ProductScreen = () => {
                 <ListGroup variant="flush">
                   <ListGroup.Item>
                     <div className="price-container d-flex justify-content-center">
-                      <Card.Text
-                        as="h6"
-                        className="mr-2"
-                        style={{ marginBottom: "0" }}
-                      >
-                        AED{" "}
-                        {(
-                          (selectedDiscount > 0
-                            ? selectedDiscountedPrice
-                            : selectedPrice) *
-                          (selectedNoOfProducts > 0 ? selectedNoOfProducts : 1)
-                        ).toFixed(2)}
-                      </Card.Text>
-                      {selectedDiscount > 0 && (
-                        <Card.Text
-                          as="p"
-                          className="original-price"
-                          style={{ marginBottom: "0", fontSize: "0.7em" }}
-                        >
-                          &nbsp;
-                          {typeof selectedPrice === "number"
-                            ? (
-                                selectedPrice *
-                                (selectedNoOfProducts > 0
-                                  ? selectedNoOfProducts
-                                  : 1)
-                              ).toFixed(2)
-                            : ""}
-                        </Card.Text>
+                      {selectedPriceVariant && (
+                        <>
+                          <Card.Text
+                            as="h6"
+                            className="mr-2"
+                            style={{ marginBottom: "0" }}
+                          >
+                            AED{" "}
+                            {(
+                              (selectedPriceVariant.discount > 0
+                                ? selectedPriceVariant.discountedPrice
+                                : selectedPriceVariant.price) *
+                              selectedPriceVariant.noOfProducts
+                            ).toFixed(2)}
+                          </Card.Text>
+                          {selectedPriceVariant.discount > 0 && (
+                            <Card.Text
+                              as="p"
+                              className="original-price"
+                              style={{ marginBottom: "0", fontSize: "0.7em" }}
+                            >
+                              &nbsp;
+                              {(
+                                selectedPriceVariant.price *
+                                selectedPriceVariant.noOfProducts
+                              ).toFixed(2)}
+                            </Card.Text>
+                          )}
+                        </>
                       )}
                     </div>
                   </ListGroup.Item>
+
                   <ListGroup.Item>
                     <Row>
                       <Col>Status: </Col>
@@ -405,25 +409,21 @@ const ProductScreen = () => {
                     <ListGroup.Item>
                       <Row>
                         <Col>Qty</Col>
-                        <Col>
-                          <div className="quantity-container">
-                            <button
-                              className="qty-btn"
-                              onClick={handleDecreaseQty}
-                            >
-                              -
-                            </button>
-                            <div className="qty-number">
-                              {selectedNoOfProducts}
+                        {selectedPriceVariant && (
+                          <Col md={6} className="mb-3">
+                            <div className="quantity-container">
+                              <button className="qty-btn" onClick={decreaseQty}>
+                                -
+                              </button>
+                              <span className="qty-number">
+                                {selectedPriceVariant.noOfProducts}
+                              </span>
+                              <button className="qty-btn" onClick={increaseQty}>
+                                +
+                              </button>
                             </div>
-                            <button
-                              className="qty-btn"
-                              onClick={handleIncreaseQty}
-                            >
-                              +
-                            </button>
-                          </div>
-                        </Col>
+                          </Col>
+                        )}
                       </Row>
                     </ListGroup.Item>
                   )}
@@ -431,16 +431,51 @@ const ProductScreen = () => {
                   <ListGroup.Item className="d-grid gap-2">
                     <Button
                       onClick={addToCartHandler}
-                      className="button-primary btn-block"
+                      className="btn btn-lg btn-block bg-primary-500 border-0"
                       type="button"
-                      disabled={product.countInStock === 0}
+                      disabled={
+                        product.countInStock === 0 || !selectedPriceVariant
+                      }
                     >
-                      {isProductInCart ? "Remove from Cart" : "Add To Cart"}
+                      {isProductInCart(
+                        `${product._id}-${selectedPriceVariant?._id}`
+                      )
+                        ? "Remove from Cart"
+                        : "Add To Cart"}
                     </Button>
                   </ListGroup.Item>
                 </ListGroup>
               </Card>
             </Col>
+
+            {frequentlyBought && frequentlyBought.length > 0 && (
+              <>
+                <h2>Frequently Bought Together</h2>
+                <div className="bg-white pt-4 border-change rounded-lg">
+                  <Row>
+                    {frequentlyBought.map((product) => (
+                      <Col key={product._id} sm={12} md={6} lg={4} xl={3}>
+                        <ProductFrequent
+                          product={product}
+                          handleCheckboxChange={handleCheckboxChange}
+                          isChecked={selectedProducts.has(product._id)}
+                        />
+                      </Col>
+                    ))}
+                  </Row>
+                  <div className="p-4">
+                    <Button
+                      onClick={bulkAddToCart}
+                      disabled={selectedProducts.size === 0}
+                      className="btn-lg bg-primary-500 border-0"
+                    >
+                      Add Selected to Cart
+                    </Button>
+                  </div>
+                </div>
+              </>
+            )}
+
             <Row>
               <Card.Text
                 as="div"
@@ -455,24 +490,26 @@ const ProductScreen = () => {
               </Card.Text>
             </Row>
           </Row>
-          <h3>Similar Products</h3>
           {categoryLoading ? (
             <Loader />
           ) : categoryError ? (
             <Message variant="danger">{error}</Message>
           ) : (
-            <div style={{ overflowX: "auto" }}>
-              <Row className="d-flex flex-nowrap">
-                {randomProducts.map((product) => (
-                  <Col key={product._id} xs={6} sm={6} md={4} lg={3} xl={2}>
-                    <Product
-                      product={product}
-                      category={product.category.name}
-                    />
-                  </Col>
-                ))}
-              </Row>
-            </div>
+            <>
+              <h3>Similar Products</h3>
+              <div style={{ overflowX: "auto" }}>
+                <Row className="d-flex flex-nowrap">
+                  {randomProducts.map((product) => (
+                    <Col key={product._id} xs={6} sm={6} md={4} lg={3} xl={2}>
+                      <Product
+                        product={product}
+                        category={product.category ? product.category.name : ""}
+                      />
+                    </Col>
+                  ))}
+                </Row>
+              </div>
+            </>
           )}
         </>
       )}

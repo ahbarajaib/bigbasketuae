@@ -21,7 +21,6 @@ const SmallBannerUploadScreen = () => {
   const userInfo = useSelector((state) => state.userLogin.userInfo);
   const allSmallBanners = useSelector((state) => state.allSmallBanners);
   const { loading, banners, error } = allSmallBanners;
-  console.log(banners);
   const categoryList = useSelector((state) => state.categoryList);
   const { categories } = categoryList;
 
@@ -44,7 +43,6 @@ const SmallBannerUploadScreen = () => {
     formData.append("category", category); // Make sure this is not empty
 
     formData.append("image", file);
-    console.log(category);
     setUploading(true);
     try {
       const config = {

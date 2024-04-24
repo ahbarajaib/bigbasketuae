@@ -82,7 +82,6 @@ export const promotionProducts =
       const { data } = await axiosInstance.get(
         `/api/products?keyword=${keyword}&pageNumber=${pageNumber}&promotion=${promotion}`
       );
-      console.log(" promotionProducts ", data);
 
       dispatch({
         type: PRODUCT_PROMOTION_SUCCESS,
@@ -101,12 +100,10 @@ export const promotionProducts =
 
 export const listProductsByPromotion = (promotion) => async (dispatch) => {
   try {
-    console.log("promotion", promotion);
     dispatch({ type: PRODUCT_PROMOTION_REQUEST });
     const { data } = await axiosInstance.get(
       `/api/products/promotion/${promotion}`
     );
-    console.log(data.products);
     dispatch({ type: PRODUCT_PROMOTION_SUCCESS, payload: data.products }); // Assuming 'data.products' is your array
   } catch (error) {
     dispatch({
@@ -247,7 +244,6 @@ export const updateProduct = (product) => async (dispatch, getState) => {
       },
     };
     //{} because we are making a post request but not sending any data
-    console.log(product);
     const { data } = await axiosInstance.put(
       `/api/products/${product._id}`,
       product,

@@ -8,6 +8,7 @@ import "primereact/resources/primereact.min.css"; //core css
 import "primeicons/primeicons.css"; //icons
 
 import "./index.css";
+import "./color.css";
 import App from "./App";
 
 import reportWebVitals from "./reportWebVitals";

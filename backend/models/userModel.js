@@ -22,7 +22,14 @@ const userSchema = mongoose.Schema(
     },
     isAdmin: {
       type: Boolean,
-      required: true,
+      default: false,
+    },
+    isManager: {
+      type: Boolean,
+      default: false,
+    },
+    isCourier: {
+      type: Boolean,
       default: false,
     },
     token: {

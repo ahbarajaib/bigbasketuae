@@ -20,7 +20,6 @@ const ProfileScreen = () => {
   const dispatch = useDispatch();
   //const location = useLocation()
   const navigate = useNavigate();
-
   const userDetails = useSelector((state) => state.userDetails);
   const { loading, error, user } = userDetails;
 
@@ -49,13 +48,7 @@ const ProfileScreen = () => {
         setPhoneNumber(user.phoneNumber);
       }
     }
-    // Remove any non-digit characters from the phone number
-    const cleanedPhoneNumber = phoneNumber.replace(/\D/g, "");
-    // Limit the phone number to a maximum of 10 digits
-    const limitedPhoneNumber = cleanedPhoneNumber.substring(0, 10);
-    setPhoneNumber(limitedPhoneNumber);
-    //location removed from below
-  }, [dispatch, userInfo, user, phoneNumber, navigate]);
+  }, [dispatch, userInfo, user, navigate]);
   function formatDateTime(dateTimeStr) {
     const options = {
       day: "2-digit",
@@ -71,8 +64,23 @@ const ProfileScreen = () => {
     );
     return formattedDate;
   }
+
+  const handlePhoneNumberChange = (e) => {
+    const input = e.target.value;
+    // Allow only digits to be entered
+    const filteredInput = input.replace(/[^\d]/g, "");
+    if (filteredInput.length <= 10) {
+      setPhoneNumber(filteredInput);
+    }
+  };
+
   const submitHandler = (e) => {
     e.preventDefault();
+    // Validate phone number length and content
+    if (!/^\d{10}$/.test(phoneNumber)) {
+      setMessage("Phone number must be exactly 10 digits and numeric.");
+      return; // Stop submission if validation fails
+    }
 
     if (password !== confirmPassword) {
       setMessage("Passwords do not match");
@@ -111,7 +119,7 @@ const ProfileScreen = () => {
             ></Form.Control>
           </Form.Group>
           <Form.Group controlId="phoneNumber">
-            <Form.Label>Phone Number</Form.Label>
+            <Form.Label>Phone Number (10 digits required)</Form.Label>
             <div className="input-group">
               <span className="input-group-text">
                 <img
@@ -125,7 +133,9 @@ const ProfileScreen = () => {
                 type="text"
                 placeholder="Enter phone number"
                 value={phoneNumber}
-                onChange={(e) => setPhoneNumber(e.target.value)}
+                onChange={handlePhoneNumberChange}
+                pattern="\d*"
+                maxLength="10"
               />
             </div>
           </Form.Group>

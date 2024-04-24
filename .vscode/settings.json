@@ -1,4 +1,13 @@
 {
   "git.ignoreLimitWarning": true,
-  "workbench.colorTheme": "GitHub Dark Default"
+  "workbench.colorTheme": "Monokai Pro (Filter Spectrum)",
+  "cSpell.words": [
+    "bigbasketuae",
+    "fullchain",
+    "letsencrypt",
+    "randomstring",
+    "smtpout"
+  ],
+  "editor.fontFamily": "JetBrains Mono",
+  "editor.fontLigatures": true
 }

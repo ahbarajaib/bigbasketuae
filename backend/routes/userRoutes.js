@@ -1,5 +1,5 @@
-import express from 'express'
-const router = express.Router()
+import express from "express";
+const router = express.Router();
 import {
   authUser,
   registerUser,
@@ -10,26 +10,26 @@ import {
   getUserById,
   updateUser,
   forgotPassword,
-  resetPassword
-} from '../controllers/userController.js'
-import { protect, admin } from '../middleware/authMiddleware.js'
+  resetPassword,
+} from "../controllers/userController.js";
+import { protect, admin } from "../middleware/authMiddleware.js";
 
-router.route('/').post(registerUser).get(protect, admin, getUsers)
-router.post('/login', authUser)
+router.route("/").post(registerUser).get(protect, admin, getUsers);
+router.post("/login", authUser);
 router
-  .route('/profile')
+  .route("/profile")
   .get(protect, getUserProfile)
-  .all(protect, updateUserProfile)
+  .all(protect, updateUserProfile);
 
 //  router.route('/forgot-password').post(forgotPassword)
-router.post('/forgot-password', forgotPassword)
+router.post("/forgot-password", forgotPassword);
 // router.route('/reset-password').post(resetPassword)
-router.post('/reset-password', resetPassword)
+router.post("/reset-password", resetPassword);
 
 router
-  .route('/:id')
+  .route("/:id")
   .delete(protect, admin, deleteUser)
   .get(protect, admin, getUserById)
-  .put(protect, admin, updateUser)
+  .put(protect, admin, updateUser);
 
-export default router
+export default router;

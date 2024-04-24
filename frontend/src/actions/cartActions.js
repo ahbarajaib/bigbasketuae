@@ -12,36 +12,21 @@ import {
 // Modify addToCart action
 // cartActions.js
 
-export const addToCart =
-  (product, variant, cartItemId) => (dispatch, getState) => {
-    const cartItem = {
-      id: cartItemId, // Use cartItemId as the cart item's ID
-      product: product._id,
-      name: product.name,
-      image: product.image,
-      category: product.category,
-      variant, // Pass the variant object
-      countInStock: product.countInStock,
-    };
+export const addToCart = (cartItem) => (dispatch, getState) => {
+  dispatch({
+    type: CART_ADD_ITEM,
+    payload: cartItem,
+  });
 
-    dispatch({
-      type: CART_ADD_ITEM,
-      payload: cartItem,
-    });
+  localStorage.setItem("cartItems", JSON.stringify(getState().cart.cartItems));
+};
 
-    localStorage.setItem(
-      "cartItems",
-      JSON.stringify(getState().cart.cartItems)
-    );
-  };
-
-// Modify updateCartQuantity action
-// Modify updateCartQuantity action
+// Action to update the quantity in the cart
 export const updateCartQuantity =
-  (cartItem, selectedNoOfProducts) => (dispatch, getState) => {
+  (cartItemId, newQuantity) => (dispatch, getState) => {
     dispatch({
-      type: CART_UPDATE_ITEM,
-      payload: { cartItem, selectedNoOfProducts },
+      type: "CART_UPDATE_ITEM",
+      payload: { cartItemId, newQuantity },
     });
 
     localStorage.setItem(

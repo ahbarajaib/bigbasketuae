@@ -407,7 +407,7 @@ const OrderScreen = (history) => {
             <ListGroup.Item>
               <h2 ref={printRef}>
                 Order Items{" "}
-                <Button onClick={handlePrint}>
+                <Button onClick={handlePrint} variant="success">
                   Print &nbsp;
                   <FontAwesomeIcon icon={faPrint} />
                 </Button>
@@ -457,12 +457,14 @@ const OrderScreen = (history) => {
                   <Col>AED {order.itemsPrice}</Col>
                 </Row>
               </ListGroup.Item>
-              <ListGroup.Item>
-                <Row>
-                  <Col>Discount</Col>
-                  <Col>- AED {order.discountAmount} OFF</Col>
-                </Row>
-              </ListGroup.Item>
+              {order.discountAmount > 0 && (
+                <ListGroup.Item>
+                  <Row>
+                    <Col>Discount</Col>
+                    <Col>- AED {order.discountAmount} OFF</Col>
+                  </Row>
+                </ListGroup.Item>
+              )}
               <ListGroup.Item>
                 <Row>
                   <Col>Shipping</Col>
@@ -521,7 +523,7 @@ const OrderScreen = (history) => {
                       order.paymentMethod === "Bring Swiping Machine"))) && (
                   <ListGroup.Item>
                     <Button
-                      type="button"
+                      variant="success"
                       className="btn btn-block"
                       onClick={deliverHandler}
                     >

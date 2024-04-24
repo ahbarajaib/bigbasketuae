@@ -57,7 +57,6 @@ const ProductListScreen = () => {
   const footer = `In total there are ${
     products ? products.length : 0
   } products.`;
-  console.log(products);
   const productDelete = useSelector((state) => state.productDelete);
 
   const {
@@ -239,7 +238,7 @@ const ProductListScreen = () => {
       <CSVLink
         {...csvReport}
         className="btn btn-primary"
-        style={{ margin: "10px", padding: "5px" }} // Adjust the padding and margin as needed
+        style={{ margin: "10px", padding: "5px", backgroundColor: "#139745" }} // Adjust the padding and margin as needed
       >
         Download
       </CSVLink>

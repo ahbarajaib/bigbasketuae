@@ -62,6 +62,9 @@ const authUser = asyncHandler(async (req, res) => {
       name: user.name,
       email: user.email,
       isAdmin: user.isAdmin,
+      isManager: user.isManager,
+      isCourier: user.isCourier,
+      phoneNumber: user.phoneNumber,
       token: generateToken(user._id),
     });
   } else {
@@ -94,6 +97,8 @@ const registerUser = asyncHandler(async (req, res) => {
       email: user.email,
       phoneNumber: user.phoneNumber,
       isAdmin: user.isAdmin,
+      isManager: user.isManager,
+      isCourier: user.isCourier,
       token: generateToken(user._id),
     });
   } else {
@@ -115,6 +120,8 @@ const getUserProfile = asyncHandler(async (req, res) => {
       email: user.email,
       phoneNumber: user.phoneNumber,
       isAdmin: user.isAdmin,
+      isManager: user.isManager,
+      isCourier: user.isCourier,
     });
   } else {
     res.status(404);
@@ -132,6 +139,7 @@ const updateUserProfile = asyncHandler(async (req, res) => {
     user.name = req.body.name || user.name;
     user.email = req.body.email || user.email;
     user.phoneNumber = req.body.phoneNumber || user.phoneNumber;
+
     if (req.body.password) {
       user.password = req.body.password;
     }
@@ -140,8 +148,10 @@ const updateUserProfile = asyncHandler(async (req, res) => {
       _id: updatedUser._id,
       name: updatedUser.name,
       email: updatedUser.email,
-      phoneNumber: updateUser.phoneNumber,
+      phoneNumber: updatedUser.phoneNumber,
       isAdmin: updatedUser.isAdmin,
+      isManager: updatedUser.isManager,
+      isCourier: updatedUser.isCourier,
       token: generateToken(updatedUser._id),
     });
   } else {
@@ -180,7 +190,7 @@ const deleteUser = asyncHandler(async (req, res) => {
 //@access Private/Admin
 //private means protected route
 const getUserById = asyncHandler(async (req, res) => {
-  //dont want to fetch password
+  //don't want to fetch password
   const user = await User.findById(req.params.id).select("-password");
   if (user) {
     res.json(user);
@@ -200,6 +210,8 @@ const updateUser = asyncHandler(async (req, res) => {
     user.email = req.body.email || user.email;
     user.phoneNumber = req.body.phoneNumber || user.phoneNumber;
     user.isAdmin = req.body.isAdmin;
+    user.isManager = req.body.isManager;
+    user.isCourier = req.body.isCourier;
     if (req.body.password) {
       user.password = req.body.password;
     }
@@ -210,6 +222,8 @@ const updateUser = asyncHandler(async (req, res) => {
       email: updatedUser.email,
       phoneNumber: updatedUser.phoneNumber,
       isAdmin: updatedUser.isAdmin,
+      isManager: updatedUser.isManager,
+      isCourier: updatedUser.isCourier,
     });
   } else {
     res.status(404);

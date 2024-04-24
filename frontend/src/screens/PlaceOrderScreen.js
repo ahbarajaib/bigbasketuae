@@ -11,42 +11,48 @@ const PlaceOrderScreen = () => {
   const navigate = useNavigate();
   const location = useLocation();
   const { paymentMethod } = location.state || {};
-  const cart = useSelector((state) => state.cart);
-  const { shippingAddress } = cart;
+
+  const cartItems = useSelector((state) => state.cart);
+  const { shippingAddress } = cartItems;
 
   if (!shippingAddress) {
     navigate("/shipping");
   }
+
   //stored from localstorage
 
   //calculate prices
   const addDecimals = (num) => {
-    return (Math.round(num * 100) / 100).toFixed(2);
+    if (typeof num !== "number") {
+      console.error("addDecimals called with non-number", num);
+      return 0; // Return '0.00' if num is not a number
+    }
+    return Math.round(num * 100) / 100;
   };
+
   //total price of all items
   // Assuming that cartItems is an array of items in the cart
-  cart.itemsPrice = addDecimals(
-    cart.cartItems.reduce(
-      (acc, item) =>
-        acc + item.variant.selectedPrice * item.variant.selectedNoOfProducts,
+  cartItems.itemsPrice = addDecimals(
+    cartItems.cartItems.reduce(
+      (acc, item) => acc + item.variant.price * item.variant.noOfProducts,
       0
     )
   );
 
   //total discountedPrice of all items
-  cart.discountedItemsPrice = addDecimals(
-    cart.cartItems.reduce((acc, item) => {
+  cartItems.discountedItemsPrice = addDecimals(
+    cartItems.cartItems.reduce((acc, item) => {
       const price =
-        item.variant.selectedDiscount > 0
-          ? typeof item.variant.selectedDiscountedPrice === "number"
-            ? item.variant.selectedDiscountedPrice
-            : item.variant.selectedPrice
-          : typeof item.variant.selectedPrice === "number"
-          ? item.variant.selectedPrice
+        item.variant.discount > 0
+          ? typeof item.variant.discountedPrice === "number"
+            ? item.variant.discountedPrice
+            : item.variant.price
+          : typeof item.variant.price === "number"
+          ? item.variant.price
           : 0;
       const noOfProducts =
-        typeof item.variant.selectedNoOfProducts === "number"
-          ? item.variant.selectedNoOfProducts
+        typeof item.variant.noOfProducts === "number"
+          ? item.variant.noOfProducts
           : 0;
 
       const itemTotal = noOfProducts * price;
@@ -54,43 +60,96 @@ const PlaceOrderScreen = () => {
     }, 0)
   );
 
-  cart.discountAmount = addDecimals(
-    cart.itemsPrice - cart.discountedItemsPrice
+  cartItems.discountAmount = addDecimals(
+    cartItems.itemsPrice - cartItems.discountedItemsPrice
   );
 
   // Calculate the shipping price based on cart.itemsPrice and cart.discountedItemsPrice
-  const smallerPrice = Math.min(cart.itemsPrice, cart.discountedItemsPrice);
+  const smallerPrice = Math.min(
+    cartItems.itemsPrice,
+    cartItems.discountedItemsPrice
+  );
 
-  cart.itemsPrice = smallerPrice.toFixed(2);
+  cartItems.itemsPrice = smallerPrice;
   // Calculate the shipping price based on cart.itemsPrice and cart.discountedItemsPrice
-  let shippingCost = 0;
+  let shippingPrice = 0;
 
   // Check if there is a product in the cart with the category 'wholesale'
-  const hasWholesaleProduct = cart.cartItems.some(
-    (item) => item.category === "wholesale"
+  const hasWholesaleProduct = cartItems.cartItems.some(
+    (item) => item.product.category.name === "wholesale"
   );
 
+  cartItems.cartItems.map((item) => item.product.category.name);
   // Adjust the shipping cost based on the conditions
   if (hasWholesaleProduct) {
     if (smallerPrice < 200) {
-      shippingCost = 20;
+      shippingPrice = 20;
     }
     // Free shipping for orders greater than or equal to 200 AED
   } else {
     if (smallerPrice < 100) {
-      shippingCost = 10;
+      shippingPrice = 10;
     }
     // Free shipping for orders greater than or equal to 100 AED
   }
 
-  cart.shippingPrice = addDecimals(shippingCost);
+  cartItems.shippingPrice = addDecimals(shippingPrice);
 
   // cart.shippingPrice = addDecimals(smallerPrice > 80 ? 0 : 10);
 
-  cart.totalPrice = Number(smallerPrice) + Number(cart.shippingPrice);
-  cart.paymentMethod = paymentMethod;
+  cartItems.totalPrice = Number(smallerPrice) + Number(cartItems.shippingPrice);
+  cartItems.paymentMethod = paymentMethod;
   const orderCreate = useSelector((state) => state.orderCreate);
   const { order, success, error } = orderCreate;
+
+  const calculateTotals = (cartItems) => {
+    const addDecimals = (num) => {
+      return (Math.round(num * 100) / 100).toFixed(2); // Correct rounding and fixing to two decimal places
+    };
+
+    let itemsPrice = 0;
+    let discountedItemsPrice = 0;
+
+    cartItems.cartItems.forEach((item) => {
+      const { variant } = item;
+      const itemBasePrice = variant.price * variant.noOfProducts;
+      const itemDiscountedPrice =
+        variant.discountedPrice * variant.noOfProducts;
+
+      itemsPrice += itemBasePrice; // Total price without discount
+      discountedItemsPrice +=
+        variant.discount > 0 ? itemDiscountedPrice : itemBasePrice; // Use discounted price if available and valid
+    });
+
+    const discountAmount = addDecimals(itemsPrice - discountedItemsPrice);
+    itemsPrice = addDecimals(itemsPrice);
+    discountedItemsPrice = addDecimals(discountedItemsPrice);
+
+    // Assuming no additional charges for the example
+    let shippingPrice = 0;
+    if (hasWholesaleProduct) {
+      if (itemsPrice < 200) {
+        shippingPrice = 20; // Apply shipping cost of 20 if items price exceeds 200
+      }
+    } else {
+      if (itemsPrice < 100) {
+        shippingPrice = 10; // Apply shipping cost of 10 if items price exceeds 100
+      }
+    }
+    const totalPrice = addDecimals(
+      Number(discountedItemsPrice) + shippingPrice
+    );
+
+    return {
+      itemsPrice,
+      discountedItemsPrice,
+      discountAmount,
+      shippingPrice,
+      totalPrice,
+    };
+  };
+
+  const totals = calculateTotals(cartItems);
 
   useEffect(() => {
     if (success) {
@@ -106,42 +165,41 @@ const PlaceOrderScreen = () => {
   }, [success, navigate, order, paymentMethod]);
 
   const placeOrderHandler = () => {
-    const orderItems = cart.cartItems.map((item) => ({
-      name: item.name,
-      noOfProducts: item.variant.selectedNoOfProducts,
-      image: item.image,
-      product: item.product,
-      selectedPrice: item.variant.selectedPrice,
-      selectedQty: item.variant.selectedQty,
-      selectedDiscountedPrice: item.variant.selectedDiscountedPrice, // Add this field
-      selectedDiscount: item.variant.selectedDiscount, // Add this field
-      selectedUnits: item.variant.selectedUnits, // Add this field
+    const orderItems = cartItems.cartItems.map((item) => ({
+      name: item.product.name,
+      noOfProducts: item.variant.noOfProducts,
+      image: item.product.image,
+      product: item.product._id,
+      selectedPrice: item.variant.price,
+      selectedQty: item.variant.qty,
+      discountedPrice: item.variant.discountedPrice, // Add this field
+      selectedDiscount: item.variant.discount, // Add this field
+      selectedUnits: item.variant.units, // Add this field
     }));
-
     dispatch(
       createOrder({
         orderItems,
         shippingAddress: {
-          building: cart.shippingAddress.building,
-          address: cart.shippingAddress.address,
-          city: cart.shippingAddress.city,
-          country: cart.shippingAddress.country,
-          coordinates: cart.shippingAddress.coordinates, // Include coordinates here
+          building: cartItems.shippingAddress.building,
+          address: cartItems.shippingAddress.address,
+          city: cartItems.shippingAddress.city,
+          country: cartItems.shippingAddress.country,
+          coordinates: cartItems.shippingAddress.coordinates, // Include coordinates here
         },
         paymentMethod: paymentMethod, // Use the selected payment method
-        itemsPrice: cart.items,
-        discountAmount: cart.discountAmount,
-        shippingPrice: cart.shippingPrice,
-        totalPrice: cart.totalPrice,
+        itemsPrice: totals.itemsPrice,
+        discountAmount: totals.discountAmount,
+        shippingPrice: totals.shippingPrice,
+        totalPrice: totals.totalPrice,
       })
     );
   };
 
   return (
     <>
-      <button className="btn btn-light my-3" onClick={() => navigate(-1)}>
+      <Button className="btn my-3" variant="dark" onClick={() => navigate(-1)}>
         Go Back
-      </button>
+      </Button>
       <CheckoutSteps step1 step2 step3 />
       <Row>
         <Col md={8}>
@@ -151,86 +209,86 @@ const PlaceOrderScreen = () => {
               <p>
                 <strong>Address: </strong>
                 <br />
-                {cart.shippingAddress.building}
+                {cartItems.shippingAddress.building}
                 &nbsp;
-                {cart.shippingAddress.address}
+                {cartItems.shippingAddress.address}
                 &nbsp;&nbsp;
-                {cart.shippingAddress.city}
+                {cartItems.shippingAddress.city}
                 <br />
-                {cart.shippingAddress.country}
+                {cartItems.shippingAddress.country}
               </p>
             </ListGroup.Item>
 
             <ListGroup.Item>
               <h2>Payment Method: {paymentMethod}</h2>
 
-              {cart.paymentMethod}
+              {cartItems.paymentMethod}
             </ListGroup.Item>
             <ListGroup.Item>
               <h2>Order Items</h2>
-              {cart.cartItems.length === 0 ? (
+              {cartItems.length === 0 ? (
                 <Message>Your cart is empty</Message>
               ) : (
                 <ListGroup variant="flush">
-                  {cart.cartItems.map((item, index) => (
+                  {cartItems.cartItems.map((item, index) => (
                     <ListGroup.Item key={index}>
                       <Row>
                         <Col md={2} sm={2}>
                           <Image
-                            src={process.env.REACT_APP_API_URL + item.image}
+                            src={
+                              process.env.REACT_APP_API_URL + item.product.image
+                            }
                             alt={item.name}
                             fluid
                             rounded
                           />
                         </Col>
                         <Col md={2} sm={3}>
-                          <Link to={`/product/${item.product}`}>
-                            {item.name}
+                          <Link to={`/product/${item.product._id}`}>
+                            {item.product.name}
                           </Link>
                         </Col>
                         <Col md={3} sm={3}>
-                          {item.variant.selectedDiscount > 0 ? (
+                          {item.variant.discount > 0 ? (
                             <>
                               <div>
-                                {item.variant.selectedNoOfProducts} x{" "}
-                                {item.variant.selectedDiscountedPrice.toFixed(
-                                  2
-                                )}
+                                {item.variant.noOfProducts} x{" "}
+                                {parseFloat(
+                                  item.variant.discountedPrice
+                                ).toFixed(2)}
                               </div>
                               <div style={{ textDecoration: "line-through" }}>
                                 {" "}
-                                {item.variant.selectedPrice.toFixed(2)}
+                                {parseFloat(item.variant.price).toFixed(2)}
                               </div>
                             </>
                           ) : (
                             <div>
-                              {item.variant.selectedNoOfProducts} x{" "}
-                              {item.variant.selectedPrice.toFixed(2)}
+                              {item.variant.noOfProducts} x{" "}
+                              {parseFloat(item.variant.price).toFixed(2)}
                             </div>
                           )}
                         </Col>
                         <Col md={2} sm={2}>
-                          {item.variant.selectedDiscount > 0 ? (
+                          {item.variant.discount > 0 ? (
                             <>
                               <div>
-                                {(
-                                  item.variant.selectedNoOfProducts *
-                                  item.variant.selectedDiscountedPrice
+                                {parseFloat(
+                                  item.variant.noOfProducts *
+                                    item.variant.discountedPrice
                                 ).toFixed(2)}
                               </div>
                               <div style={{ textDecoration: "line-through" }}>
                                 {" "}
-                                {(
-                                  item.variant.selectedNoOfProducts *
-                                  item.variant.selectedPrice
+                                {parseFloat(
+                                  item.variant.noOfProducts * item.variant.price
                                 ).toFixed(2)}
                               </div>
                             </>
                           ) : (
                             <div>
-                              {(
-                                item.variant.selectedNoOfProducts *
-                                item.variant.selectedPrice
+                              {parseFloat(
+                                item.variant.noOfProducts * item.variant.price
                               ).toFixed(2)}
                             </div>
                           )}
@@ -252,14 +310,18 @@ const PlaceOrderScreen = () => {
               <ListGroup.Item>
                 <Row>
                   <Col>Items</Col>
-                  <Col>AED {smallerPrice}</Col>
+                  <Col>
+                    AED {parseFloat(totals.discountedItemsPrice).toFixed(2)}
+                  </Col>
                 </Row>
               </ListGroup.Item>
-              {cart.discountAmount > 0 && (
+              {cartItems.discountAmount > 0 && (
                 <ListGroup.Item>
                   <Row>
                     <Col>Discount</Col>
-                    <Col>- AED {cart.discountAmount} OFF</Col>
+                    <Col>
+                      - AED {parseFloat(totals.discountAmount).toFixed(2)} OFF
+                    </Col>
                   </Row>
                 </ListGroup.Item>
               )}
@@ -268,12 +330,12 @@ const PlaceOrderScreen = () => {
                 <Row>
                   <Col>Shipping</Col>
                   <Col>
-                    {Math.abs(cart.shippingPrice) < 0.01 ? (
+                    {Math.abs(parseFloat(totals.shippingPrice)) < 0.01 ? (
                       <strong>
                         <span style={{ color: "green" }}>FREE</span>
                       </strong>
                     ) : (
-                      `AED ${cart.shippingPrice}`
+                      `AED ${parseFloat(totals.shippingPrice).toFixed(2)}`
                     )}
                   </Col>
                 </Row>
@@ -282,7 +344,7 @@ const PlaceOrderScreen = () => {
               <ListGroup.Item>
                 <Row>
                   <Col>Total</Col>
-                  <Col>AED {cart.totalPrice.toFixed(2)}</Col>
+                  <Col>AED {parseFloat(totals.totalPrice).toFixed(2)}</Col>
                 </Row>
               </ListGroup.Item>
 
@@ -293,9 +355,9 @@ const PlaceOrderScreen = () => {
               <ListGroup.Item>
                 <div className="d-grid gap-2">
                   <Button
-                    type="button"
-                    className="button-primary btn-block"
-                    disabled={cart.cartItems === 0}
+                    variant="success"
+                    className="btn-block btn-lg"
+                    disabled={cartItems.cartItems === 0}
                     onClick={placeOrderHandler}
                   >
                     Place Order

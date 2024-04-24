@@ -29,7 +29,6 @@ const storage = multer.diskStorage({
 const smallStorage = multer.diskStorage({
   destination: function (req, file, cb) {
     const category = req.body.category || "uncategorized";
-    console.log(req.body);
     const uploadPath = path.join("banners", "small", category); // Adjust this line
 
     if (!fs.existsSync(uploadPath)) {

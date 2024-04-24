@@ -12,53 +12,46 @@ export const cartReducer = (
 ) => {
   switch (action.type) {
     case CART_ADD_ITEM:
-      const newItem = action.payload;
-
-      // Check if an item with the same id (based on product ID and selectedQty) exists in the cart
-      const existingItemIndex = state.cartItems.findIndex(
-        (item) => item.id === newItem.id
+      const item = action.payload;
+      const existItem = state.cartItems.find(
+        (x) => x.cartItemId === item.cartItemId
       );
 
-      if (existingItemIndex !== -1) {
-        // If it exists, update the quantity of the existing item
-        const updatedCartItems = [...state.cartItems];
-        updatedCartItems[existingItemIndex].selectedNoOfProducts +=
-          newItem.selectedNoOfProducts;
+      if (existItem) {
         return {
           ...state,
-          cartItems: updatedCartItems,
+          cartItems: state.cartItems.map((x) =>
+            x.cartItemId === existItem.cartItemId ? item : x
+          ),
         };
       } else {
-        // If it doesn't exist, add the new item to the cart
         return {
           ...state,
-          cartItems: [...state.cartItems, newItem],
+          cartItems: [...state.cartItems, item],
         };
       }
-
-    case CART_UPDATE_ITEM:
-      const { cartItem, selectedNoOfProducts } = action.payload;
-      const updatedCartItems = state.cartItems.map((item) =>
-        item.id === cartItem.id
-          ? {
-              ...item,
-              variant: {
-                ...item.variant,
-                selectedNoOfProducts,
-              },
-            }
-          : item
-      );
-
-      return {
-        ...state,
-        cartItems: updatedCartItems,
-      };
 
     case CART_REMOVE_ITEM:
       return {
         ...state,
-        cartItems: state.cartItems.filter((x) => x.id !== action.payload),
+        cartItems: state.cartItems.filter(
+          (x) => x.cartItemId !== action.payload
+        ),
+      };
+    case "CART_UPDATE_ITEM":
+      return {
+        ...state,
+        cartItems: state.cartItems.map((item) =>
+          item.cartItemId === action.payload.cartItemId
+            ? {
+                ...item,
+                variant: {
+                  ...item.variant,
+                  noOfProducts: action.payload.newQuantity,
+                },
+              }
+            : item
+        ),
       };
     case CART_SAVE_SHIPPING_ADDRESS:
       return {

@@ -67,6 +67,7 @@ const productSchema = mongoose.Schema(
           type: String,
           required: true,
         },
+        _id: mongoose.Schema.Types.ObjectId,
       },
     ],
     noOfProducts: {
@@ -85,10 +86,9 @@ const productSchema = mongoose.Schema(
           type: mongoose.Schema.Types.ObjectId,
           ref: "Product",
         },
-        variant: {
-          qty: Number,
-          units: String,
-          // Add other variant properties as needed
+        variantId: {
+          type: mongoose.Schema.Types.ObjectId,
+          ref: "Product.prices",
         },
       },
     ],

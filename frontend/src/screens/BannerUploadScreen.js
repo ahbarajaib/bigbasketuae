@@ -18,7 +18,6 @@ const BannerUploadScreen = () => {
   const userInfo = useSelector((state) => state.userLogin.userInfo);
   const bannerView = useSelector((state) => state.bannerView);
   const { loading, images, error } = bannerView;
-  console.log(images);
   const [category, setCategory] = useState("");
   const [selectedFileName, setSelectedFileName] = useState("");
 

@@ -80,7 +80,6 @@ const CategoryEditScreen = () => {
         formData,
         config
       );
-      console.log(data);
       setImage(data);
       setUploading(false);
     } catch (error) {
@@ -111,7 +110,7 @@ const CategoryEditScreen = () => {
 
   return (
     <>
-      <Link to="/admin/categories" className="btn btn-light my-3">
+      <Link to="/admin/categories" className="btn btn-dark my-3">
         Go Back
       </Link>
       <FormContainer>
