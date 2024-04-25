@@ -2,7 +2,7 @@ import Product from "../models/productModel.js";
 import Category from "../models/categoryModel.js";
 import Promotion from "../models/promotionModel.js";
 import asyncHandler from "express-async-handler";
-
+import mongoose from "mongoose";
 //@desc Fetch all products
 //@route GET /api/products
 //@access Public
@@ -180,6 +180,11 @@ const createProduct = asyncHandler(async (req, res) => {
 });
 
 const updateProduct = asyncHandler(async (req, res) => {
+  const { frequentlyBought } = req.body;
+  const validFrequentlyBought = frequentlyBought.filter((fb) =>
+    mongoose.Types.ObjectId.isValid(fb._id)
+  );
+  console.log(validFrequentlyBought);
   const {
     name,
     prices,
@@ -189,7 +194,6 @@ const updateProduct = asyncHandler(async (req, res) => {
     category,
     promotion,
     countInStock,
-    frequentlyBought,
     subtitle,
     countryOfOrigin,
     // Added promotions to the destructured fields

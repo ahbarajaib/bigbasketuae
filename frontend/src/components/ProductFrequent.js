@@ -26,9 +26,9 @@ const ProductFrequent = ({ product, handleCheckboxChange, isChecked }) => {
             {product.productId.name}
           </Card.Text>
           <Card.Text className="text-center">
-            {product.variant.qty}&nbsp; {product.variant.units}
+            {product?.variant?.qty}&nbsp; {product?.variant?.units}
             <br />
-            <strong>AED&nbsp;{product.variant.price}</strong>
+            <strong>AED&nbsp;{product?.variant?.price}</strong>
           </Card.Text>
         </div>
         <div className="col-3 d-flex align-items-center justify-content-end">
