@@ -4,7 +4,6 @@ import { Card, Form, Button } from "react-bootstrap";
 import { Link } from "react-router-dom";
 
 const ProductFrequent = ({ product, handleCheckboxChange, isChecked }) => {
-  console.log(product);
   return (
     <Card className="my-1 rounded product-card">
       <Card.Body className="d-flex flex-row p-2">

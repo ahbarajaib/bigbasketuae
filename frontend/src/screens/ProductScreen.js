@@ -22,8 +22,8 @@ const ProductScreen = () => {
 
   const productDetails = useSelector((state) => state.productDetails);
   const { loading, error, product } = productDetails;
-  console.log(product);
   const currentCategoryName = product?.category?.name;
+  console.log("current ", currentCategoryName);
   const frequentlyBought = product.frequentlyBought;
   const categoryDetails = useSelector((state) => state.categoryDetails);
   const { category } = categoryDetails; // Assuming this contains the fetched category details
@@ -39,6 +39,7 @@ const ProductScreen = () => {
     error: categoryError,
     products,
   } = productCategory;
+  console.log(products);
   useEffect(() => {
     // If a cart item ID is set, find the corresponding item in the cart
     if (cartItemId && selectedPriceVariant) {
@@ -169,6 +170,7 @@ const ProductScreen = () => {
     // Shuffle the products array randomly
     const shuffledProducts = (products || []).sort(() => Math.random() - 0.5);
     setRandomProducts(shuffledProducts);
+    console.log(products);
   }, [products]);
 
   return (
