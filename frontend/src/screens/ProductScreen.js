@@ -13,6 +13,7 @@ import SEO from "../components/SEO";
 import ReactMarkdown from "react-markdown";
 import { listCategories } from "../actions/categoryActions";
 import ProductFrequent from "../components/ProductFrequent";
+import { width } from "@fortawesome/free-brands-svg-icons/fa42Group";
 
 const ProductScreen = () => {
   const { id } = useParams();
@@ -85,12 +86,6 @@ const ProductScreen = () => {
       dispatch(categoryProducts(currentCategoryName));
     }
   }, [dispatch, currentCategoryName]);
-
-  // const addToCartHandler = (index) => {
-  //   const variant = priceVariants[index];
-  //   const cartItemId = `${product._id}-${variant.qty}`;
-  //   dispatch(addToCart(product, variant, cartItemId));
-  // };
 
   const increaseQty = () => {
     if (
