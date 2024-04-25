@@ -160,15 +160,15 @@ const PORT = process.env.PORT || 5000;
 if (process.env.USE_SSL === "true") {
   // Setup for HTTPS server
   const privateKey = fs.readFileSync(
-    "/etc/letsencrypt/live/yourdomain.com/privkey.pem",
+    "/etc/letsencrypt/live/bigbasketuae.com/privkey.pem",
     "utf8"
   );
   const certificate = fs.readFileSync(
-    "/etc/letsencrypt/live/yourdomain.com/fullchain.pem",
+    "/etc/letsencrypt/live/bigbasketuae.com/fullchain.pem",
     "utf8"
   );
   const ca = fs.readFileSync(
-    "/etc/letsencrypt/live/yourdomain.com/chain.pem",
+    "/etc/letsencrypt/live/bigbasketuae.com/chain.pem",
     "utf8"
   );
 
