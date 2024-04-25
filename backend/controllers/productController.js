@@ -47,46 +47,52 @@ const getProducts = asyncHandler(async (req, res) => {
 //@route GET /api/products/:id
 //@access Public
 const getProductById = asyncHandler(async (req, res) => {
-  console.log(`Fetching product with ID ${req.params.id}`);
-  const product = await Product.findById(req.params.id)
-    .populate("category", "title name")
-    .populate("promotion", "title name")
-    .populate({
-      path: "frequentlyBought.productId",
-      select: "_id name prices image countInStock category",
-      populate: {
-        path: "category",
-        select: "name title",
-      },
-    });
+  try {
+    console.log(`Fetching product with ID ${req.params.id}`);
+    const product = await Product.findById(req.params.id)
+      .populate("category", "title name")
+      .populate("promotion", "title name")
+      .populate({
+        path: "frequentlyBought.productId",
+        select: "_id name prices image countInStock category",
+        // populate: {
+        //   path: "category",
+        //   select: "name title",
+        // },
+      });
 
-  if (product) {
-    // Enhance frequentlyBought by attaching the matched variant details
-    const frequentlyBoughtWithVariants = product.frequentlyBought.map(
-      (fbItem) => {
-        const variant =
-          fbItem.productId &&
-          fbItem.productId.prices.find(
-            (variant) => variant._id.toString() === fbItem.variantId.toString()
-          );
-        return {
-          ...fbItem._doc, // include all existing fields
-          productId: fbItem.productId,
-          variant: variant || null, // attach the found variant or null if not found
-        };
-      }
-    );
+    if (product) {
+      // Enhance frequentlyBought by attaching the matched variant details
+      const frequentlyBoughtWithVariants = product.frequentlyBought.map(
+        (fbItem) => {
+          const variant =
+            fbItem.productId &&
+            fbItem.productId.prices.find(
+              (variant) =>
+                variant._id.toString() === fbItem.variantId.toString()
+            );
+          return {
+            ...fbItem._doc, // include all existing fields
+            productId: fbItem.productId,
+            variant: variant || null, // attach the found variant or null if not found
+          };
+        }
+      );
 
-    // Create a new response object with the full product data and enhanced frequentlyBought
-    const fullProductDetails = {
-      ...product._doc,
-      frequentlyBought: frequentlyBoughtWithVariants,
-    };
+      // Create a new response object with the full product data and enhanced frequentlyBought
+      const fullProductDetails = {
+        ...product._doc,
+        frequentlyBought: frequentlyBoughtWithVariants,
+      };
 
-    res.json(fullProductDetails);
-  } else {
-    res.status(404);
-    throw new Error("Product not found");
+      res.json(fullProductDetails);
+    } else {
+      res.status(404);
+      throw new Error("Product not found");
+    }
+  } catch (error) {
+    console.error(error);
+    res.status(500).json({ message: "Server Error" });
   }
 });
 
