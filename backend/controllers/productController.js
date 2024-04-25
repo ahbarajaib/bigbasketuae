@@ -47,6 +47,7 @@ const getProducts = asyncHandler(async (req, res) => {
 //@route GET /api/products/:id
 //@access Public
 const getProductById = asyncHandler(async (req, res) => {
+  console.log(`Fetching product with ID ${req.params.id}`);
   const product = await Product.findById(req.params.id)
     .populate("category", "title name")
     .populate("promotion", "title name")
@@ -56,7 +57,7 @@ const getProductById = asyncHandler(async (req, res) => {
       populate: {
         path: "category",
         select: "name title",
-      }, // Include the prices to access variants
+      },
     });
 
   if (product) {
