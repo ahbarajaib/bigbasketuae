@@ -15,7 +15,7 @@ const ProductFrequent = ({ product, handleCheckboxChange, isChecked }) => {
           <Link to={`/product/${product?.productId?._id}`}>
             <Card.Img
               variant="top"
-              src={process.env.REACT_APP_API_URL + product.productId.image}
+              src={process.env.REACT_APP_API_URL + product?.productId?.image}
               style={{
                 objectFit: "cover",
                 height: "100px",
