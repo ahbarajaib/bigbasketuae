@@ -194,7 +194,6 @@ const updateProduct = asyncHandler(async (req, res) => {
     countryOfOrigin,
     // Added promotions to the destructured fields
   } = req.body;
-
   const product = await Product.findById(req.params.id);
 
   if (!product) {

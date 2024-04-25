@@ -142,7 +142,6 @@ const ProductEditScreen = () => {
   };
   const handleProductSelect = (selectedOptions) => {
     const newItems = selectedOptions.map((option) => ({
-      _id: Math.random().toString(36).substr(2, 9), // Temporary ID
       productId: option.value.productId,
       variantId: option.value.variantId,
       name: products.find((p) => p._id === option.value.productId)?.name,
@@ -153,6 +152,7 @@ const ProductEditScreen = () => {
     }));
 
     setFrequentlyBought((currentItems) => [...currentItems, ...newItems]);
+    console.log("frequently", frequentlyBought);
   };
 
   const handleRemove = (fbId) => {
@@ -224,7 +224,6 @@ const ProductEditScreen = () => {
       subtitle: showSubtitleInput ? subtitle : undefined,
     };
     dispatch(updateProduct(updatedProduct));
-    console.log("Submitting product update:", updatedProduct);
   };
   const categoryOptions = categories.map((cat) => ({
     value: cat._id, // Use _id as the value
