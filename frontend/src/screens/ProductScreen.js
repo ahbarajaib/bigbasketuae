@@ -458,9 +458,8 @@ const ProductScreen = () => {
             {frequentlyBought && frequentlyBought.length > 0 && (
               <div className="frequentlyBought-container m-2">
                 {" "}
-                {/* Add frequentlyBought-container class */}
                 <h2>Frequently Bought Together</h2>
-                <div className="frequentlyBought bg-white pt-4 border-change rounded-lg">
+                <div className=" bg-white pt-4 border-change rounded-lg m-2">
                   <Row>
                     {frequentlyBought.map((product) => (
                       <Col key={product._id} className="frequentlyBought-item">
@@ -473,6 +472,8 @@ const ProductScreen = () => {
                     ))}
                   </Row>
                   <div className="p-4">
+                    {" "}
+                    {/* Added button container */}
                     <Button
                       onClick={bulkAddToCart}
                       disabled={selectedProducts.size === 0}

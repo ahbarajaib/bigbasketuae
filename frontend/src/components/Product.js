@@ -125,14 +125,14 @@ const Product = ({ product }) => {
           {product?.brand}
         </Card.Subtitle>
         <div className="row">
-          <div className="col-sm m-0 p-0">
+          <div className="col m-0 p-0">
             <QuantityDropdown
               product={product}
               selectedPriceVariant={selectedPriceVariant}
               setSelectedPriceVariant={setSelectedPriceVariant}
             />
           </div>
-          <div className="col-sm m-0 p-0">
+          <div className="col m-0 p-0">
             <QuantitySelector
               selectedPriceVariant={selectedPriceVariant}
               increaseQty={increaseQty}

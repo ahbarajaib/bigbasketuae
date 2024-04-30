@@ -103,27 +103,8 @@ header {
 
 .frequentlyBought-container {
   display: flex;
-  flex-wrap: wrap; /* Wrap cards if they overflow container */
-  /* Other styles as needed (e.g., border, padding) */
-}
-
-/* Responsive adjustments for columns (adjust as needed) */
-@media (min-width: 768px) {
-  .frequentlyBought-item {
-    /* Adjust column sizes for medium screens (e.g., md={4}) */
-  }
-}
-
-@media (min-width: 992px) {
-  .frequentlyBought-item {
-    /* Adjust column sizes for large screens (e.g., lg={3}) */
-  }
-}
-
-@media (min-width: 1200px) {
-  .frequentlyBought-item {
-    /* Adjust column sizes for extra large screens (e.g., xl={2}) */
-  }
+  flex-direction: column;
+  flex-wrap: wrap;
 }
 
 /* Center the text below the icon on small and medium screens */
