@@ -188,11 +188,11 @@ const Header = () => {
         </Container>
       </Navbar>
       <Container className="p-0">
-        <Navbar expand="lg" className="d-inline-flex">
+        <Navbar expand="lg" className="d-inline-flex m-2">
           <Nav className="me-auto">
             <NavDropdown
               title={
-                <span>
+                <span className="fw-normal">
                   Browse All Categories <FontAwesomeIcon icon={faChevronDown} />
                 </span>
               }

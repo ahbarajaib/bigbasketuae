@@ -8,14 +8,6 @@ import visa from "../images/visa.png";
 import mastercard from "../images/mastercard.png";
 import instagram from "../images/instagram.png";
 import facebook from "../images/facebook.png";
-import {
-  faFacebook,
-  faInstagram,
-  faCcVisa,
-  faCcMastercard,
-  faCcAmex,
-  faCcDiscover,
-} from "@fortawesome/free-brands-svg-icons";
 
 const Footer = () => {
   return (
@@ -23,9 +15,9 @@ const Footer = () => {
       <Container>
         <Row>
           {/* Brand Image and Details */}
-          <Col lg={4} md={12} className="mb-4 mb-lg-0">
+          <Col lg={4} md={12} sm={12} className="mb-2 mb-lg-0">
             {/* Insert your brand image here */}
-            <div className="pb-5">
+            <div className="pb-5 mx-2">
               <Image
                 src={largeLogo}
                 alt="BigBasket Logo"
@@ -37,15 +29,19 @@ const Footer = () => {
                 className="logo small-logo"
               />
             </div>
-            <h5 className="text-dark">Big Basket UAE</h5>
-            <ul className="list-unstyled">
-              <li className="text-dark">Montana building 304 karama, Dubai</li>
-              <li className="text-dark">Phone: +971 522512453</li>
-            </ul>
+            <div className="m-2">
+              <h5 className="text-dark">Big Basket UAE</h5>
+              <ul className="list-unstyled">
+                <li className="text-dark">
+                  Montana building 304 karama, Dubai
+                </li>
+                <li className="text-dark">Phone: +971 522512453</li>
+              </ul>
+            </div>
           </Col>
 
           {/* Payment Methods and Social Icons */}
-          <Col lg={4} md={12}>
+          <Col lg={4} md={12} className="m-2">
             <h5 className="text-dark">
               We accept all major credit and debit cards
             </h5>
@@ -58,7 +54,7 @@ const Footer = () => {
               />
             </div>
           </Col>
-          <Col lg={4} md={12} className="text-lg-right text-md-center">
+          <Col lg={4} md={12} className="text-lg-right text-md-center m-2">
             <h5 className="text-dark">Follow Us</h5>
             <div className="social-icons d-flex justify-content-center gap-2">
               <Image src={facebook} alt="visa" className="social-icon" />
@@ -69,7 +65,7 @@ const Footer = () => {
 
         {/* Additional Links and Info */}
         <hr className="bg-dark" />
-        <Row className="justify-content-between">
+        <Row className="justify-content-between m-2">
           <Col lg={3} md={6}>
             <h5 className="text-dark">Customer Service</h5>
             <ul className="list-unstyled">
@@ -84,7 +80,7 @@ const Footer = () => {
               </li>
             </ul>
           </Col>
-          <Col lg={3} md={6}>
+          <Col lg={3} md={6} className="m-2">
             <h5 className="text-dark">Information</h5>
             <ul className="list-unstyled">
               <li>
@@ -101,7 +97,7 @@ const Footer = () => {
         </Row>
 
         {/* Copyright Notice */}
-        <Row>
+        <Row className="m-2">
           <Col>
             <p className="text-center mb-0 text-dark">
               &copy; {new Date().getFullYear()} Big Basket UAE. All rights

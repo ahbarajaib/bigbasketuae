@@ -23,12 +23,12 @@ const Categories = () => {
             key={category._id}
             xs={3}
             sm={3}
-            md={3}
+            md={2}
             lg={2}
             xl={2}
             className="mb-4"
           >
-            <div className="category-card">
+            <div>
               <a href={`/category/${category.name}`}>
                 <div className="image-container">
                   <img

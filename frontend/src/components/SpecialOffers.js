@@ -21,8 +21,8 @@ const SpecialOffers = () => {
 
   return (
     <div>
-      <h2>Special Offers</h2>
-      <Row>
+      <h2 className="m-2">Special Offers</h2>
+      <Row className="m-2">
         {loading && <Loader />}
         {error && <Message variant="danger">{error}</Message>}
         {promotions
@@ -33,10 +33,11 @@ const SpecialOffers = () => {
               <Link to={`/promotion/${promotion.name}`}>
                 {" "}
                 {/* Ensure this path is as per your routing setup */}
-                <Card>
+                <Card className="rounded-lg">
                   <Card.Img
                     variant="top"
                     src={process.env.REACT_APP_API_URL + promotion.image}
+                    className="rounded-lg"
                     alt={promotion.title}
                   />
                 </Card>

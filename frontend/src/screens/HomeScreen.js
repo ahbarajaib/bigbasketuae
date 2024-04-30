@@ -103,8 +103,8 @@ const HomeScreen = () => {
       {
         breakpoint: 600,
         settings: {
-          slidesToShow: 3,
-          slidesToScroll: 3,
+          slidesToShow: 2,
+          slidesToScroll: 2,
           initialSlide: 2,
         },
       },
@@ -119,7 +119,7 @@ const HomeScreen = () => {
   };
   const getMarginTop = () => {
     const isMobile = window.innerWidth <= 767; // Adjust the breakpoint as needed
-    return isMobile ? "140px" : "110px";
+    return isMobile ? "140px" : "160px";
   };
   return (
     <>
@@ -129,7 +129,7 @@ const HomeScreen = () => {
 
         {!searchKeyword && (
           <div>
-            <h1>Categories</h1>
+            <h1 className="m-2">Categories</h1>
             <Row>
               <Col>
                 <Suspense fallback={<Loader />}>

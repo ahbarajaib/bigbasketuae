@@ -35,16 +35,16 @@ const ProductPromotionScreen = () => {
 
   return (
     <div>
-      <h2>{formatPromotionName(promotion)}</h2>
+      <h2 className="m-2">{formatPromotionName(promotion)}</h2>
       {loading ? (
         <Loader />
       ) : error ? (
         <Message variant="danger">{error}</Message>
       ) : (
-        <Row>
+        <Row className="m-1 p-0">
           {products &&
             products.map((product) => (
-              <Col key={product._id} sm={12} md={6} lg={4} xl={3}>
+              <Col key={product._id} xs={6} sm={6} md={4} lg={3} xl={2}>
                 <Product
                   product={product}
                   promotion={product.promotion && product.promotion.name}

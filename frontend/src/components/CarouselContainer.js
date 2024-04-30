@@ -27,11 +27,11 @@ function CarouselContainer({ category }) {
     return <p>Error: {error}</p>;
   }
   return (
-    <Carousel slide interval={2000}>
+    <Carousel slide interval={2000} className="m-1">
       {images.map((image, index) => (
         <Carousel.Item key={index}>
           <img
-            className="d-block w-100"
+            className="d-block w-100 rounded-lg"
             src={`${process.env.REACT_APP_API_URL}/${image}`} // Use the imported image directly
             alt={`Banner ${index + 1}`}
           />

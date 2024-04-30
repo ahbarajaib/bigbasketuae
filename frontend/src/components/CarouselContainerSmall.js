@@ -12,11 +12,11 @@ const CarouselContainerSmall = React.memo(({ images }) => {
   }
 
   return (
-    <Carousel slide interval={2000}>
+    <Carousel slide interval={2000} className="mx-2">
       {images.map((image, index) => (
         <Carousel.Item key={index}>
           <img
-            className="d-block w-100"
+            className="d-block w-100 rounded-lg"
             src={`${process.env.REACT_APP_API_URL}/banners/small/${image}`}
             alt={`Banner ${index + 1}`}
           />

@@ -87,7 +87,7 @@ header {
 /* Define styles for small screens */
 .small-logo {
   display: none;
-  max-width: 40px; /* Hide the small logo on small screens */
+  max-width: 48px; /* Hide the small logo on small screens */
 }
 
 /* Use a media query to adjust the display property for small screens */
@@ -98,6 +98,31 @@ header {
   }
   .small-logo {
     display: block; /* Show the small logo on small screens */
+  }
+}
+
+.frequentlyBought-container {
+  display: flex;
+  flex-wrap: wrap; /* Wrap cards if they overflow container */
+  /* Other styles as needed (e.g., border, padding) */
+}
+
+/* Responsive adjustments for columns (adjust as needed) */
+@media (min-width: 768px) {
+  .frequentlyBought-item {
+    /* Adjust column sizes for medium screens (e.g., md={4}) */
+  }
+}
+
+@media (min-width: 992px) {
+  .frequentlyBought-item {
+    /* Adjust column sizes for large screens (e.g., lg={3}) */
+  }
+}
+
+@media (min-width: 1200px) {
+  .frequentlyBought-item {
+    /* Adjust column sizes for extra large screens (e.g., xl={2}) */
   }
 }
 
@@ -114,15 +139,6 @@ header {
   .location-link i {
     margin-bottom: 5px; /* Adjust the margin as needed */
   }
-}
-/* categories */
-.category-card {
-  position: relative;
-  cursor: pointer;
-  overflow: hidden;
-  border-radius: 8px; /* Rounded corners */
-  margin: 15px; /* Space between cards */
-  transition: box-shadow 0.3s ease-out, transform 0.3s ease-out; /* Smooth transition for shadow and lift */
 }
 
 .image-container {
@@ -142,6 +158,8 @@ header {
   height: 80%;
   object-fit: cover;
   margin: auto; /* This will help in centering the image */
+  box-shadow: 0px 0px 10px rgba(0, 0, 0, 0.1);
+  border-radius: 50%;
 }
 
 .category-card:hover {
@@ -258,7 +276,7 @@ header {
 /* Product.css */
 
 .product-card:hover {
-  border: 2px solid #139745; /* Add a strong border on hover with your desired color */
+  border: 1px solid #139745; /* Add a strong border on hover with your desired color */
 }
 
 /* Below is for productNav text to make it smaller */
@@ -361,15 +379,31 @@ header {
   margin: 0 10px;
 }
 .responsive-button {
+  background-color: white;
+
   overflow: hidden; /* Hide text overflow */
   text-overflow: ellipsis; /* Show ellipsis (...) for truncated text */
   white-space: nowrap; /* Prevent line breaks */
   font-size: 0.8rem; /* Initial font size */
-
+  border-color: #117a30;
+  color: #117a30;
   /* Media query for smaller screen sizes */
   @media (max-width: 768px) {
     font-size: 0.7rem; /* Reduce font size for smaller screens */
   }
+}
+
+.responsive-button:active,
+.responsive-button:focus {
+  background-color: #139745 !important;
+  outline: none;
+  box-shadow: none;
+  border: none;
+  color: white;
+}
+
+.responsive-button:hover {
+  background-color: #117a30 !important;
 }
 
 .clickable {
@@ -436,10 +470,6 @@ button {
 }
 
 /* This is code end */
-
-.category-text {
-  flex: 1;
-}
 
 .scrolling-text {
   flex: 2;

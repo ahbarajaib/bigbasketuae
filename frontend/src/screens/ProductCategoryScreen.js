@@ -43,7 +43,7 @@ const ProductCategoryScreen = () => {
         description={currentSeoData.description}
       />{" "}
       <div className="scrolling-container">
-        <h3 className="category-text">{selectedCategory?.title}</h3>
+        <h3 className="m-2">{selectedCategory?.title}</h3>
         <div className="scrolling-text">
           <span>Same Day Delivery if ordered before 12pm</span>
           <span>
@@ -58,7 +58,7 @@ const ProductCategoryScreen = () => {
         <Message variant="danger">{error}</Message>
       ) : (
         <>
-          <Row>
+          <Row className="m-1 p-0">
             {products &&
               products
                 .filter((product) => product?.category?.name === category)

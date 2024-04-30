@@ -253,7 +253,7 @@ const ProductScreen = () => {
                       product.prices.map((price, index) => (
                         <Col
                           key={index} // Changed from price.qty to index for uniqueness
-                          xs={3}
+                          xs={6}
                           sm={3}
                           md={6}
                           lg={6}
@@ -277,6 +277,16 @@ const ProductScreen = () => {
                               width: "100%",
                               position: "relative",
                               textAlign: "left",
+                              backgroundColor:
+                                selectedPriceVariant &&
+                                selectedPriceVariant._id === price._id
+                                  ? "#117a30"
+                                  : "",
+                              color:
+                                selectedPriceVariant &&
+                                selectedPriceVariant._id === price._id
+                                  ? "#fff"
+                                  : "",
                             }}
                           >
                             <div
@@ -351,7 +361,7 @@ const ProductScreen = () => {
               </ListGroup>
             </Col>
 
-            <Col md={3}>
+            <Col md={2} className="m-2">
               <Card>
                 <ListGroup variant="flush">
                   <ListGroup.Item>
@@ -446,12 +456,14 @@ const ProductScreen = () => {
             </Col>
 
             {frequentlyBought && frequentlyBought.length > 0 && (
-              <>
+              <div className="frequentlyBought-container m-2">
+                {" "}
+                {/* Add frequentlyBought-container class */}
                 <h2>Frequently Bought Together</h2>
-                <div className="bg-white pt-4 border-change rounded-lg">
+                <div className="frequentlyBought bg-white pt-4 border-change rounded-lg">
                   <Row>
                     {frequentlyBought.map((product) => (
-                      <Col key={product._id} sm={12} md={6} lg={4} xl={3}>
+                      <Col key={product._id} className="frequentlyBought-item">
                         <ProductFrequent
                           product={product}
                           handleCheckboxChange={handleCheckboxChange}
@@ -470,7 +482,7 @@ const ProductScreen = () => {
                     </Button>
                   </div>
                 </div>
-              </>
+              </div>
             )}
 
             <Row>
@@ -493,8 +505,8 @@ const ProductScreen = () => {
             <Message variant="danger">{error}</Message>
           ) : (
             <>
-              <h3>Similar Products</h3>
-              <div style={{ overflowX: "auto" }}>
+              <h3 className="m-2">Similar Products</h3>
+              <div style={{ overflowX: "auto" }} className="m-2">
                 <Row className="d-flex flex-nowrap">
                   {randomProducts.map((product) => (
                     <Col key={product._id} xs={6} sm={6} md={4} lg={3} xl={2}>

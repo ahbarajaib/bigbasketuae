@@ -1,11 +1,10 @@
-// ProductFrequent.js
 import React from "react";
 import { Card, Form, Button } from "react-bootstrap";
 import { Link } from "react-router-dom";
 
 const ProductFrequent = ({ product, handleCheckboxChange, isChecked }) => {
   return (
-    <Card className="my-1 rounded product-card">
+    <Card className="m-2 rounded product-card">
       <Card.Body className="d-flex flex-row p-2">
         <div className="col-3">
           <Link to={`/product/${product?.productId?._id}`}>
@@ -31,7 +30,7 @@ const ProductFrequent = ({ product, handleCheckboxChange, isChecked }) => {
             <strong>AED&nbsp;{product?.variant?.price}</strong>
           </Card.Text>
         </div>
-        <div className="col-3 d-flex align-items-center justify-content-end">
+        <div className="col-3 d-flex align-items-center justify-content-end p-4">
           <Form.Check
             type="checkbox"
             className="large-checkbox"

@@ -102,12 +102,12 @@ const Product = ({ product }) => {
             objectFit: "cover",
             height: "200px",
             borderRadius: "10px",
-            padding: "5px",
+            padding: "2px",
           }}
           loading="lazy"
         />
       </Link>
-      <Card.Body className="text-center d-flex flex-column p-2">
+      <Card.Body className="text-center d-flex flex-column">
         <Link to={`/product/${product?._id}`}>
           <Card.Title
             as="div"
