@@ -10,6 +10,7 @@ import {
   listPromotionDetails,
   updatePromotion,
 } from "../actions/promotionActions";
+import { listCategories } from "../actions/categoryActions";
 import { PROMOTION_UPDATE_RESET } from "../constants/promotionConstants";
 
 const PromotionEditScreen = () => {
@@ -19,6 +20,7 @@ const PromotionEditScreen = () => {
   const [name, setName] = useState("");
   const [image, setImage] = useState("");
   const [uploading, setUploading] = useState(false);
+  const [category, setCategory] = useState("");
 
   const dispatch = useDispatch();
 
@@ -33,6 +35,9 @@ const PromotionEditScreen = () => {
   } = promotionDetails;
   const promotionList = useSelector((state) => state.promotionList);
   const { loading, error, promotions } = promotionList;
+
+  const categoryList = useSelector((state) => state.categoryList);
+  const { loading: loadingList, error: errorList, categories } = categoryList;
 
   const promotionUpdate = useSelector((state) => state.promotionUpdate);
   const {
@@ -103,6 +108,7 @@ const PromotionEditScreen = () => {
         title,
         name,
         image,
+        category,
       })
     );
   };
@@ -156,6 +162,22 @@ const PromotionEditScreen = () => {
               />
               {uploading && <Loader />}
             </Form.Group>
+            <Form.Group controlId="category">
+              <Form.Label>Category</Form.Label>
+              <Form.Control
+                as="select"
+                value={category}
+                onChange={(e) => setCategory(e.target.value)}
+              >
+                <option value="">Select category</option>
+                {categories.map((category) => (
+                  <option key={category._id} value={category._id}>
+                    {category.title}
+                  </option>
+                ))}
+              </Form.Control>
+            </Form.Group>
+
             <Button type="submit" variant="primary">
               Update
             </Button>

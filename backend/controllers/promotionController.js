@@ -2,12 +2,19 @@ import Promotion from "../models/promotionModel.js";
 import asyncHandler from "express-async-handler";
 
 const getPromotions = asyncHandler(async (req, res) => {
-  const promotions = await Promotion.find({});
+  const promotions = await Promotion.find({}).populate(
+    "category",
+    "name title"
+  );
   res.json(promotions);
 });
 
 const getPromotionById = asyncHandler(async (req, res) => {
-  const promotion = await Promotion.findById(req.params.id);
+  const promotion = await Promotion.findById(req.params.id).populate(
+    "category",
+    "name title"
+  );
+
   if (promotion) {
     res.json(promotion);
   } else {
@@ -17,7 +24,7 @@ const getPromotionById = asyncHandler(async (req, res) => {
 });
 
 const createPromotion = asyncHandler(async (req, res) => {
-  const { name, title, isActive } = req.body;
+  const { name, title, isActive, category } = req.body;
   const activePromotionsCount = await Promotion.countDocuments({
     isActive: true,
   });
@@ -32,13 +39,14 @@ const createPromotion = asyncHandler(async (req, res) => {
     name,
     title,
     isActive,
+    category,
   });
   const createdPromotion = await promotion.save();
   res.status(201).json(createdPromotion);
 });
 
 const updatePromotion = asyncHandler(async (req, res) => {
-  const { name, title, image, isActive } = req.body;
+  const { name, title, image, isActive, category } = req.body;
   const promotion = await Promotion.findById(req.params.id);
 
   if (!promotion) {
@@ -64,6 +72,7 @@ const updatePromotion = asyncHandler(async (req, res) => {
   promotion.name = name || promotion.name;
   promotion.title = title || promotion.title;
   promotion.image = image || promotion.image;
+  promotion.category = category || promotion.category;
 
   // This safely sets isActive only if it's provided in the request
   if (isActive !== undefined) {

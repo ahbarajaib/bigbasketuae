@@ -22,7 +22,7 @@ const PromotionListScreen = () => {
   const promotionList = useSelector((state) => state.promotionList);
   const { loading, error, promotions } = promotionList;
   const [updateTrigger, setUpdateTrigger] = useState(false);
-
+  console.log(promotions);
   const promotionCreate = useSelector((state) => state.promotionCreate);
   const {
     loading: loadingCreate,
@@ -109,6 +109,7 @@ const PromotionListScreen = () => {
               <th>TITLE</th>
               <th>NAME</th>
               <th>IMAGE</th>
+              <th>CATEGORY</th>
               <th>ACTIVE</th>
               <th>ACTION</th>
             </tr>
@@ -117,7 +118,6 @@ const PromotionListScreen = () => {
             {promotions.map((promotion) => (
               <tr key={promotion._id}>
                 <td>{promotion.title}</td>
-
                 <td>{promotion.name}</td>
                 <td>
                   <img
@@ -127,6 +127,8 @@ const PromotionListScreen = () => {
                     className="img-thumbnail"
                   />
                 </td>
+                <td>{promotion.category ? promotion.category.title : "N/A"}</td>{" "}
+                {/* Add defensive check */}
                 <td>
                   <Form.Check
                     type="switch"

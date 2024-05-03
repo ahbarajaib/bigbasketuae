@@ -25,14 +25,11 @@ const SpecialOffers = () => {
       <Row className="m-2">
         {loading && <Loader />}
         {error && <Message variant="danger">{error}</Message>}
-        {promotions
-          .filter((promo) => promo.isActive)
-          .map((promotion) => (
-            <Col xs={3} key={promotion.id}>
-              {/* Use Link to navigate to the search route */}
+        {promotions.map((promotion) => (
+          <Col xs={3} key={promotion.id}>
+            {promotion.isActive ? (
+              // If promotion is active, display it as a Link
               <Link to={`/promotion/${promotion.name}`}>
-                {" "}
-                {/* Ensure this path is as per your routing setup */}
                 <Card className="rounded-lg">
                   <Card.Img
                     variant="top"
@@ -42,8 +39,26 @@ const SpecialOffers = () => {
                   />
                 </Card>
               </Link>
-            </Col>
-          ))}
+            ) : (
+              // If promotion is not active, display category details when clicked
+
+              <Link
+                to={`/category/${
+                  promotion.category ? promotion.category.name : "No Category"
+                }`}
+              >
+                <Card className="rounded-lg">
+                  <Card.Img
+                    variant="top"
+                    src={process.env.REACT_APP_API_URL + promotion.image}
+                    className="rounded-lg"
+                    alt={promotion.title}
+                  />
+                </Card>
+              </Link>
+            )}
+          </Col>
+        ))}
       </Row>
     </div>
   );

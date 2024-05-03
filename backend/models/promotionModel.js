@@ -22,6 +22,10 @@ const promotionSchema = mongoose.Schema(
       required: true,
       default: false,
     },
+    category: {
+      type: mongoose.Schema.Types.ObjectId,
+      ref: "Category",
+    },
   },
   {
     timestamps: true,
