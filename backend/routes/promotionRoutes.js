@@ -1,6 +1,11 @@
 import express from "express";
 const router = express.Router();
-import { protect, admin, manager } from "../middleware/authMiddleware.js";
+import {
+  protect,
+  admin,
+  manager,
+  adminOrManager,
+} from "../middleware/authMiddleware.js";
 import {
   getPromotions,
   getPromotionById,
@@ -14,14 +19,12 @@ router.route("/").get(getPromotions).post(protect, admin, createPromotion);
 
 router
   .route("/toggle-active/:id")
-  .post(protect, admin, togglePromotionActive)
-  .post(protect, manager, togglePromotionActive);
+  .post(protect, adminOrManager, togglePromotionActive);
 
 router
   .route("/:id")
   .get(getPromotionById)
-  .put(protect, admin, updatePromotion)
-  .put(protect, manager, updatePromotion)
+  .put(protect, adminOrManager, updatePromotion)
   .delete(protect, admin, deletePromotion);
 
 export default router;

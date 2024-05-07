@@ -13,16 +13,15 @@ import {
 import {
   protect,
   admin,
-  manager,
   courier,
+  adminOrManagerOrCourier,
 } from "../middleware/authMiddleware.js";
 
 router
   .route("/")
   .post(protect, addOrderItems)
-  .get(protect, admin, getOrders)
-  .get(protect, manager, getOrders)
-  .get(protect, courier, getOrders);
+  .get(protect, adminOrManagerOrCourier, getOrders);
+
 router.route("/myorders").get(protect, getMyOrders);
 router.route("/:id").get(protect, getOrderById);
 router.route("/:id/orderplaced").put(protect, updateOrderToPlaced);
@@ -30,8 +29,7 @@ router.route("/:id/orderplaced").put(protect, updateOrderToPlaced);
 router.route("/:id/payment").put(protect, updateOrderToPaid);
 router
   .route("/:id/deliver")
-  .put(protect, admin, updateOrderToDelivered)
-  .put(protect, courier, updateOrderToDelivered);
+  .put(protect, adminOrManagerOrCourier, updateOrderToDelivered);
 
 // Route to update order to paid when payment is successful
 

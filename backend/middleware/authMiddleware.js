@@ -56,4 +56,32 @@ const courier = (req, res, next) => {
   }
 };
 
-export { protect, admin, manager, courier };
+const adminOrManager = (req, res, next) => {
+  if (req.user && (req.user.isAdmin || req.user.isManager)) {
+    next();
+  } else {
+    res.status(401);
+    throw new Error("Not authorized as an admin or manager");
+  }
+};
+
+const adminOrManagerOrCourier = (req, res, next) => {
+  if (
+    req.user &&
+    (req.user.isAdmin || req.user.isManager || req.user.isCourier)
+  ) {
+    next();
+  } else {
+    res.status(401);
+    throw new Error("Not authorized as an admin or manager or courier");
+  }
+};
+
+export {
+  protect,
+  admin,
+  manager,
+  courier,
+  adminOrManager,
+  adminOrManagerOrCourier,
+};

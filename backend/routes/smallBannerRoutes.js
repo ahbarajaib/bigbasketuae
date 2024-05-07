@@ -7,14 +7,15 @@ import {
   getSmallBanner,
 } from "../controllers/bannerController.js";
 
-import { protect, admin, manager } from "../middleware/authMiddleware.js";
+import {
+  protect,
+  admin,
+  adminOrManager,
+} from "../middleware/authMiddleware.js";
 
 const router = express.Router();
 
-router
-  .route("/")
-  .post(protect, admin, uploadSmallBanner)
-  .post(protect, manager, uploadSmallBanner);
+router.route("/").post(protect, adminOrManager, uploadSmallBanner);
 
 router.route("/all").get(getAllSmallBanners);
 

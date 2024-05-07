@@ -1,6 +1,11 @@
 import express from "express";
 const router = express.Router();
-import { protect, admin, manager } from "../middleware/authMiddleware.js";
+import {
+  protect,
+  admin,
+  manager,
+  adminOrManager,
+} from "../middleware/authMiddleware.js";
 import {
   getCategories,
   getCategoryById,
@@ -12,13 +17,11 @@ import {
 router
   .route("/")
   .get(getCategories)
-  .post(protect, admin, createCategory)
-  .post(protect, manager, createCategory);
+  .post(protect, adminOrManager, createCategory);
 router
   .route("/:id")
   .get(getCategoryById)
   .delete(protect, admin, deleteCategory)
-  .put(protect, admin, updateCategory)
-  .put(protect, manager, updateCategory);
+  .put(protect, adminOrManager, updateCategory);
 
 export default router;

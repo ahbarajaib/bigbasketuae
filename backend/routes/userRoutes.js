@@ -12,13 +12,14 @@ import {
   forgotPassword,
   resetPassword,
 } from "../controllers/userController.js";
-import { protect, admin, manager } from "../middleware/authMiddleware.js";
+import {
+  protect,
+  admin,
+  manager,
+  adminOrManager,
+} from "../middleware/authMiddleware.js";
 
-router
-  .route("/")
-  .post(registerUser)
-  .get(protect, admin, getUsers)
-  .get(protect, manager, getUsers);
+router.route("/").post(registerUser).get(protect, adminOrManager, getUsers);
 router.post("/login", authUser);
 router
   .route("/profile")
