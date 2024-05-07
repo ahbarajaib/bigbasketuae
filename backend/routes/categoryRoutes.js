@@ -12,11 +12,13 @@ import {
 router
   .route("/")
   .get(getCategories)
-  .post(protect, admin, manager, createCategory);
+  .post(protect, admin, createCategory)
+  .post(protect, manager, createCategory);
 router
   .route("/:id")
   .get(getCategoryById)
   .delete(protect, admin, deleteCategory)
-  .put(protect, admin, manager, updateCategory);
+  .put(protect, admin, updateCategory)
+  .put(protect, manager, updateCategory);
 
 export default router;

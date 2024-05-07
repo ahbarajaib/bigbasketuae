@@ -12,6 +12,7 @@ import logo from "../images/logo_only.png";
 import {
   ORDER_PAY_RESET,
   ORDER_DELIVER_RESET,
+  ORDER_DETAILS_REQUEST,
 } from "../constants/orderConstants";
 
 const OrderScreen = (history) => {
@@ -74,6 +75,11 @@ const OrderScreen = (history) => {
     } else if (!order.isPaid) {
       setSdkReady(true);
     }
+    dispatch(getOrderDetails(id));
+    return () => {
+      // Reset order details when the component unmounts
+      dispatch({ type: ORDER_DETAILS_REQUEST }); // Reset order state or perform other cleanup tasks
+    };
   }, [id, dispatch, successPay, successDeliver, order, navigate, userInfo]);
 
   const successPaymentHandler = async () => {

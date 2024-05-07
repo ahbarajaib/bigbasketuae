@@ -11,12 +11,16 @@ import { protect, admin, manager } from "../middleware/authMiddleware.js";
 
 const router = express.Router();
 
-router.route("/").post(protect, admin, manager, uploadSmallBanner);
+router
+  .route("/")
+  .post(protect, admin, uploadSmallBanner)
+  .post(protect, manager, uploadSmallBanner);
+
 router.route("/all").get(getAllSmallBanners);
 
 router
   .route("/:category")
   .get(getSmallBanner)
-  .delete(protect, admin, manager, deleteSmallBanner);
+  .delete(protect, admin, deleteSmallBanner);
 
 export default router;

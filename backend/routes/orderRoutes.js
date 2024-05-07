@@ -20,7 +20,9 @@ import {
 router
   .route("/")
   .post(protect, addOrderItems)
-  .get(protect, admin, manager, getOrders);
+  .get(protect, admin, getOrders)
+  .get(protect, manager, getOrders)
+  .get(protect, courier, getOrders);
 router.route("/myorders").get(protect, getMyOrders);
 router.route("/:id").get(protect, getOrderById);
 router.route("/:id/orderplaced").put(protect, updateOrderToPlaced);
@@ -28,7 +30,8 @@ router.route("/:id/orderplaced").put(protect, updateOrderToPlaced);
 router.route("/:id/payment").put(protect, updateOrderToPaid);
 router
   .route("/:id/deliver")
-  .put(protect, admin, courier, updateOrderToDelivered);
+  .put(protect, admin, updateOrderToDelivered)
+  .put(protect, courier, updateOrderToDelivered);
 
 // Route to update order to paid when payment is successful
 
