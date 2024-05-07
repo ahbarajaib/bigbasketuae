@@ -7,16 +7,16 @@ import {
   getSmallBanner,
 } from "../controllers/bannerController.js";
 
-import { protect, admin } from "../middleware/authMiddleware.js";
+import { protect, admin, manager } from "../middleware/authMiddleware.js";
 
 const router = express.Router();
 
-router.route("/").post(protect, admin, uploadSmallBanner);
+router.route("/").post(protect, admin, manager, uploadSmallBanner);
 router.route("/all").get(getAllSmallBanners);
 
 router
   .route("/:category")
   .get(getSmallBanner)
-  .delete(protect, admin, deleteSmallBanner);
+  .delete(protect, admin, manager, deleteSmallBanner);
 
 export default router;

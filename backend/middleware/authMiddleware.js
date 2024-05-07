@@ -56,4 +56,4 @@ const courier = (req, res, next) => {
   }
 };
 
-export { protect, admin, manager };
+export { protect, admin, manager, courier };
