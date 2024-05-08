@@ -75,11 +75,6 @@ const OrderScreen = (history) => {
     } else if (!order.isPaid) {
       setSdkReady(true);
     }
-    dispatch(getOrderDetails(id));
-    return () => {
-      // Reset order details when the component unmounts
-      dispatch({ type: ORDER_DETAILS_REQUEST }); // Reset order state or perform other cleanup tasks
-    };
   }, [id, dispatch, successPay, successDeliver, order, navigate, userInfo]);
 
   const successPaymentHandler = async () => {
@@ -363,7 +358,9 @@ const OrderScreen = (history) => {
               </p>
               {/* New button to open Google Maps */}
               {userInfo &&
-                userInfo.isAdmin &&
+                (userInfo.isAdmin ||
+                  userInfo.isManager ||
+                  userInfo.isCourier) &&
                 order.shippingAddress.coordinates && (
                   <Button
                     className="mb-3"
