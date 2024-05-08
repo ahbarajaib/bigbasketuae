@@ -122,56 +122,62 @@ const Header = () => {
                   </LinkContainer>
                 )}
 
-                {userInfo && userInfo.isAdmin && (
-                  <NavDropdown
-                    title={
-                      <>
-                        <div className="d-flex align-items-center">
-                          <FontAwesomeIcon icon={faToolbox} />
-                          &nbsp;
-                          <span className="d-none d-md-block"> Admin Menu</span>
-                        </div>
-                      </>
-                    }
-                    id="adminmenu"
-                  >
-                    <LinkContainer to="/admin/userList">
-                      <NavDropdown.Item className="custom-dropdown-item">
-                        Users
-                      </NavDropdown.Item>
-                    </LinkContainer>
-                    <LinkContainer to="/admin/productlist">
-                      <NavDropdown.Item className="custom-dropdown-item">
-                        Products
-                      </NavDropdown.Item>
-                    </LinkContainer>
-                    <LinkContainer to="/admin/orderlist">
-                      <NavDropdown.Item className="custom-dropdown-item">
-                        Orders
-                      </NavDropdown.Item>
-                    </LinkContainer>
-                    <LinkContainer to="/admin/categories">
-                      <NavDropdown.Item className="custom-dropdown-item">
-                        Categories
-                      </NavDropdown.Item>
-                    </LinkContainer>
-                    <LinkContainer to="/admin/banners">
-                      <NavDropdown.Item className="custom-dropdown-item">
-                        Banners
-                      </NavDropdown.Item>
-                    </LinkContainer>
-                    <LinkContainer to="/admin/bannerssmall">
-                      <NavDropdown.Item className="custom-dropdown-item">
-                        Small Banners
-                      </NavDropdown.Item>
-                    </LinkContainer>
-                    <LinkContainer to="/admin/promotions">
-                      <NavDropdown.Item className="custom-dropdown-item">
-                        Promotions
-                      </NavDropdown.Item>
-                    </LinkContainer>
-                  </NavDropdown>
-                )}
+                {userInfo &&
+                  (userInfo.isAdmin ||
+                    userInfo.isManager ||
+                    userInfo.isCourier) && (
+                    <NavDropdown
+                      title={
+                        <>
+                          <div className="d-flex align-items-center">
+                            <FontAwesomeIcon icon={faToolbox} />
+                            &nbsp;
+                            <span className="d-none d-md-block">
+                              {" "}
+                              Admin Menu
+                            </span>
+                          </div>
+                        </>
+                      }
+                      id="adminmenu"
+                    >
+                      <LinkContainer to="/admin/userList">
+                        <NavDropdown.Item className="custom-dropdown-item">
+                          Users
+                        </NavDropdown.Item>
+                      </LinkContainer>
+                      <LinkContainer to="/admin/productlist">
+                        <NavDropdown.Item className="custom-dropdown-item">
+                          Products
+                        </NavDropdown.Item>
+                      </LinkContainer>
+                      <LinkContainer to="/admin/orderlist">
+                        <NavDropdown.Item className="custom-dropdown-item">
+                          Orders
+                        </NavDropdown.Item>
+                      </LinkContainer>
+                      <LinkContainer to="/admin/categories">
+                        <NavDropdown.Item className="custom-dropdown-item">
+                          Categories
+                        </NavDropdown.Item>
+                      </LinkContainer>
+                      <LinkContainer to="/admin/banners">
+                        <NavDropdown.Item className="custom-dropdown-item">
+                          Banners
+                        </NavDropdown.Item>
+                      </LinkContainer>
+                      <LinkContainer to="/admin/bannerssmall">
+                        <NavDropdown.Item className="custom-dropdown-item">
+                          Small Banners
+                        </NavDropdown.Item>
+                      </LinkContainer>
+                      <LinkContainer to="/admin/promotions">
+                        <NavDropdown.Item className="custom-dropdown-item">
+                          Promotions
+                        </NavDropdown.Item>
+                      </LinkContainer>
+                    </NavDropdown>
+                  )}
                 <LinkContainer to="/cart">
                   <Nav.Link>
                     <div className="cart">

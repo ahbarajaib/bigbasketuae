@@ -15,7 +15,6 @@ import {
 import {
   protect,
   admin,
-  manager,
   adminOrManager,
 } from "../middleware/authMiddleware.js";
 

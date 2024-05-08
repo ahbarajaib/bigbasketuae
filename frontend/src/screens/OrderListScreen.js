@@ -66,7 +66,7 @@ const OrderListScreen = () => {
     return formattedDate;
   }
   useEffect(() => {
-    if (userInfo && userInfo.isAdmin) {
+    if (userInfo && (userInfo.isAdmin || userInfo.isManager)) {
       dispatch(listOrders());
     } else {
       navigate("/login");

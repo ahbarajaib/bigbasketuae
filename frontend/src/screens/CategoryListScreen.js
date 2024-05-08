@@ -38,7 +38,7 @@ const CategoryListScreen = () => {
   useEffect(() => {
     dispatch({ type: CATEGORY_CREATE_RESET });
 
-    if (!userInfo || !userInfo.isAdmin) {
+    if (!userInfo && (!userInfo.isAdmin || !userInfo.isManager)) {
       navigate("/login");
     }
 

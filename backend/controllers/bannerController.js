@@ -75,7 +75,7 @@ const smallUpload = multer({
 // Upload Banner function
 const uploadBanner = asyncHandler(async (req, res) => {
   // Check if the user is an admin
-  if (req.user && req.user.isAdmin) {
+  if (req.user && (req.user.isAdmin || user.isManager)) {
     // Multer middleware for handling file upload
     upload(req, res, async (err) => {
       if (err) {
@@ -163,7 +163,7 @@ const deleteBanner = asyncHandler(async (req, res) => {
 // Upload Small Banner function
 const uploadSmallBanner = asyncHandler(async (req, res) => {
   // Check if the user is an admin
-  if (req.user && req.user.isAdmin) {
+  if (req.user && (req.user.isAdmin || user.isManager)) {
     // Multer middleware for handling file upload
     smallUpload(req, res, async (err) => {
       if (err) {
