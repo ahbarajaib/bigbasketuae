@@ -24,7 +24,9 @@ router
 router
   .route("/:id")
   .get(getPromotionById)
+  .put(protect, admin, updatePromotion)
   .put(protect, adminOrManager, updatePromotion)
+
   .delete(protect, admin, deletePromotion);
 
 export default router;

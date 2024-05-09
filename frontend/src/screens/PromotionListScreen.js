@@ -40,7 +40,7 @@ const PromotionListScreen = () => {
   useEffect(() => {
     dispatch({ type: PROMOTION_CREATE_RESET });
 
-    if (!userInfo || !userInfo.isAdmin || !userInfo.isManager) {
+    if (!userInfo && (!userInfo.isAdmin || !userInfo.isManager)) {
       navigate("/login");
     }
 
