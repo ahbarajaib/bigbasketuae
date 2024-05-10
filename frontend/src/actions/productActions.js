@@ -207,7 +207,6 @@ export const createProduct = () => async (dispatch, getState) => {
     };
     //{} because we are making a post request but not sending any data
     const { data } = await axiosInstance.post(`/api/products`, {}, config);
-
     dispatch({
       type: PRODUCT_CREATE_SUCCESS,
       payload: data,

@@ -2,7 +2,7 @@ import Product from "../models/productModel.js";
 import Category from "../models/categoryModel.js";
 import Promotion from "../models/promotionModel.js";
 import asyncHandler from "express-async-handler";
-
+import mongoose from "mongoose";
 //@desc Fetch all products
 //@route GET /api/products
 //@access Public
@@ -48,17 +48,12 @@ const getProducts = asyncHandler(async (req, res) => {
 //@access Public
 const getProductById = asyncHandler(async (req, res) => {
   try {
-    console.log(`Fetching product with ID ${req.params.id}`);
     const product = await Product.findById(req.params.id)
       .populate("category", "title name")
       .populate("promotion", "title name")
       .populate({
         path: "frequentlyBought.productId",
         select: "_id name prices image countInStock category",
-        // populate: {
-        //   path: "category",
-        //   select: "name title",
-        // },
       });
 
     if (product) {
@@ -67,6 +62,7 @@ const getProductById = asyncHandler(async (req, res) => {
         (fbItem) => {
           const variant =
             fbItem.productId &&
+            fbItem.variantId && // Check if variantId exists
             fbItem.productId.prices.find(
               (variant) =>
                 variant._id.toString() === fbItem.variantId.toString()
@@ -169,7 +165,14 @@ const createProduct = asyncHandler(async (req, res) => {
   const product = new Product({
     name: "Sample name",
     prices: [
-      { qty: 1, units: "gm", price: 1, discountedPrice: 0, discount: 0 },
+      {
+        _id: new mongoose.Types.ObjectId(),
+        qty: 1,
+        units: "gm",
+        price: 1,
+        discountedPrice: 0,
+        discount: 0,
+      },
     ], // Only one price variant
 
     user: req.user._id,
@@ -178,10 +181,10 @@ const createProduct = asyncHandler(async (req, res) => {
     category: category._id,
     countInStock: 0,
     description: "Sample description",
-    subitle: req.body.subtitle || undefined, // Set only if provided, otherwise undefined
+    subtitle: req.body.subtitle || undefined, // Set only if provided, otherwise undefined
     countryOfOrigin: req.body.countryOfOrigin || undefined, // Set only if provided, otherwise undefined
   });
-
+  console.log(product);
   const createdProduct = await product.save();
   res.status(201).json(createdProduct);
 });

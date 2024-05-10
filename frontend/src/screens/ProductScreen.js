@@ -23,9 +23,9 @@ const ProductScreen = () => {
 
   const productDetails = useSelector((state) => state.productDetails);
   const { loading, error, product } = productDetails;
+  console.log(product);
   const currentCategoryName = product?.category?.name;
-  console.log("current ", currentCategoryName);
-  const frequentlyBought = product.frequentlyBought;
+  const frequentlyBought = product?.frequentlyBought;
   const categoryDetails = useSelector((state) => state.categoryDetails);
   const { category } = categoryDetails; // Assuming this contains the fetched category details
 
@@ -40,7 +40,6 @@ const ProductScreen = () => {
     error: categoryError,
     products,
   } = productCategory;
-  console.log(products);
   useEffect(() => {
     // If a cart item ID is set, find the corresponding item in the cart
     if (cartItemId && selectedPriceVariant) {
@@ -120,6 +119,17 @@ const ProductScreen = () => {
     });
   };
 
+  useEffect(() => {
+    // Default selection of frequently bought products
+    if (frequentlyBought && frequentlyBought.length > 0) {
+      const defaultSelection = new Map(selectedProducts);
+      frequentlyBought.forEach((product) => {
+        defaultSelection.set(product._id, product);
+      });
+      setSelectedProducts(defaultSelection);
+    }
+  }, [frequentlyBought]);
+
   const bulkAddToCart = () => {
     selectedProducts.forEach((product, productId) => {
       const cartItemId = `${product.productId._id}-${product.variantId}`; // Ensure unique IDs are used
@@ -165,7 +175,6 @@ const ProductScreen = () => {
     // Shuffle the products array randomly
     const shuffledProducts = (products || []).sort(() => Math.random() - 0.5);
     setRandomProducts(shuffledProducts);
-    console.log(products);
   }, [products]);
 
   return (

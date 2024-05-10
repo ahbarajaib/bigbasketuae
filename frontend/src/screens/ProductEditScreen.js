@@ -13,6 +13,7 @@ import { listCategories } from "../actions/categoryActions";
 import { useLocation } from "react-router-dom";
 import { listPromotions } from "../actions/promotionActions";
 import { set } from "mongoose";
+import mongoose from "mongoose";
 
 const ProductEditScreen = () => {
   const { id } = useParams();
@@ -24,9 +25,16 @@ const ProductEditScreen = () => {
   const [image, setImage] = useState("");
   const [brand, setBrand] = useState("");
   const [category, setCategory] = useState({ _id: "", title: "" });
-  const [promotion, setPromotion] = useState({ _id: "", title: "" });
+  const [promotion, setPromotion] = useState(null);
   const [prices, setPrices] = useState([
-    { qty: "", units: "gm", price: "", discount: "", discountedPrice: "" },
+    {
+      _id: new mongoose.Types.ObjectId(),
+      qty: "",
+      units: "gm",
+      price: "",
+      discount: "",
+      discountedPrice: "",
+    },
   ]);
 
   const [countryOfOrigin, setCountryOfOrigin] = useState("");
@@ -40,6 +48,7 @@ const ProductEditScreen = () => {
   const dispatch = useDispatch();
   const productDetails = useSelector((state) => state.productDetails);
   const { loading, error, product } = productDetails;
+  console.log(product);
   const productList = useSelector((state) => state.productList);
   const { loading: ListLoading, error: ListError, products } = productList;
   const categoryList = useSelector((state) => state.categoryList);
@@ -76,7 +85,7 @@ const ProductEditScreen = () => {
         setImage(product.image);
         setBrand(product.brand);
         setCategory(product.category || { _id: "", title: "" });
-        setPromotion(product.promotion || { _id: "", title: "" });
+        setPromotion(product.promotion || null);
         setPrices(product.prices);
         setCountInStock(product.countInStock);
         setDescription(product.description);
@@ -131,7 +140,14 @@ const ProductEditScreen = () => {
   const addPriceVariant = () => {
     setPrices((currentPrices) => [
       ...currentPrices,
-      { qty: "", units: "gm", price: "", discount: "", discountedPrice: "" },
+      {
+        _id: new mongoose.Types.ObjectId(),
+        qty: "",
+        units: "gm",
+        price: "",
+        discount: "",
+        discountedPrice: "",
+      },
     ]);
   };
 

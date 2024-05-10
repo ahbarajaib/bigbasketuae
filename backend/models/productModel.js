@@ -67,7 +67,11 @@ const productSchema = mongoose.Schema(
           type: String,
           required: true,
         },
-        _id: mongoose.Schema.Types.ObjectId,
+        //i want id as well
+        _id: {
+          type: mongoose.Schema.Types.ObjectId,
+          required: true,
+        },
       },
     ],
     noOfProducts: {
