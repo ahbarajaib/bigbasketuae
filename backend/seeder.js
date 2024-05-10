@@ -1,6 +1,5 @@
 import mongoose from "mongoose";
 import Product from "./models/productModel.js";
-import Category from "./models/categoryModel.js";
 
 mongoose
   .connect(
@@ -12,33 +11,28 @@ mongoose
   )
   .then(() => console.log("MongoDB Connected"))
   .catch((err) => console.log(err));
-async function updateProductCategories() {
-  const products = await Product.find(); // Fetch all products
+const updatePrices = async () => {
+  const products = await Product.find();
 
-  for (let product of products) {
-    if (typeof product.category === "undefined" || product.category === null) {
-      console.log(
-        `Skipping product ${product.name} as it has no defined category.`
-      );
-      continue; // Skip this iteration and proceed with the next product
-    }
+  const promises = products.map(async (product) => {
+    product.prices = product.prices.map((price) => {
+      if (!price._id) {
+        price._id = new mongoose.Types.ObjectId();
+      }
+      return price;
+    });
 
-    const category = await Category.findOne({ name: product.category });
+    const start = Date.now();
+    await product.save(); // wait for the save operation to complete
+    const end = Date.now();
 
-    if (category) {
-      product.category = category._id;
-      await product.save();
-      console.log(
-        `Updated product ${product.name} with category ObjectId ${category._id} corresponding to ${category.name}`
-      );
-    } else {
-      console.log(
-        `Category not found for product ${product.name} with category name '${product.category}'`
-      );
-    }
-  }
+    console.log(`Saved product ${product._id} in ${end - start} ms`);
 
-  console.log("Finished updating products.");
-}
+    return product;
+  });
 
-updateProductCategories().then(() => mongoose.disconnect());
+  await Promise.all(promises); // wait for all promises to resolve
+  console.log("Prices Updated");
+};
+
+updatePrices().then(() => mongoose.disconnect());
