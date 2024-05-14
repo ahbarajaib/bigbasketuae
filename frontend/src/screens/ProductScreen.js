@@ -4,16 +4,14 @@ import { useDispatch, useSelector } from "react-redux";
 import { Row, Col, Image, ListGroup, Card, Button } from "react-bootstrap";
 import Loader from "../components/Loader";
 import Message from "../components/Message";
-import Meta from "../components/Meta";
 import { listProductDetails } from "../actions/productActions";
 import { addToCart, removeFromCart } from "../actions/cartActions";
 import { categoryProducts } from "../actions/productActions";
 import Product from "../components/Product";
 import SEO from "../components/SEO";
-import ReactMarkdown from "react-markdown";
 import { listCategories } from "../actions/categoryActions";
 import ProductFrequent from "../components/ProductFrequent";
-import { width } from "@fortawesome/free-brands-svg-icons/fa42Group";
+import DOMPurify from "dompurify";
 
 const ProductScreen = () => {
   const { id } = useParams();
@@ -168,6 +166,12 @@ const ProductScreen = () => {
   const isProductInCart = (cartItemId) => {
     return cartItems.some((item) => item.cartItemId === cartItemId);
   };
+
+  function createMarkup(html) {
+    return {
+      __html: DOMPurify.sanitize(html),
+    };
+  }
 
   const [randomProducts, setRandomProducts] = useState([]);
 
@@ -505,7 +509,10 @@ const ProductScreen = () => {
                   marginRight: "1em",
                 }}
               >
-                <ReactMarkdown>{product.description}</ReactMarkdown>
+                <div
+                  className="preview-description"
+                  dangerouslySetInnerHTML={createMarkup(product.description)}
+                ></div>{" "}
               </Card.Text>
             </Row>
           </Row>

@@ -17,7 +17,7 @@ import { MultiSelect } from "primereact/multiselect";
 import { Dropdown } from "primereact/dropdown";
 import { InputText } from "primereact/inputtext";
 import { FilterMatchMode } from "primereact/api";
-
+import { format } from "date-fns";
 import { Button } from "primereact/button";
 
 const ProductListScreen = () => {
@@ -29,6 +29,8 @@ const ProductListScreen = () => {
   const [rowsPerPage, setRowsPerPage] = useState(20);
 
   const [selectedCategories, setSelectedCategories] = useState([]);
+  const [selectedCategoryName, setSelectedCategoryName] = useState("All");
+
   const [globalFilters, setGlobalFilters] = useState({
     // Initialize all required filters here
     name: { value: null, matchMode: FilterMatchMode.STARTS_WITH },
@@ -48,7 +50,6 @@ const ProductListScreen = () => {
     localStorage.setItem("dataTableFirst", first.toString());
   }, [first]);
   const [selectedCategory, setSelectedCategory] = useState("All");
-
   const categoryList = useSelector((state) => state.categoryList);
   const { loading: loadingList, error: errorList, categories } = categoryList;
 
@@ -121,13 +122,13 @@ const ProductListScreen = () => {
 
     for (let i = 0; i < maxPrices; i++) {
       headers.push(
-        { label: `Price ${i + 1} - Qty`, key: `price${i + 1}Qty` },
-        { label: `Price ${i + 1} - Units`, key: `price${i + 1}Units` },
+        { label: `Qty - ${i + 1}`, key: `price${i + 1}Qty` },
+        { label: `Units - ${i + 1}`, key: `price${i + 1}Units` },
         {
-          label: `Price ${i + 1} - Regular Price`,
+          label: `Regular Price - ${i + 1}`,
           key: `price${i + 1}Regular`,
         },
-        { label: `Price ${i + 1} - Discount`, key: `price${i + 1}Discount` } // Changed from Discounted Price to Discount
+        { label: `Discount - ${i + 1}`, key: `price${i + 1}Discount` } // Changed from Discounted Price to Discount
       );
     }
 
@@ -162,7 +163,11 @@ const ProductListScreen = () => {
   const csvHeaders = generateCSVHeaders();
 
   const csvReport = {
-    filename: "Product_Report.csv",
+    filename: `${selectedCategoryName}-${format(
+      new Date(),
+      "yyyy-MM-dd HH.mm"
+    )}.csv`,
+    // filename: `products-${format(new Date(), "yyyy-MM-dd HH.mm")}.csv`,
     headers: csvHeaders,
     data: csvData,
   };
@@ -225,8 +230,16 @@ const ProductListScreen = () => {
       <h5 className="m-0">Products</h5>
       <select
         value={selectedCategory}
-        onChange={(e) => setSelectedCategory(e.target.value)}
-        style={{ margin: "10px", padding: "5px" }} // Adjust the padding and margin as needed
+        onChange={(e) => {
+          setSelectedCategory(e.target.value);
+          const selectedCategoryObject = categories.find(
+            (category) => category._id === e.target.value
+          );
+          setSelectedCategoryName(
+            selectedCategoryObject ? selectedCategoryObject.title : "All"
+          );
+        }}
+        style={{ margin: "10px", padding: "5px" }}
       >
         <option value="All">All Categories</option>
         {categories.map((category) => (

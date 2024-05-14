@@ -202,6 +202,7 @@ const updateProduct = asyncHandler(async (req, res) => {
     frequentlyBought,
     subtitle,
     countryOfOrigin,
+    isOrganic,
     // Added promotions to the destructured fields
   } = req.body;
   const product = await Product.findById(req.params.id);
@@ -242,7 +243,7 @@ const updateProduct = asyncHandler(async (req, res) => {
   }));
   product.subtitle = subtitle;
   product.countryOfOrigin = countryOfOrigin;
-
+  product.isOrganic = isOrganic;
   const updatedProduct = await product.save();
   res.json(updatedProduct);
 });

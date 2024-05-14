@@ -42,6 +42,16 @@ const productSchema = mongoose.Schema(
       type: String,
       required: false,
     },
+    isOrganic: {
+      type: Boolean,
+      required: false,
+      default: false,
+    },
+    isBulk: {
+      type: Boolean,
+      required: false,
+      default: false,
+    },
     prices: [
       {
         qty: {

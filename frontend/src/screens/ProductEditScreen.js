@@ -14,6 +14,12 @@ import { useLocation } from "react-router-dom";
 import { listPromotions } from "../actions/promotionActions";
 import { set } from "mongoose";
 import mongoose from "mongoose";
+import { EditorState } from "draft-js";
+import { Editor } from "react-draft-wysiwyg";
+import { convertToHTML } from "draft-convert";
+import DOMPurify from "dompurify";
+import "react-draft-wysiwyg/dist/react-draft-wysiwyg.css";
+//import "draft-js/dist/Draft.css";
 
 const ProductEditScreen = () => {
   const { id } = useParams();
@@ -42,13 +48,17 @@ const ProductEditScreen = () => {
   const [subtitle, setSubtitle] = useState("");
   const [showSubtitleInput, setShowSubtitleInput] = useState(false);
   const [countInStock, setCountInStock] = useState(0);
-  const [description, setDescription] = useState("");
+  const [editorState, setEditorState] = useState(() =>
+    EditorState.createEmpty()
+  );
+  const [description, setDescription] = useState(null);
+  console.log("description", description);
   const [frequentlyBought, setFrequentlyBought] = useState([]);
+  const [isOrganic, setIsOrganic] = useState(false);
   const [uploading, setUploading] = useState(false);
   const dispatch = useDispatch();
   const productDetails = useSelector((state) => state.productDetails);
   const { loading, error, product } = productDetails;
-  console.log(product);
   const productList = useSelector((state) => state.productList);
   const { loading: ListLoading, error: ListError, products } = productList;
   const categoryList = useSelector((state) => state.categoryList);
@@ -97,9 +107,21 @@ const ProductEditScreen = () => {
         const hasSubtitle = Boolean(product.subtitle);
         setShowSubtitleInput(hasSubtitle);
         setSubtitle(product.subtitle || "");
+        setIsOrganic(product.isOrganic);
       }
     }
   }, [product, dispatch, id, navigate, successUpdate]);
+
+  useEffect(() => {
+    let html = convertToHTML(editorState.getCurrentContent());
+    setDescription(html);
+  }, [editorState]);
+
+  function createMarkup(html) {
+    return {
+      __html: DOMPurify.sanitize(html),
+    };
+  }
 
   const productOptions = products.flatMap((product) =>
     product.prices.map((variant) => ({
@@ -238,7 +260,9 @@ const ProductEditScreen = () => {
       frequentlyBought, // Make sure this is what you intend to send
       countryOfOrigin: showCountryInput ? countryOfOrigin : undefined,
       subtitle: showSubtitleInput ? subtitle : undefined,
+      isOrganic,
     };
+    console.log(updatedProduct);
     dispatch(updateProduct(updatedProduct));
   };
   const categoryOptions = categories.map((cat) => ({
@@ -296,6 +320,15 @@ const ProductEditScreen = () => {
                   className="mb-3"
                 ></Form.Control>
               )}
+            </Form.Group>
+            <Form.Group controlId="isOrganic">
+              <Form.Check
+                type="checkbox"
+                label="Is Organic"
+                checked={isOrganic}
+                onChange={(e) => setIsOrganic(e.target.checked)}
+                className="mb-3"
+              ></Form.Check>
             </Form.Group>
             {prices.map((price, index) => (
               <Row key={index} className="mb-3">
@@ -463,6 +496,30 @@ const ProductEditScreen = () => {
             </Form.Group>
             <Form.Group controlId="description">
               <Form.Label>Description</Form.Label>
+              <Editor
+                defaultEditorState={editorState}
+                onEditorStateChange={setEditorState}
+                wrapperClassName="wrapper-class"
+                editorClassName="editor-class"
+                toolbarClassName="toolbar-class"
+                toolbar={{
+                  options: [
+                    "inline",
+                    "blockType",
+                    "fontFamily",
+                    "list",
+                    "textAlign",
+                    "colorPicker",
+                  ],
+                }}
+              />
+              <div
+                className="preview-description"
+                dangerouslySetInnerHTML={createMarkup(description)}
+              ></div>
+            </Form.Group>
+            {/* <Form.Group controlId="description">
+              <Form.Label>Description</Form.Label>
               <Form.Control
                 as="textarea"
                 rows={3}
@@ -471,7 +528,7 @@ const ProductEditScreen = () => {
                 onChange={(e) => setDescription(e.target.value)}
                 className="mb-3"
               ></Form.Control>
-            </Form.Group>
+            </Form.Group> */}
             <Form.Group controlId="promotion">
               <Form.Label>Promotion</Form.Label>
               <Form.Select

@@ -23,7 +23,6 @@ const ProductCategoryScreen = () => {
 
   const categoryList = useSelector((state) => state.categoryList);
   const { categories } = categoryList;
-  console.log("categories", categories);
 
   const selectedCategory =
     categories && categories.find((cat) => cat.name === category);
@@ -33,6 +32,7 @@ const ProductCategoryScreen = () => {
     //all displays all the product related code is in getProductByCategory in productController
     if (category) {
       dispatch(categoryProducts(category));
+      console.log("productCategory", productCategory);
     }
   }, [dispatch, category]);
 

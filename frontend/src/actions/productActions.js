@@ -229,7 +229,6 @@ export const updateProduct = (product) => async (dispatch, getState) => {
     dispatch({
       type: PRODUCT_UPDATE_REQUEST,
     });
-
     const {
       userLogin: { userInfo },
     } = getState();
