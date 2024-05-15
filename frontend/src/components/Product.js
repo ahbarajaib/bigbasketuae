@@ -5,6 +5,8 @@ import { addToCart, removeFromCart } from "../actions/cartActions";
 import { useDispatch, useSelector } from "react-redux";
 import QuantitySelector from "./QuantitySelector";
 import QuantityDropdown from "./QuantityDropdown";
+import bulk from "../images/bulk.png";
+import organic from "../images/organic.png";
 
 const Product = ({ product }) => {
   const [selectedPriceVariant, setSelectedPriceVariant] = useState(null);
@@ -95,17 +97,61 @@ const Product = ({ product }) => {
         </span>
       )}
       <Link to={`/product/${product?._id}`} style={{ display: "block" }}>
-        <Card.Img
-          src={`${process.env.REACT_APP_API_URL}${product?.image}`}
-          variant="top"
-          style={{
-            objectFit: "cover",
-            height: "200px",
-            borderRadius: "10px",
-            padding: "2px",
-          }}
-          loading="lazy"
-        />
+        <div style={{ position: "relative" }}>
+          <Card.Img
+            src={`${process.env.REACT_APP_API_URL}${product?.image}`}
+            variant="top"
+            style={{
+              objectFit: "cover",
+              height: "200px",
+              borderRadius: "10px",
+              padding: "2px",
+            }}
+            loading="lazy"
+          />
+          {selectedPriceVariant && selectedPriceVariant.discount > 0 && (
+            <span
+              className="discount-badge"
+              style={{
+                backgroundColor: "#DC143C",
+                padding: "4px",
+                color: "white",
+              }}
+            >
+              <strong>
+                {selectedPriceVariant && selectedPriceVariant.discount}% OFF
+              </strong>
+            </span>
+          )}
+          {product.isOrganic && (
+            <img
+              src={organic}
+              alt="Organic"
+              style={{
+                position: "absolute",
+                padding: "2px",
+                top: "0",
+                right: "0",
+                width: "48px",
+                height: "48px",
+              }}
+            />
+          )}
+          {product.isBulk && (
+            <img
+              src={bulk}
+              alt="Bulk"
+              style={{
+                position: "absolute",
+                padding: "2px",
+                top: product.isOrganic ? "48px" : "0",
+                right: "0",
+                width: "48px",
+                height: "48px",
+              }}
+            />
+          )}
+        </div>
       </Link>
       <Card.Body className="text-center d-flex flex-column">
         <Link to={`/product/${product?._id}`}>

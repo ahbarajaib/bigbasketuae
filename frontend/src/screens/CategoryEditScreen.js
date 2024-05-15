@@ -110,9 +110,13 @@ const CategoryEditScreen = () => {
 
   return (
     <>
-      <Link to="/admin/categories" className="btn btn-dark my-3">
+      <Button
+        className="my-3 border"
+        variant="light"
+        onClick={() => navigate(-1)}
+      >
         Go Back
-      </Link>
+      </Button>
       <FormContainer>
         <h1>Edit Category</h1>
         {loadingUpdate && <Loader />}

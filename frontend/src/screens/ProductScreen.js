@@ -12,6 +12,8 @@ import SEO from "../components/SEO";
 import { listCategories } from "../actions/categoryActions";
 import ProductFrequent from "../components/ProductFrequent";
 import DOMPurify from "dompurify";
+import organic from "../images/organic.png";
+import bulk from "../images/bulk.png";
 
 const ProductScreen = () => {
   const { id } = useParams();
@@ -139,6 +141,7 @@ const ProductScreen = () => {
         },
         cartItemId: cartItemId,
       };
+
       dispatch(addToCart(cartItem)); // Pass the entire cartItem object
     });
   };
@@ -183,9 +186,13 @@ const ProductScreen = () => {
 
   return (
     <>
-      <button className="btn btn-light my-3" onClick={() => navigate(-1)}>
+      <Button
+        className="my-3 border"
+        variant="light"
+        onClick={() => navigate(-1)}
+      >
         Go Back
-      </button>
+      </Button>
       {loading ? (
         <Loader />
       ) : error ? (
@@ -200,42 +207,70 @@ const ProductScreen = () => {
           />
           <Row>
             <Col
-              md={6}
+              md={5}
               style={{ position: "relative" }}
               className="d-flex justify-content-center"
             >
-              <Image
-                src={process.env.REACT_APP_API_URL + product.image}
-                alt={product.name}
-                fluid
-                style={{
-                  maxWidth: "75%", // Set maximum width to 100%
-                  height: "auto", // Ensure aspect ratio is maintained
-                }}
-              />
-
-              {/* Check if there is a discount on the selected variant and display a badge if there is */}
-              {selectedPriceVariant && selectedPriceVariant.discount > 0 && (
-                <span
-                  className="discount-badge"
+              <div style={{ position: "relative" }}>
+                <Image
+                  className="border"
+                  src={process.env.REACT_APP_API_URL + product.image}
+                  alt={product.name}
+                  fluid
                   style={{
-                    backgroundColor: "#feb9b9",
-                    padding: "4px",
-                    color: "#610000",
-                    position: "absolute",
-                    top: 0,
-                    left: 0,
-                    textAlign: "right",
-                    paddingRight: "4px",
+                    width: "100%", // Fill the width of its container
+                    height: "auto", // Maintain aspect ratio
                   }}
-                >
-                  {selectedPriceVariant.discount}% OFF
-                </span>
-              )}
+                />
+                {selectedPriceVariant && selectedPriceVariant.discount > 0 && (
+                  <span
+                    className="discount-badge"
+                    style={{
+                      backgroundColor: "#DC143C",
+                      padding: "4px",
+                      color: "white",
+                    }}
+                  >
+                    <strong>
+                      {selectedPriceVariant && selectedPriceVariant.discount}%
+                      OFF
+                    </strong>
+                  </span>
+                )}
+                {product.isOrganic && (
+                  <img
+                    src={organic}
+                    alt="Organic"
+                    style={{
+                      position: "absolute",
+                      padding: "4px",
+                      top: "0",
+                      right: "0",
+                      width: "96px",
+                      height: "96px",
+                    }}
+                  />
+                )}
+                {product.isBulk && (
+                  <img
+                    src={bulk}
+                    alt="Bulk"
+                    style={{
+                      position: "absolute",
+                      padding: "4px",
+                      top: product.isOrganic ? "96px" : "0",
+                      right: "0",
+                      width: "96px",
+                      height: "96px",
+                    }}
+                  />
+                )}
+              </div>
+              {/* Check if there is a discount on the selected variant and display a badge if there is */}
             </Col>
 
             <Col md={3}>
-              <ListGroup variant="flush">
+              <ListGroup variant="flush" className="border">
                 <ListGroup.Item>
                   <h3>{product.name}</h3>
                   {product.subtitle && product.subtitle.trim() !== "" && (
@@ -374,7 +409,7 @@ const ProductScreen = () => {
               </ListGroup>
             </Col>
 
-            <Col md={2} className="m-2">
+            <Col md={3} className="m-2">
               <Card>
                 <ListGroup variant="flush">
                   <ListGroup.Item>
@@ -460,7 +495,7 @@ const ProductScreen = () => {
                       {isProductInCart(
                         `${product._id}-${selectedPriceVariant?._id}`
                       )
-                        ? "Remove from Cart"
+                        ? "Remove"
                         : "Add To Cart"}
                     </Button>
                   </ListGroup.Item>
@@ -472,7 +507,7 @@ const ProductScreen = () => {
               <div className="frequentlyBought-container m-2">
                 {" "}
                 <h2>Frequently Bought Together</h2>
-                <div className=" bg-white pt-4 border-change rounded-lg m-2">
+                <div className=" bg-white border-change rounded m-2">
                   <Row>
                     {frequentlyBought.map((product) => (
                       <Col key={product._id} className="frequentlyBought-item">
@@ -484,7 +519,7 @@ const ProductScreen = () => {
                       </Col>
                     ))}
                   </Row>
-                  <div className="p-4">
+                  <div className="p-1 item-center">
                     {" "}
                     {/* Added button container */}
                     <Button

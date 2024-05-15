@@ -45,9 +45,13 @@ const SelectPaymentScreen = () => {
   return (
     <div>
       <h1>Select Payment Method</h1>
-      <button className="btn btn-light my-3" onClick={() => navigate(-1)}>
+      <Button
+        className="my-3 border"
+        variant="light"
+        onClick={() => navigate(-1)}
+      >
         Go Back
-      </button>
+      </Button>
       <CheckoutSteps step1 step2 step3 />
       <Container className="text-left my-5">
         <div style={{ maxWidth: "400px", margin: "0 auto" }}>

@@ -55,6 +55,7 @@ const ProductEditScreen = () => {
   console.log("description", description);
   const [frequentlyBought, setFrequentlyBought] = useState([]);
   const [isOrganic, setIsOrganic] = useState(false);
+  const [isBulk, setIsBulk] = useState(false);
   const [uploading, setUploading] = useState(false);
   const dispatch = useDispatch();
   const productDetails = useSelector((state) => state.productDetails);
@@ -108,6 +109,7 @@ const ProductEditScreen = () => {
         setShowSubtitleInput(hasSubtitle);
         setSubtitle(product.subtitle || "");
         setIsOrganic(product.isOrganic);
+        setIsBulk(product.isBulk);
       }
     }
   }, [product, dispatch, id, navigate, successUpdate]);
@@ -261,6 +263,7 @@ const ProductEditScreen = () => {
       countryOfOrigin: showCountryInput ? countryOfOrigin : undefined,
       subtitle: showSubtitleInput ? subtitle : undefined,
       isOrganic,
+      isBulk,
     };
     console.log(updatedProduct);
     dispatch(updateProduct(updatedProduct));
@@ -272,9 +275,13 @@ const ProductEditScreen = () => {
 
   return (
     <>
-      <Link to="/admin/productlist" className="btn btn-light my-3">
+      <Button
+        className="my-3 border"
+        variant="light"
+        onClick={() => navigate(-1)}
+      >
         Go Back
-      </Link>
+      </Button>
       <FormContainer>
         <h1>Edit Product</h1>
         {loadingUpdate && <Loader />}
@@ -327,6 +334,15 @@ const ProductEditScreen = () => {
                 label="Is Organic"
                 checked={isOrganic}
                 onChange={(e) => setIsOrganic(e.target.checked)}
+                className="mb-3"
+              ></Form.Check>
+            </Form.Group>
+            <Form.Group>
+              <Form.Check
+                type="checkbox"
+                label="Is Bulk"
+                checked={isBulk}
+                onChange={(e) => setIsBulk(e.target.checked)}
                 className="mb-3"
               ></Form.Check>
             </Form.Group>

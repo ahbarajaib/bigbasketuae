@@ -325,7 +325,6 @@ header {
   position: absolute;
   top: 0;
   left: 0;
-  border-top-right-radius: 5px;
   padding: 2px 6px;
   font-size: 12px;
 }

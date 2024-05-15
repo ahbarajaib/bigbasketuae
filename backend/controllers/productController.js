@@ -203,6 +203,7 @@ const updateProduct = asyncHandler(async (req, res) => {
     subtitle,
     countryOfOrigin,
     isOrganic,
+    isBulk,
     // Added promotions to the destructured fields
   } = req.body;
   const product = await Product.findById(req.params.id);
@@ -244,6 +245,7 @@ const updateProduct = asyncHandler(async (req, res) => {
   product.subtitle = subtitle;
   product.countryOfOrigin = countryOfOrigin;
   product.isOrganic = isOrganic;
+  product.isBulk = isBulk;
   const updatedProduct = await product.save();
   res.json(updatedProduct);
 });

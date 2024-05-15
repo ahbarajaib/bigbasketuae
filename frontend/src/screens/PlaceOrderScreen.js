@@ -197,7 +197,11 @@ const PlaceOrderScreen = () => {
 
   return (
     <>
-      <Button className="btn my-3" variant="dark" onClick={() => navigate(-1)}>
+      <Button
+        className="my-3 border"
+        variant="light"
+        onClick={() => navigate(-1)}
+      >
         Go Back
       </Button>
       <CheckoutSteps step1 step2 step3 />

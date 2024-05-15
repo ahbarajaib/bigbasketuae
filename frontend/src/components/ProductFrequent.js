@@ -27,10 +27,23 @@ const ProductFrequent = ({ product, handleCheckboxChange, isChecked }) => {
           <Card.Text className="text-center">
             {product?.variant?.qty}&nbsp; {product?.variant?.units}
             <br />
-            <strong>AED&nbsp;{product?.variant?.price}</strong>
+            {product?.variant?.discount > 0 ? (
+              <>
+                <span className="text-muted">
+                  <strong>AED&nbsp;{product?.variant?.price}</strong>
+                </span>{" "}
+                <span className="text-danger">
+                  <strong>AED&nbsp;{product?.variant?.discountedPrice}</strong>
+                </span>
+              </>
+            ) : (
+              <span>
+                <strong>AED&nbsp;{product?.variant?.price} </strong>
+              </span>
+            )}
           </Card.Text>
         </div>
-        <div className="col-3 d-flex align-items-center justify-content-end p-4">
+        <div className="col-3 d-flex align-items-center justify-content-end px-4">
           <Form.Check
             type="checkbox"
             className="large-checkbox"

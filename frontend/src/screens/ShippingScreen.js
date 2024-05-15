@@ -145,9 +145,13 @@ const ShippingScreen = () => {
 
   return (
     <>
-      <button className="btn btn-light my-3" onClick={() => navigate(-1)}>
+      <Button
+        className="my-3 border"
+        variant="light"
+        onClick={() => navigate(-1)}
+      >
         Go Back
-      </button>
+      </Button>
       <FormContainer>
         <h1>Shipping</h1>
         <CheckoutSteps step1 step2 />

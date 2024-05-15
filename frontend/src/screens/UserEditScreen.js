@@ -56,9 +56,13 @@ const UserEditScreen = () => {
 
   return (
     <>
-      <Link to="/admin/userlist" className="btn btn-light my-3">
+      <Button
+        className="my-3 border"
+        variant="light"
+        onClick={() => navigate(-1)}
+      >
         Go Back
-      </Link>
+      </Button>
       <FormContainer>
         <h1>Edit User</h1>
 

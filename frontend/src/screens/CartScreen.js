@@ -64,7 +64,11 @@ const CartScreen = () => {
 
   return (
     <>
-      <Button className="my-3" variant="dark" onClick={() => navigate(-1)}>
+      <Button
+        className="my-3 border"
+        variant="light"
+        onClick={() => navigate(-1)}
+      >
         Go Back
       </Button>
       <Row>
@@ -72,7 +76,14 @@ const CartScreen = () => {
           <h1>Shopping Cart</h1>
           {cartItems.length === 0 ? (
             <Message>
-              Your cart is empty <Link to="/">Go Back</Link>
+              Your cart is empty{" "}
+              <Button
+                className="my-3 border"
+                variant="light"
+                onClick={() => navigate(-1)}
+              >
+                Go Back
+              </Button>
             </Message>
           ) : (
             <ListGroup variant="flush">
