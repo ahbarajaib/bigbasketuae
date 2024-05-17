@@ -52,7 +52,6 @@ const ProductEditScreen = () => {
     EditorState.createEmpty()
   );
   const [description, setDescription] = useState(null);
-  console.log("description", description);
   const [frequentlyBought, setFrequentlyBought] = useState([]);
   const [isOrganic, setIsOrganic] = useState(false);
   const [isBulk, setIsBulk] = useState(false);
@@ -181,20 +180,30 @@ const ProductEditScreen = () => {
     );
   };
   const handleProductSelect = (selectedOptions) => {
+    console.log(selectedOptions);
+
     const newItems = selectedOptions.map((option) => ({
       productId: option.value.productId,
       variantId: option.value.variantId,
-      name: products.find((p) => p._id === option.value.productId)?.name,
+      name: option.label,
       variant:
         products
           .find((p) => p._id === option.value.productId)
           ?.prices.find((v) => v._id === option.value.variantId) || {},
     }));
 
-    setFrequentlyBought((currentItems) => [...currentItems, ...newItems]);
-    console.log("frequently", frequentlyBought);
+    setFrequentlyBought((currentItems) => {
+      const uniqueItems = [...currentItems, ...newItems].filter(
+        (item, index, self) =>
+          index ===
+          self.findIndex(
+            (t) =>
+              t.productId === item.productId && t.variantId === item.variantId
+          )
+      );
+      return uniqueItems;
+    });
   };
-
   const handleRemove = (fbId) => {
     setFrequentlyBought((currentItems) =>
       currentItems.filter((item) => item._id !== fbId)
@@ -265,7 +274,6 @@ const ProductEditScreen = () => {
       isOrganic,
       isBulk,
     };
-    console.log(updatedProduct);
     dispatch(updateProduct(updatedProduct));
   };
   const categoryOptions = categories.map((cat) => ({
@@ -576,6 +584,7 @@ const ProductEditScreen = () => {
             </Form.Group>
             <Row className="mb-3">
               {frequentlyBought.map((fbItem, index) => {
+                console.log(frequentlyBought);
                 return (
                   <Col md={12} key={fbItem._id || index} className="mb-3">
                     <div
@@ -586,7 +595,7 @@ const ProductEditScreen = () => {
                       }}
                     >
                       <p>
-                        {fbItem.productId.name || "Product Unavailable"} |
+                        {fbItem.productId.name || fbItem.name} |
                         {fbItem.variant && fbItem.variant.price != null
                           ? `${fbItem.variant.qty || "N/A"} ${
                               fbItem.variant.units || "N/A"
