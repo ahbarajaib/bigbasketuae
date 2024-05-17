@@ -1,7 +1,7 @@
 #!/bin/bash
 
 # Pull the code from the remote repository
-git pull origin main
+git pull origin master
 
 # Check if git pull was successful
 if [ $? -ne 0 ]; then
