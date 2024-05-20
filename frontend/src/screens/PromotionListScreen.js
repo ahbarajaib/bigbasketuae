@@ -22,7 +22,6 @@ const PromotionListScreen = () => {
   const promotionList = useSelector((state) => state.promotionList);
   const { loading, error, promotions } = promotionList;
   const [updateTrigger, setUpdateTrigger] = useState(false);
-  console.log(promotions);
   const promotionCreate = useSelector((state) => state.promotionCreate);
   const {
     loading: loadingCreate,

@@ -24,7 +24,6 @@ const ProductScreen = () => {
 
   const productDetails = useSelector((state) => state.productDetails);
   const { loading, error, product } = productDetails;
-  console.log(product);
   const currentCategoryName = product?.category?.name;
   const frequentlyBought = product?.frequentlyBought;
   const categoryDetails = useSelector((state) => state.categoryDetails);
@@ -490,7 +489,8 @@ const ProductScreen = () => {
                     ) ? (
                       <Button
                         onClick={addToCartHandler}
-                        className="btn btn-lg btn-block btn-remove border-0"
+                        className="btn btn-lg"
+                        variant="danger"
                         type="button"
                       >
                         Remove
