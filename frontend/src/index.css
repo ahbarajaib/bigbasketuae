@@ -797,7 +797,7 @@ button {
   padding: 1rem;
   margin-top: 1rem;
 }
-
+.btn-custom,
 .btn-custom:active,
 .btn-custom:focus {
   background-color: #139745 !important; /* Use your desired hover color */

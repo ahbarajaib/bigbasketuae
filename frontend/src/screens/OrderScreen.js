@@ -494,10 +494,10 @@ const OrderScreen = (history) => {
                   <Col>AED {order.totalPrice}</Col>
                 </Row>
               </ListGroup.Item>
-              <ListGroup.Item>
-                {!order.isPaid &&
-                  order.paymentMethod !== "Cash on Delivery" &&
-                  order.paymentMethod !== "Bring Swiping Machine" && (
+              {!order.isPaid &&
+                order.paymentMethod !== "Cash on Delivery" &&
+                order.paymentMethod !== "Bring Swiping Machine" && (
+                  <ListGroup.Item>
                     <div>
                       {loadingPay && <Loader />}
                       {!sdkReady ? (
@@ -506,7 +506,7 @@ const OrderScreen = (history) => {
                         <div className="d-grid gap-2">
                           <Button
                             type="button"
-                            className="button-primary"
+                            className="btn btn-lg btn-block btn-custom border-0"
                             onClick={successPaymentHandler}
                           >
                             Place Order
@@ -514,8 +514,8 @@ const OrderScreen = (history) => {
                         </div>
                       )}
                     </div>
-                  )}
-              </ListGroup.Item>
+                  </ListGroup.Item>
+                )}
               {loadingDeliver && <Loader />}
               {/* Mark As Delivered button */}
               {userInfo &&
@@ -524,15 +524,14 @@ const OrderScreen = (history) => {
                   (!order.isPaid &&
                     (order.paymentMethod === "Cash on Delivery" ||
                       order.paymentMethod === "Bring Swiping Machine"))) && (
-                  <ListGroup.Item>
-                    <Button
-                      variant="success"
-                      className="btn btn-block"
-                      onClick={deliverHandler}
-                    >
-                      Mark As Delivered
-                    </Button>
-                  </ListGroup.Item>
+                  <Button
+                    variant="success"
+                    disabled={order.isDelivered}
+                    className="btn btn-lg btn-block border-0 m-2"
+                    onClick={deliverHandler}
+                  >
+                    Mark As Delivered
+                  </Button>
                 )}
             </ListGroup>
           </Card>
