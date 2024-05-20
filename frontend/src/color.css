@@ -108,3 +108,11 @@
 .bg-neutral-900 {
   background-color: #6f6f6f; /* Darker shade */
 }
+
+.bg-remove-100 {
+  background-color: #ff4e02; /* Lighter shade */
+}
+
+.bg-checkout-100 {
+  background-color: #ccbb00; /* Lighter shade */
+}

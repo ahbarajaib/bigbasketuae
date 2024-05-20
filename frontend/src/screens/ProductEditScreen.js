@@ -180,8 +180,6 @@ const ProductEditScreen = () => {
     );
   };
   const handleProductSelect = (selectedOptions) => {
-    console.log(selectedOptions);
-
     const newItems = selectedOptions.map((option) => ({
       productId: option.value.productId,
       variantId: option.value.variantId,
@@ -584,7 +582,6 @@ const ProductEditScreen = () => {
             </Form.Group>
             <Row className="mb-3">
               {frequentlyBought.map((fbItem, index) => {
-                console.log(frequentlyBought);
                 return (
                   <Col md={12} key={fbItem._id || index} className="mb-3">
                     <div

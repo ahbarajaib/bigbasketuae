@@ -7,6 +7,9 @@ import QuantitySelector from "./QuantitySelector";
 import QuantityDropdown from "./QuantityDropdown";
 import bulk from "../images/bulk.png";
 import organic from "../images/organic.png";
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import { faShoppingCart } from "@fortawesome/free-solid-svg-icons";
+import { LinkContainer } from "react-router-bootstrap";
 
 const Product = ({ product }) => {
   const [selectedPriceVariant, setSelectedPriceVariant] = useState(null);
@@ -230,14 +233,27 @@ const Product = ({ product }) => {
           {product &&
           selectedPriceVariant &&
           isProductInCart(`${product._id}-${selectedPriceVariant._id}`) ? (
-            <Button
-              onClick={addToCartHandler}
-              className=""
-              variant="danger"
-              style={{ width: "100%" }} // Add custom styles
+            <div
+              style={{
+                display: "flex",
+                justifyContent: "space-between",
+                width: "100%",
+              }}
             >
-              Remove
-            </Button>
+              <Button
+                onClick={addToCartHandler}
+                className=""
+                variant="danger"
+                style={{ width: "75%" }}
+              >
+                Remove
+              </Button>
+              <LinkContainer to="/cart">
+                <Button className="btn-checkout" style={{ width: "20%" }}>
+                  <FontAwesomeIcon icon={faShoppingCart} />
+                </Button>
+              </LinkContainer>
+            </div>
           ) : (
             <Button
               onClick={addToCartHandler}

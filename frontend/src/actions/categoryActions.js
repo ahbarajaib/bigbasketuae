@@ -22,15 +22,12 @@ export const listCategories = () => async (dispatch) => {
   try {
     dispatch({ type: CATEGORY_LIST_REQUEST });
     const { data } = await axiosInstance.get(`/api/categories`);
-    //console.log("API Response:", data); // Check the API response structure
 
     dispatch({
       type: CATEGORY_LIST_SUCCESS,
       payload: data,
     });
   } catch (error) {
-    //console.error("Error fetching categories:", error);
-
     dispatch({
       type: CATEGORY_LIST_FAIL,
       payload:

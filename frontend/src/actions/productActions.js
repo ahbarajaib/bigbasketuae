@@ -245,7 +245,6 @@ export const updateProduct = (product) => async (dispatch, getState) => {
       product,
       config
     );
-
     dispatch({
       type: PRODUCT_UPDATE_SUCCESS,
       payload: data,

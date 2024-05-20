@@ -11,27 +11,43 @@ mongoose
   )
   .then(() => console.log("MongoDB Connected"))
   .catch((err) => console.log(err));
+
 const updatePrices = async () => {
+  let totalPricesWithoutId = 0; // Initialize counter for prices without ID
+
   const products = await Product.find();
 
   const promises = products.map(async (product) => {
+    let pricesWithoutId = 0; // Counter for prices without ID in each product
+
     product.prices = product.prices.map((price) => {
       if (!price._id) {
         price._id = new mongoose.Types.ObjectId();
+        pricesWithoutId++; // Increment counter if ID is missing
       }
       return price;
     });
 
+    totalPricesWithoutId += pricesWithoutId; // Accumulate the count of prices without ID
+
     const start = Date.now();
-    await product.save(); // wait for the save operation to complete
+    await product.save(); // Wait for the save operation to complete
     const end = Date.now();
 
-    console.log(`Saved product ${product._id} in ${end - start} ms`);
+    console.log(
+      `Saved product ${product._id} in ${
+        end - start
+      } ms with ${pricesWithoutId} prices without ID`
+    );
 
     return product;
   });
 
-  await Promise.all(promises); // wait for all promises to resolve
+  await Promise.all(promises); // Wait for all promises to resolve
+
+  console.log(
+    `Total prices updated across all products: ${totalPricesWithoutId}`
+  );
   console.log("Prices Updated");
 };
 

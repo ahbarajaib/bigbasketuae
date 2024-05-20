@@ -2,7 +2,12 @@ import React from "react";
 import { Card, Form, Button } from "react-bootstrap";
 import { Link } from "react-router-dom";
 
-const ProductFrequent = ({ product, handleCheckboxChange, isChecked }) => {
+const ProductFrequent = ({
+  product,
+  handleCheckboxChange,
+  isChecked,
+  totalProducts,
+}) => {
   return (
     <Card className="m-2 rounded product-card">
       <Card.Body className="d-flex flex-row p-2">

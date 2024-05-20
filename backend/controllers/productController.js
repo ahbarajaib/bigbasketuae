@@ -184,7 +184,6 @@ const createProduct = asyncHandler(async (req, res) => {
     subtitle: req.body.subtitle || undefined, // Set only if provided, otherwise undefined
     countryOfOrigin: req.body.countryOfOrigin || undefined, // Set only if provided, otherwise undefined
   });
-  console.log(product);
   const createdProduct = await product.save();
   res.status(201).json(createdProduct);
 });

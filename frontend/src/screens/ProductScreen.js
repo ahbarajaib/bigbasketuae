@@ -14,6 +14,7 @@ import ProductFrequent from "../components/ProductFrequent";
 import DOMPurify from "dompurify";
 import organic from "../images/organic.png";
 import bulk from "../images/bulk.png";
+import { LinkContainer } from "react-router-bootstrap";
 
 const ProductScreen = () => {
   const { id } = useParams();
@@ -484,20 +485,37 @@ const ProductScreen = () => {
                   )}
 
                   <ListGroup.Item className="d-grid gap-2">
-                    <Button
-                      onClick={addToCartHandler}
-                      className="btn btn-lg btn-block bg-primary-500 border-0"
-                      type="button"
-                      disabled={
-                        product.countInStock === 0 || !selectedPriceVariant
-                      }
-                    >
-                      {isProductInCart(
-                        `${product._id}-${selectedPriceVariant?._id}`
-                      )
-                        ? "Remove"
-                        : "Add To Cart"}
-                    </Button>
+                    {isProductInCart(
+                      `${product._id}-${selectedPriceVariant?._id}`
+                    ) ? (
+                      <Button
+                        onClick={addToCartHandler}
+                        className="btn btn-lg btn-block btn-remove border-0"
+                        type="button"
+                      >
+                        Remove
+                      </Button>
+                    ) : (
+                      <Button
+                        onClick={addToCartHandler}
+                        className="btn btn-lg btn-block btn-custom border-0"
+                        type="button"
+                      >
+                        Add to Cart
+                      </Button>
+                    )}
+                    {isProductInCart(
+                      `${product._id}-${selectedPriceVariant?._id}`
+                    ) && (
+                      <LinkContainer to="/cart">
+                        <Button
+                          className="btn btn-lg btn-block btn-checkout border-0"
+                          type="button"
+                        >
+                          Checkout
+                        </Button>
+                      </LinkContainer>
+                    )}
                   </ListGroup.Item>
                 </ListGroup>
               </Card>
@@ -515,6 +533,7 @@ const ProductScreen = () => {
                           product={product}
                           handleCheckboxChange={handleCheckboxChange}
                           isChecked={selectedProducts.has(product._id)}
+                          totalProducts={frequentlyBought.length}
                         />
                       </Col>
                     ))}
