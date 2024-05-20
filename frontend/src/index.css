@@ -812,25 +812,25 @@ button {
 .btn-remove,
 .btn-remove:active,
 .btn-remove:focus {
-  background-color: #ff4e02 !important; /* Use your desired hover color */
-  border-color: #ff4e02 !important; /* Match border color if needed */
+  background-color: #ac0000 !important; /* Use your desired hover color */
+  border-color: #ac0000 !important; /* Match border color if needed */
   box-shadow: none !important; /* Removes the glow effect */
 }
 .btn-remove:hover {
-  background-color: #fb6727e7 !important; /* Use your desired color */
-  border-color: #fb6727e7 !important; /* Match border color if needed */
+  background-color: #850808 !important; /* Use your desired color */
+  border-color: #850808 !important; /* Match border color if needed */
   box-shadow: none !important; /* Removes the glow effect */
 }
 
 .btn-checkout,
 .btn-checkout:active,
 .btn-checkout:focus {
-  background-color: #ccbb00 !important; /* Use your desired hover color */
-  border-color: #ccbb00 !important; /* Match border color if needed */
+  background-color: #2e8b57 !important; /* Use your desired hover color */
+  border-color: #2e8b57 !important; /* Match border color if needed */
   box-shadow: none !important; /* checkouts the glow effect */
 }
 .btn-checkout:hover {
-  background-color: #afa100 !important; /* Use your desired color */
-  border-color: #afa100 !important; /* Match border color if needed */
+  background-color: #246942 !important; /* Use your desired color */
+  border-color: #246942 !important; /* Match border color if needed */
   box-shadow: none !important; /* Removes the glow effect */
 }
