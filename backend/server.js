@@ -21,6 +21,7 @@ import bannerRoutes from "./routes/bannerRoutes.js";
 import smallBannerRoutes from "./routes/smallBannerRoutes.js";
 import categoryRoutes from "./routes/categoryRoutes.js";
 import promotionRoutes from "./routes/promotionRoutes.js";
+import paymentRoutes from "./routes/paymentRoutes.js";
 import bodyParser from "body-parser";
 import cors from "cors";
 import nStatic from "node-static";
@@ -46,6 +47,14 @@ app.use((req, res, next) => {
   next();
 });
 
+app.use(
+  bodyParser.json({
+    verify: function (req, res, buf) {
+      req.rawBody = buf;
+    },
+  })
+);
+
 const staticDir = process.env.STATIC_DIR;
 const stripeSecretKey = process.env.STRIPE_SECRET_KEY;
 const stripePublishableKey = process.env.STRIPE_PUBLISHABLE_KEY;
@@ -60,35 +69,36 @@ app.get("/", (req, res) => {
   res.sendFile(path);
 });
 
-app.get("/api/config/stripe", (req, res) => {
-  res.send({
-    publishableKey: stripePublishableKey,
-  });
-});
-app.use(express.urlencoded({ extended: true }));
+// app.get("/api/config/stripe", (req, res) => {
+//   res.send({
+//     publishableKey: stripePublishableKey,
+//   });
+// });
+// app.use(express.urlencoded({ extended: true }));
 
-app.post("/create-payment-intent", async (req, res) => {
-  try {
-    const totalPrice = req.body.totalPrice * 100;
+// app.post("/create-payment-intent", async (req, res) => {
+//   try {
+//     const totalPrice = req.body.totalPrice * 100;
 
-    const paymentIntent = await stripeInstance.paymentIntents.create({
-      currency: "aed",
-      amount: totalPrice,
-      automatic_payment_methods: { enabled: true },
-    });
+//     const paymentIntent = await stripeInstance.paymentIntents.create({
+//       currency: "aed",
+//       amount: totalPrice,
+//       automatic_payment_methods: { enabled: true },
+//     });
 
-    // Send publishable key and PaymentIntent details to client
-    res.send({
-      clientSecret: paymentIntent.client_secret,
-    });
-  } catch (e) {
-    return res.status(400).send({
-      error: {
-        message: e.message,
-      },
-    });
-  }
-});
+//     // Send publishable key and PaymentIntent details to client
+//     res.send({
+//       clientSecret: paymentIntent.client_secret,
+//     });
+//   } catch (e) {
+//     return res.status(400).send({
+//       error: {
+//         message: e.message,
+//       },
+//     });
+//   }
+// });
+app.use("/payment", paymentRoutes);
 
 app.use("/api/products", productRoutes);
 app.use("/api/users", userRoutes);

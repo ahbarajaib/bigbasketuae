@@ -43,6 +43,7 @@ import CategoryEditScreen from "./screens/CategoryEditScreen";
 import PromotionListScreen from "./screens/PromotionListScreen";
 import PromotionEditScreen from "./screens/PromotionEditScreen";
 import ProductPromotionScreen from "./screens/ProductPromotionScreen";
+import SuccessPage from "./components/SuccessPage";
 const getMarginTop = () => {
   const isMobile = window.innerWidth <= 767; // Adjust the breakpoint as needed
   return isMobile ? "140px" : "140px";
@@ -61,6 +62,7 @@ function App() {
             {/* If a link has / with anything it will take this route so 'exact'*/}
             {/* 'component' has changed to 'element' in react-router-dom version 6*/}
             <Routes>
+              <Route path="/success" element={<SuccessPage />} />
               <Route path="/orders/:id/payment" element={<Payment />} />
               <Route path="/completion" element={<Completion />} />
               <Route path="/orders/:id" element={<OrderScreen />} />

@@ -151,20 +151,20 @@ const PlaceOrderScreen = () => {
 
   const totals = calculateTotals(cartItems);
 
-  useEffect(() => {
-    if (success) {
-      if (
-        paymentMethod === "Cash on Delivery" ||
-        paymentMethod === "Bring Swiping Machine"
-      ) {
-        navigate(`/orders/${order._id}/cod`);
-      } else if (paymentMethod === "Card Payment") {
-        navigate(`/orders/${order._id}/payment`);
-      }
-    }
-  }, [success, navigate, order, paymentMethod]);
+  // useEffect(() => {
+  //   if (success) {
+  //     if (
+  //       paymentMethod === "Cash on Delivery" ||
+  //       paymentMethod === "Bring Swiping Machine"
+  //     ) {
+  //       navigate(`/orders/${order._id}/cod`);
+  //     } else if (paymentMethod === "Card Payment") {
+  //       navigate(`/orders/${order._id}/payment`);
+  //     }
+  //   }
+  // }, [success, navigate, order, paymentMethod]);
 
-  const placeOrderHandler = () => {
+  const placeOrderHandler = async () => {
     const orderItems = cartItems.cartItems.map((item) => ({
       name: item.product.name,
       noOfProducts: item.variant.noOfProducts,
@@ -172,27 +172,63 @@ const PlaceOrderScreen = () => {
       product: item.product._id,
       selectedPrice: item.variant.price,
       selectedQty: item.variant.qty,
-      discountedPrice: item.variant.discountedPrice, // Add this field
-      selectedDiscount: item.variant.discount, // Add this field
-      selectedUnits: item.variant.units, // Add this field
+      discountedPrice: item.variant.discountedPrice,
+      selectedDiscount: item.variant.discount,
+      selectedUnits: item.variant.units,
     }));
-    dispatch(
-      createOrder({
-        orderItems,
-        shippingAddress: {
-          building: cartItems.shippingAddress.building,
-          address: cartItems.shippingAddress.address,
-          city: cartItems.shippingAddress.city,
-          country: cartItems.shippingAddress.country,
-          coordinates: cartItems.shippingAddress.coordinates, // Include coordinates here
-        },
-        paymentMethod: paymentMethod, // Use the selected payment method
-        itemsPrice: totals.itemsPrice,
-        discountAmount: totals.discountAmount,
-        shippingPrice: totals.shippingPrice,
-        totalPrice: totals.totalPrice,
-      })
-    );
+
+    const orderData = {
+      orderItems,
+      shippingAddress: {
+        building: cartItems.shippingAddress.building,
+        address: cartItems.shippingAddress.address,
+        city: cartItems.shippingAddress.city,
+        country: cartItems.shippingAddress.country,
+        coordinates: cartItems.shippingAddress.coordinates,
+      },
+      paymentMethod: paymentMethod,
+      itemsPrice: totals.itemsPrice,
+      discountAmount: totals.discountAmount,
+      shippingPrice: totals.shippingPrice,
+      totalPrice: totals.totalPrice,
+    };
+
+    try {
+      // Dispatch the order to Redux
+      const createdOrder = await dispatch(createOrder(orderData));
+      console.log("Created Order:", createdOrder);
+
+      let orderId = order._id;
+      if (createdOrder.payload) {
+        orderId = createdOrder.payload._id;
+      }
+
+      const response = await fetch(
+        `${process.env.REACT_APP_API_URL}/payment/create-checkout-session`,
+        {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+          },
+          body: JSON.stringify({
+            orderId: orderId,
+            orderData: orderData,
+          }),
+        }
+      );
+
+      if (!response.ok) {
+        throw new Error("Failed to create checkout session");
+      }
+
+      const session = await response.json();
+      console.log("Stripe session created:", session);
+
+      // Redirect to checkout
+      window.location.href = session.url;
+    } catch (error) {
+      console.error("Error:", error);
+    }
   };
 
   return (

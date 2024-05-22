@@ -834,3 +834,48 @@ button {
   border-color: #246942 !important; /* Match border color if needed */
   box-shadow: none !important; /* Removes the glow effect */
 }
+
+/* 
+Success Page */
+
+.checkmark-animation {
+  position: relative;
+  animation: bounceIn 0.5s ease-in-out;
+}
+
+.checkmark-icon {
+  width: 100px;
+}
+
+.success-message {
+  margin-top: 20px;
+  animation: fadeInUp 0.5s ease-in-out;
+}
+
+@keyframes bounceIn {
+  0% {
+    opacity: 0;
+    transform: scale(0.3);
+  }
+  50% {
+    opacity: 1;
+    transform: scale(1.05);
+  }
+  70% {
+    transform: scale(0.9);
+  }
+  100% {
+    transform: scale(1);
+  }
+}
+
+@keyframes fadeInUp {
+  0% {
+    opacity: 0;
+    transform: translateY(20px);
+  }
+  100% {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}

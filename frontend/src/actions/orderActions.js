@@ -47,6 +47,8 @@ export const createOrder = (order) => async (dispatch, getState) => {
     });
 
     localStorage.removeItem("cartItems");
+    console.log(data);
+    return data;
   } catch (error) {
     const message =
       error.response && error.response.data.message

@@ -33,9 +33,6 @@ const addOrderItems = asyncHandler(async (req, res) => {
     });
 
     const createdOrder = await order.save();
-    // Pass the order object to confirmOrderEmail
-    confirmOrderEmail(req.user.email, createdOrder);
-    confirmOrderEmail2(config.emailUser, createdOrder);
 
     // Send the response after calling confirmOrderEmail
     res.status(201).json(createdOrder);
