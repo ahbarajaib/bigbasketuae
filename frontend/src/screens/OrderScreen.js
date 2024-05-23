@@ -35,9 +35,7 @@ const OrderScreen = (history) => {
 
   // Now you can use building, address, city, country, Lat, and Lng safely
 
-  const orderPay = useSelector((state) => state.orderPay);
   //loadingPay is just a rename because its used above
-  const { loading: loadingPay, success: successPay } = orderPay;
 
   const userLogin = useSelector((state) => state.userLogin);
   const { userInfo } = userLogin;
@@ -66,16 +64,15 @@ const OrderScreen = (history) => {
       navigate("/login");
     }
 
-    if (!order || successPay || successDeliver) {
+    if (!order || successDeliver) {
       //if you don't do below the pay will keep refreshing
 
-      dispatch({ type: ORDER_PAY_RESET });
       dispatch({ type: ORDER_DELIVER_RESET });
       dispatch(getOrderDetails(id));
     } else if (!order.isPaid) {
       setSdkReady(true);
     }
-  }, [id, dispatch, successPay, successDeliver, order, navigate, userInfo]);
+  }, [id, dispatch, successDeliver, order, navigate, userInfo]);
 
   const successPaymentHandler = async () => {
     if (
@@ -499,7 +496,6 @@ const OrderScreen = (history) => {
                 order.paymentMethod !== "Bring Swiping Machine" && (
                   <ListGroup.Item>
                     <div>
-                      {loadingPay && <Loader />}
                       {!sdkReady ? (
                         <Loader />
                       ) : (

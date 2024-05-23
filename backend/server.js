@@ -38,8 +38,6 @@ if (process.env.NODE_ENV === "development") {
 }
 
 app.use(cors());
-app.use(express.json());
-app.use(bodyParser.json());
 //middleware is a function that has access to req res cycle
 app.use((req, res, next) => {
   //to check which URL triggered this console.log(req.originalUrl)

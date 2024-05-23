@@ -15,9 +15,9 @@ import {
   ORDER_DELIVER_FAIL,
   ORDER_DELIVER_SUCCESS,
   ORDER_DELIVER_REQUEST,
-  ORDER_PAY_REQUEST,
-  ORDER_PAY_SUCCESS,
-  ORDER_PAY_FAIL,
+  ORDER_CONFIRM_REQUEST,
+  ORDER_CONFIRM_SUCCESS,
+  ORDER_CONFIRM_FAIL,
 } from "../constants/orderConstants";
 import { logout } from "./userActions";
 
@@ -97,10 +97,10 @@ export const getOrderDetails = (id) => async (dispatch, getState) => {
   }
 };
 
-export const payOrder = (id, paymentIntent) => async (dispatch, getState) => {
+export const confirmOrder = (id) => async (dispatch, getState) => {
   try {
     dispatch({
-      type: ORDER_PAY_REQUEST,
+      type: ORDER_CONFIRM_REQUEST,
     });
 
     const {
@@ -115,13 +115,13 @@ export const payOrder = (id, paymentIntent) => async (dispatch, getState) => {
     };
 
     const { data } = await axiosInstance.put(
-      `/api/orders/${id}/payment`,
-      paymentIntent,
+      `/api/orders/${id}/confirm`,
+      {},
       config
     );
 
     dispatch({
-      type: ORDER_PAY_SUCCESS,
+      type: ORDER_CONFIRM_SUCCESS,
       payload: data,
     });
   } catch (error) {
@@ -133,7 +133,7 @@ export const payOrder = (id, paymentIntent) => async (dispatch, getState) => {
       dispatch(logout());
     }
     dispatch({
-      type: ORDER_PAY_FAIL,
+      type: ORDER_CONFIRM_FAIL,
       payload: message,
     });
   }

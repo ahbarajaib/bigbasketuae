@@ -23,29 +23,14 @@ const OrderListScreen = () => {
   const yesterday = new Date(today);
   yesterday.setDate(today.getDate() - 1);
 
-  const filterOrders = (order) => {
-    const orderDate = new Date(order.createdAt);
-    if (
-      (selectedPaymentFilter === "All" ||
-        order.paymentMethod === selectedPaymentFilter) &&
-      (selectedDeliveryFilter === "All" ||
-        (selectedDeliveryFilter === "Delivered"
-          ? order.isDelivered
-          : !order.isDelivered)) &&
-      (selectedDateFilter === "All" ||
-        (selectedDateFilter === "Yesterday" &&
-          orderDate.getDate() === yesterday.getDate()) ||
-        (selectedDateFilter === "Today" &&
-          orderDate.getDate() === today.getDate()))
-    ) {
-      return true;
-    }
-    return false;
-  };
-
   // Filter and sort orders based on selected filters and sort by createdAt
   const filteredAndSortedOrders = orders
-    .filter(filterOrders)
+    .filter(
+      (order) =>
+        order.status === "Confirmed" ||
+        order.status === "Paid" ||
+        order.status === "Delivered"
+    )
     .sort((a, b) => new Date(b.createdAt) - new Date(a.createdAt));
 
   const userLogin = useSelector((state) => state.userLogin);
@@ -130,6 +115,7 @@ const OrderListScreen = () => {
               <th>USER</th>
               <th>DATE</th>
               <th>TOTAL</th>
+              <th>STATUS</th>
               <th>PAYMENT</th>
               <th>DELIVERED</th>
               <th></th>
@@ -142,6 +128,7 @@ const OrderListScreen = () => {
                 <td>{order.user && order.user.name}</td>
                 <td>{formatDateTime(order.createdAt)}</td>{" "}
                 <td>AED {order.totalPrice.toFixed(2)}</td>
+                <td>{order.status}</td>
                 <td
                   style={{
                     backgroundColor:
@@ -171,25 +158,6 @@ const OrderListScreen = () => {
                     ? "Failed"
                     : order.paymentMethod}
                 </td>
-                {/* <td>
-                  {order.isPaid ? (
-                    (() => {
-                      const paidDate = new Date(order.paidAt);
-                      const formattedDate = `${paidDate.getDate()}/${
-                        paidDate.getMonth() + 1
-                      }/${paidDate.getFullYear()}`;
-                      const hours = paidDate.getHours();
-                      const minutes = paidDate.getMinutes();
-                      const ampm = hours >= 12 ? "PM" : "AM";
-                      const formattedTime = `${hours % 12}:${minutes
-                        .toString()
-                        .padStart(2, "0")} ${ampm}`;
-                      return `${formattedDate} ${formattedTime}`;
-                    })()
-                  ) : (
-                    <FontAwesomeIcon icon={faXmark} style={{ color: "red" }} />
-                  )}
-                </td> */}
                 <td
                   style={{
                     backgroundColor: order.isDelivered

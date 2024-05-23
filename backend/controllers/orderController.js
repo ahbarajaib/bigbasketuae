@@ -119,12 +119,7 @@ const updateOrderToPaid = asyncHandler(async (req, res) => {
   if (order) {
     order.isPaid = true;
     order.paidAt = new Date(req.body.created * 1000);
-    order.paymentResult = {
-      id: req.body.id,
-      status: req.body.status,
-      update_time: req.body.created, // This is a UNIX timestamp
-      email_address: req.body.receipt_email,
-    };
+    order.status = "Confirmed";
 
     const updatedOrder = await order.save();
     res.json(updatedOrder);
@@ -134,7 +129,19 @@ const updateOrderToPaid = asyncHandler(async (req, res) => {
   }
 });
 
-const updateOrderToPlaced = asyncHandler(async (req, res) => {});
+const updateOrderToConfirmed = asyncHandler(async (req, res) => {
+  const order = await Order.findById(req.params.id);
+  console.log("order to confirm", order);
+  if (order) {
+    order.status = "Confirmed";
+
+    const updatedOrder = await order.save();
+    res.json(updatedOrder);
+  } else {
+    res.status(404);
+    throw new Error("Order not found");
+  }
+});
 
 // @desc    Update order to delivered
 // @route   GET /api/orders/:id/deliver
@@ -174,7 +181,7 @@ const getOrders = asyncHandler(async (req, res) => {
 export {
   addOrderItems,
   getOrderById,
-  updateOrderToPlaced,
+  updateOrderToConfirmed,
   updateOrderToPaid,
   updateOrderToDelivered,
   getMyOrders,

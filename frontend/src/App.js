@@ -36,7 +36,6 @@ import ProductCategoryScreen from "./screens/ProductCategoryScreen";
 import ForgotPasswordScreen from "./screens/ForgotPasswordScreen";
 import ResetPasswordScreen from "./screens/ResetPasswordScreen";
 import ScrollToTop from "./components/ScrollToTop";
-import Payment from "./screens/Payment";
 import Completion from "./screens/Completion";
 import SelectPaymentScreen from "./screens/SelectPaymentScreen";
 import CategoryEditScreen from "./screens/CategoryEditScreen";
@@ -63,7 +62,6 @@ function App() {
             {/* 'component' has changed to 'element' in react-router-dom version 6*/}
             <Routes>
               <Route path="/success" element={<SuccessPage />} />
-              <Route path="/orders/:id/payment" element={<Payment />} />
               <Route path="/completion" element={<Completion />} />
               <Route path="/orders/:id" element={<OrderScreen />} />
 

@@ -35,7 +35,6 @@ const makePayment = async (req, res) => {
       },
     });
 
-    console.log("Stripe session URL:", session.url);
     res.json({ url: session.url });
   } catch (e) {
     console.error("Stripe session creation failed:", e.message);
@@ -45,7 +44,6 @@ const makePayment = async (req, res) => {
 
 const webhook = async (req, res) => {
   const payload = req.body;
-  console.log(" payload", payload);
   const sig = req.headers["stripe-signature"];
 
   let event;
@@ -63,17 +61,29 @@ const webhook = async (req, res) => {
   // Handle the event
   if (event.type === "checkout.session.completed") {
     const session = event.data.object;
+    console.log("session", session);
     // Retrieve orderId from the metadata
     const orderId = session.metadata.orderId;
-
-    console.log("orderId", orderId);
+    //orderId in webhook console.log
+    console.log("orderId iin webhook", orderId);
+    try {
+      const order = await Order.findById(orderId);
+      if (order) {
+        order.isPaid = true;
+        order.paidAt = Date.now();
+        order.status = "Confirmed";
+        const updated = await order.save();
+        console.log("Order updated to paid");
+      }
+    } catch (e) {
+      console.error("Order not found");
+    }
   }
   res.sendStatus(200);
 };
 
 const getPaymentStatus = async (req, res) => {
   const { session_id } = req.query;
-  console.log(session_id);
   try {
     const payment = await stripe.checkout.sessions.retrieve(session_id);
     res.json(payment);

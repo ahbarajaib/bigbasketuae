@@ -80,6 +80,11 @@ const orderSchema = mongoose.Schema(
     deliveredAt: {
       type: Date,
     },
+    status: {
+      type: String,
+      required: true,
+      default: "Pending",
+    },
   },
   {
     timestamps: true,

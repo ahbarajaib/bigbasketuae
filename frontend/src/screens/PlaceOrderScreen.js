@@ -11,7 +11,7 @@ const PlaceOrderScreen = () => {
   const navigate = useNavigate();
   const location = useLocation();
   const { paymentMethod } = location.state || {};
-
+  console.log("paymentMethod", paymentMethod);
   const cartItems = useSelector((state) => state.cart);
   const { shippingAddress } = cartItems;
 
@@ -184,13 +184,11 @@ const PlaceOrderScreen = () => {
       // Dispatch the order to Redux
       const createdOrder = await dispatch(createOrder(orderData));
       console.log("Created Order:", createdOrder);
-
+      console.log("Order ID", createdOrder._id);
       let orderId;
-      if (
-        createdOrder.payload &&
-        typeof createdOrder.payload._id === "object"
-      ) {
-        orderId = createdOrder.payload._id;
+      if (createdOrder && typeof createdOrder === "object") {
+        orderId = createdOrder._id;
+        console.log("Order ID:", orderId);
       } else {
         console.log("unable to retrieve order id");
       }
@@ -211,10 +209,15 @@ const PlaceOrderScreen = () => {
 
       const data = await response.json();
       console.log("Data:", data);
-      if (data.url) {
+      if (
+        orderData.paymentMethod === "Cash on Delivery" ||
+        orderData.paymentMethod === "Bring Swiping Machine"
+      ) {
+        navigate(`/success?orderId=${orderId}`);
+      } else if (order.paymentMethod === "Card Payment") {
         window.location.href = data.url;
       } else {
-        console.log("Error in creating checkout session");
+        console.log("Payment Method not found");
       }
     } catch (error) {
       console.error("Error placing order:", error);

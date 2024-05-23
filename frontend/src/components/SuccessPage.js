@@ -3,10 +3,12 @@ import { Container, Row, Col } from "react-bootstrap";
 import SuccessIcon from "../images/success.png";
 import { useLocation, useNavigate } from "react-router-dom";
 import axios from "axios";
+import { confirmOrder } from "../actions/orderActions";
+import { useDispatch } from "react-redux";
 
 const SuccessPage = () => {
   const [paymentStatus, setPaymentStatus] = useState("");
-
+  const dispatch = useDispatch();
   const location = useLocation();
   const navigate = useNavigate();
   const [countdown, setCountdown] = useState(5);
@@ -20,7 +22,7 @@ const SuccessPage = () => {
 
   useEffect(() => {
     const sessionId = new URLSearchParams(location.search).get("session_id");
-
+    const orderId = new URLSearchParams(location.search).get("orderId");
     if (sessionId) {
       axiosInstance
         .get(`/payment/status?session_id=${sessionId}`)
@@ -36,7 +38,10 @@ const SuccessPage = () => {
           console.error("Error fetching payment status:", error);
         });
     }
-  }, [location.search]);
+    if (orderId) {
+      dispatch(confirmOrder(orderId));
+    }
+  }, [location.search, axiosInstance, dispatch]);
 
   useEffect(() => {
     const timer = setInterval(() => {
@@ -59,6 +64,8 @@ const SuccessPage = () => {
         <Col xs={12} md={6} className="text-center">
           <div className="checkmark-animation">
             <img src={SuccessIcon} alt="Success" className="checkmark-icon" />
+            <p>Payment Status: {paymentStatus}</p>
+            <p>Redirecting to home in {countdown} seconds...</p>
             <h2 className="success-message">Payment Successful!</h2>
           </div>
           <p className="mt-3">Your order has been successfully processed.</p>

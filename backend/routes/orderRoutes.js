@@ -4,7 +4,7 @@ const router = express.Router();
 import {
   addOrderItems,
   getOrderById,
-  updateOrderToPlaced,
+  updateOrderToConfirmed,
   updateOrderToPaid,
   updateOrderToDelivered,
   getMyOrders,
@@ -24,7 +24,7 @@ router
 
 router.route("/myorders").get(protect, getMyOrders);
 router.route("/:id").get(protect, getOrderById);
-router.route("/:id/orderplaced").put(protect, updateOrderToPlaced);
+router.route("/:id/confirm").put(protect, updateOrderToConfirmed);
 
 router.route("/:id/payment").put(protect, updateOrderToPaid);
 router
