@@ -69,35 +69,6 @@ app.get("/", (req, res) => {
   res.sendFile(path);
 });
 
-// app.get("/api/config/stripe", (req, res) => {
-//   res.send({
-//     publishableKey: stripePublishableKey,
-//   });
-// });
-// app.use(express.urlencoded({ extended: true }));
-
-// app.post("/create-payment-intent", async (req, res) => {
-//   try {
-//     const totalPrice = req.body.totalPrice * 100;
-
-//     const paymentIntent = await stripeInstance.paymentIntents.create({
-//       currency: "aed",
-//       amount: totalPrice,
-//       automatic_payment_methods: { enabled: true },
-//     });
-
-//     // Send publishable key and PaymentIntent details to client
-//     res.send({
-//       clientSecret: paymentIntent.client_secret,
-//     });
-//   } catch (e) {
-//     return res.status(400).send({
-//       error: {
-//         message: e.message,
-//       },
-//     });
-//   }
-// });
 app.use("/payment", paymentRoutes);
 
 app.use("/api/products", productRoutes);

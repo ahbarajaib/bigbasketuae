@@ -151,19 +151,6 @@ const PlaceOrderScreen = () => {
 
   const totals = calculateTotals(cartItems);
 
-  // useEffect(() => {
-  //   if (success) {
-  //     if (
-  //       paymentMethod === "Cash on Delivery" ||
-  //       paymentMethod === "Bring Swiping Machine"
-  //     ) {
-  //       navigate(`/orders/${order._id}/cod`);
-  //     } else if (paymentMethod === "Card Payment") {
-  //       navigate(`/orders/${order._id}/payment`);
-  //     }
-  //   }
-  // }, [success, navigate, order, paymentMethod]);
-
   const placeOrderHandler = async () => {
     const orderItems = cartItems.cartItems.map((item) => ({
       name: item.product.name,
@@ -198,9 +185,14 @@ const PlaceOrderScreen = () => {
       const createdOrder = await dispatch(createOrder(orderData));
       console.log("Created Order:", createdOrder);
 
-      let orderId = order._id;
-      if (createdOrder.payload) {
+      let orderId;
+      if (
+        createdOrder.payload &&
+        typeof createdOrder.payload._id === "object"
+      ) {
         orderId = createdOrder.payload._id;
+      } else {
+        console.log("unable to retrieve order id");
       }
 
       const response = await fetch(
@@ -217,17 +209,15 @@ const PlaceOrderScreen = () => {
         }
       );
 
-      if (!response.ok) {
-        throw new Error("Failed to create checkout session");
+      const data = await response.json();
+      console.log("Data:", data);
+      if (data.url) {
+        window.location.href = data.url;
+      } else {
+        console.log("Error in creating checkout session");
       }
-
-      const session = await response.json();
-      console.log("Stripe session created:", session);
-
-      // Redirect to checkout
-      window.location.href = session.url;
     } catch (error) {
-      console.error("Error:", error);
+      console.error("Error placing order:", error);
     }
   };
 
