@@ -61,11 +61,9 @@ const webhook = async (req, res) => {
   // Handle the event
   if (event.type === "checkout.session.completed") {
     const session = event.data.object;
-    console.log("session", session);
     // Retrieve orderId from the metadata
     const orderId = session.metadata.orderId;
     //orderId in webhook console.log
-    console.log("orderId iin webhook", orderId);
     try {
       const order = await Order.findById(orderId);
       if (order) {

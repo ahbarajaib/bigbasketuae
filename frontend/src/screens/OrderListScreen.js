@@ -14,7 +14,7 @@ const OrderListScreen = () => {
 
   const orderList = useSelector((state) => state.orderList);
   const { loading, error, orders, page, pages } = orderList;
-
+  console.log(orders);
   const [selectedPaymentFilter, setSelectedPaymentFilter] = useState("All");
   const [selectedDeliveryFilter, setSelectedDeliveryFilter] = useState("All");
   const [selectedDateFilter, setSelectedDateFilter] = useState("All");
@@ -24,14 +24,9 @@ const OrderListScreen = () => {
   yesterday.setDate(today.getDate() - 1);
 
   // Filter and sort orders based on selected filters and sort by createdAt
-  const filteredAndSortedOrders = orders
-    .filter(
-      (order) =>
-        order.status === "Confirmed" ||
-        order.status === "Paid" ||
-        order.status === "Delivered"
-    )
-    .sort((a, b) => new Date(b.createdAt) - new Date(a.createdAt));
+  const filteredAndSortedOrders = orders.sort(
+    (a, b) => new Date(b.createdAt) - new Date(a.createdAt)
+  );
 
   const userLogin = useSelector((state) => state.userLogin);
   const { userInfo } = userLogin;

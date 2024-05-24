@@ -208,14 +208,13 @@ const PlaceOrderScreen = () => {
       );
 
       const data = await response.json();
-      console.log("Data:", data);
-      if (
+      if (order.paymentMethod === "Card Payment") {
+        window.location.href = data.url;
+      } else if (
         orderData.paymentMethod === "Cash on Delivery" ||
         orderData.paymentMethod === "Bring Swiping Machine"
       ) {
         navigate(`/success?orderId=${orderId}`);
-      } else if (order.paymentMethod === "Card Payment") {
-        window.location.href = data.url;
       } else {
         console.log("Payment Method not found");
       }
@@ -223,6 +222,7 @@ const PlaceOrderScreen = () => {
       console.error("Error placing order:", error);
     }
   };
+  //
 
   return (
     <>

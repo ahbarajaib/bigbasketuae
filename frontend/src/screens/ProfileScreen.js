@@ -74,6 +74,10 @@ const ProfileScreen = () => {
     }
   };
 
+  const filteredAndSortedOrders = orders
+    ? orders.sort((a, b) => new Date(b.createdAt) - new Date(a.createdAt))
+    : [];
+
   const submitHandler = (e) => {
     e.preventDefault();
     // Validate phone number length and content
@@ -178,19 +182,58 @@ const ProfileScreen = () => {
                 <th>ID</th>
                 <th>DATE</th>
                 <th>TOTAL</th>
-                <th>PAID</th>
+                <th>STATUS</th>
+                <th>PAYMENT</th>
                 <th>DELIVERED</th>
                 <th></th>
               </tr>
             </thead>
             <tbody>
-              {orders.map((order) => (
+              {filteredAndSortedOrders.map((order) => (
                 <tr key={order._id}>
                   <td>{order._id}</td>
                   <td>{formatDateTime(order.createdAt)}</td>
                   <td>AED {order.totalPrice}</td>
-                  <td>{order.paymentMethod}</td>
-                  <td>{order.isDelivered ? "Delivered" : "Not Delivered"}</td>
+                  <td>{order.status}</td>
+                  <td
+                    style={{
+                      backgroundColor:
+                        order.paymentMethod === "Cash on Delivery"
+                          ? "#ffc107" // Yellow for COD
+                          : order.paymentMethod === "Bring Swiping Machine"
+                          ? "#007bff" // Blue for Swipe
+                          : order.paymentMethod === "Card Payment" &&
+                            order.isPaid
+                          ? "#28a745" // Green for Paid
+                          : order.paymentMethod === "Card Payment" &&
+                            !order.isPaid
+                          ? "#dc3545" // Red for Failed
+                          : "transparent", // Default background color
+                      color:
+                        order.paymentMethod === "Bring Swiping Machine"
+                          ? "#fff"
+                          : "#000", // White text for Swipe, black for others
+                    }}
+                  >
+                    {order.paymentMethod === "Cash on Delivery"
+                      ? "COD"
+                      : order.paymentMethod === "Bring Swiping Machine"
+                      ? "Swipe"
+                      : order.paymentMethod === "Card Payment" && order.isPaid
+                      ? "Paid"
+                      : order.paymentMethod === "Card Payment" && !order.isPaid
+                      ? "Failed"
+                      : order.paymentMethod}
+                  </td>
+                  <td
+                    style={{
+                      backgroundColor: order.isDelivered
+                        ? "lightgreen"
+                        : "lightcoral",
+                    }}
+                  >
+                    {order.isDelivered ? "Delivered" : "Not Delivered"}
+                  </td>
                   <td>
                     <LinkContainer to={`/orders/${order._id}`}>
                       <Button className="btn-sm" variant="light">
