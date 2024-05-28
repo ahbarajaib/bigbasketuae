@@ -33,6 +33,18 @@ const ProductScreen = () => {
 
   const [cartItemId, setCartItemId] = useState("");
   const [selectedProducts, setSelectedProducts] = useState(new Set());
+  const calculateTotalAmount = () => {
+    let total = 0;
+    selectedProducts.forEach((product) => {
+      const price =
+        product.variant.discount > 0
+          ? product.variant.discountedPrice
+          : product.variant.price;
+      total += price;
+    });
+    return total.toFixed(2);
+  };
+
   const cartItems = useSelector((state) => state.cart.cartItems);
   const productCategory = useSelector((state) => state.productCategory);
   const {
@@ -538,16 +550,19 @@ const ProductScreen = () => {
                       </Col>
                     ))}
                   </Row>
-                  <div className="p-1 item-center">
-                    {" "}
-                    {/* Added button container */}
-                    <Button
-                      onClick={bulkAddToCart}
-                      disabled={selectedProducts.size === 0}
-                      className="btn-lg bg-primary-500 border-0"
-                    >
-                      Add Selected to Cart
-                    </Button>
+                  <div className="row d-flex align-items-center justify-content-center m-2">
+                    <div className="col-auto">
+                      <Button
+                        onClick={bulkAddToCart}
+                        disabled={selectedProducts.size === 0}
+                        className="btn-lg bg-primary-500 border-0"
+                      >
+                        Add Selected to Cart
+                      </Button>
+                    </div>
+                    <div className="col-auto">
+                      <h4>AED&nbsp;{calculateTotalAmount()}</h4>
+                    </div>
                   </div>
                 </div>
               </div>
