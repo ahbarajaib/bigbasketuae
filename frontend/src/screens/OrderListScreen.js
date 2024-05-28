@@ -14,7 +14,6 @@ const OrderListScreen = () => {
 
   const orderList = useSelector((state) => state.orderList);
   const { loading, error, orders, page, pages } = orderList;
-  console.log(orders);
   const [selectedPaymentFilter, setSelectedPaymentFilter] = useState("All");
   const [selectedDeliveryFilter, setSelectedDeliveryFilter] = useState("All");
   const [selectedDateFilter, setSelectedDateFilter] = useState("All");
