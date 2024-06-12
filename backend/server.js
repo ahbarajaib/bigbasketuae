@@ -63,8 +63,8 @@ const stripeInstance = stripe(stripeSecretKey, {
 app.use(express.static(staticDir));
 
 app.get("/", (req, res) => {
-  const path = resolve(staticDir + "/index.html");
-  res.sendFile(path);
+  // Your homepage logic
+  res.send("Welcome to the homepage!");
 });
 
 app.use("/payment", paymentRoutes);
