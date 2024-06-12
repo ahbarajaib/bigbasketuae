@@ -1,0 +1,8 @@
+{
+  "rewrites": [
+    {
+      "source": "/api/(.*)",
+      "destination": "bigbasketuae-backend.vercel.app/api/$1"
+    }
+  ]
+}
