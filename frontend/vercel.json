@@ -3,6 +3,10 @@
     {
       "source": "/api/(.*)",
       "destination": "bigbasketuae-backend.vercel.app/api/$1"
+    },
+    {
+      "source": "/uploads/(.*)",
+      "destination": "bigbasketuae-backend.vercel.app/uploads/$1"
     }
   ]
 }
