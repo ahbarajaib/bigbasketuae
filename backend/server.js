@@ -36,8 +36,11 @@ const app = express();
 if (process.env.NODE_ENV === "development") {
   app.use(morgan("dev"));
 }
-
-app.use(cors());
+const corsOptions = {
+  origin: process.env.CLIENT_URL,
+  optionsSuccessStatus: 200,
+};
+app.use(cors(corsOptions));
 //middleware is a function that has access to req res cycle
 app.use((req, res, next) => {
   //to check which URL triggered this console.log(req.originalUrl)
