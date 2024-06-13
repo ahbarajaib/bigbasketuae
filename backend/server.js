@@ -41,7 +41,16 @@ const corsOptions = {
   optionsSuccessStatus: 200,
 };
 app.use(cors(corsOptions));
-//middleware is a function that has access to req res cycle
+
+app.use(
+  bodyParser.json({
+    verify: function (req, res, buf) {
+      req.rawBody = buf;
+    },
+  })
+);
+app.use(bodyParser.urlencoded({ extended: true }));
+
 app.use((req, res, next) => {
   //to check which URL triggered this console.log(req.originalUrl)
 
