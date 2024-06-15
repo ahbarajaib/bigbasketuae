@@ -52,6 +52,13 @@ app.use(
 app.use(bodyParser.urlencoded({ extended: true }));
 
 app.use((req, res, next) => {
+  res.setHeader("Access-Control-Allow-Origin", "*");
+  res.setHeader("Access-Control-Allow-Methods", "GET, POST, PUT, DELETE");
+  res.setHeader("Access-Control-Allow-Headers", "Content-Type");
+  next();
+});
+
+app.use((req, res, next) => {
   //to check which URL triggered this console.log(req.originalUrl)
 
   next();
