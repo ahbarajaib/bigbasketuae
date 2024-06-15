@@ -100,6 +100,29 @@ app.use("/api/categories", categoryRoutes);
 app.use("/api/promotions", promotionRoutes);
 
 const __dirname = path.resolve();
+app.use((req, res, next) => {
+  console.log(`Request URL: ${req.originalUrl}`);
+  next();
+});
+
+app.use(
+  "/uploads",
+  (req, res, next) => {
+    console.log(`Serving static file from /uploads: ${req.originalUrl}`);
+    next();
+  },
+  express.static(path.join(__dirname, "/uploads"))
+);
+
+app.use(
+  "/banners",
+  (req, res, next) => {
+    console.log(`Serving static file from /banners: ${req.originalUrl}`);
+    next();
+  },
+  express.static(path.join(__dirname, "/banners"))
+);
+
 app.use("/uploads", express.static(path.join(__dirname, "/uploads")));
 app.use("/banners", express.static(path.join(__dirname, "/banners")));
 
