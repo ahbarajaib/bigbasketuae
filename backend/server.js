@@ -1,6 +1,5 @@
 //es6 way of importing
-import path from "path";
-import { resolve } from "path";
+import path, { resolve, dirname } from "path";
 import stripe from "stripe";
 import https from "https";
 import fs from "fs";
@@ -24,7 +23,7 @@ import promotionRoutes from "./routes/promotionRoutes.js";
 import paymentRoutes from "./routes/paymentRoutes.js";
 import bodyParser from "body-parser";
 import cors from "cors";
-import nStatic from "node-static";
+import { fileURLToPath } from "url";
 
 // importing environmental variables
 dotenv.config();
@@ -99,34 +98,21 @@ app.use("/api/smallbanners", smallBannerRoutes);
 app.use("/api/categories", categoryRoutes);
 app.use("/api/promotions", promotionRoutes);
 
-const __dirname = path.resolve();
-app.use((req, res, next) => {
-  console.log(`Request URL: ${req.originalUrl}`);
-  next();
-});
-
-app.use(
-  "/uploads",
-  (req, res, next) => {
-    console.log(`Serving static file from /uploads: ${req.originalUrl}`);
-    next();
-  },
-  express.static(path.join(__dirname, "/uploads"))
-);
-
-app.use(
-  "/banners",
-  (req, res, next) => {
-    console.log(`Serving static file from /banners: ${req.originalUrl}`);
-    next();
-  },
-  express.static(path.join(__dirname, "/banners"))
-);
+const __filename = fileURLToPath(import.meta.url);
+const __dirname = dirname(__filename);
 
 app.use("/uploads", express.static(path.join(__dirname, "/uploads")));
 app.use("/banners", express.static(path.join(__dirname, "/banners")));
 
-var fileServer = new nStatic.Server("./public");
+app.use((err, req, res, next) => {
+  console.error(err.message); // For debugging
+  if (err.message.includes("not found")) {
+    // A more flexible check
+    res.status(404).json({ message: err.message });
+  } else {
+    res.status(500).json({ message: "An error occurred" });
+  }
+});
 
 // Define routes
 app.get("/api/contactus", (req, res) => {

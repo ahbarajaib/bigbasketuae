@@ -59,6 +59,7 @@
     "slick-carousel": "^1.8.1",
     "stripe": "^8.191.0",
     "typescript": "^5.0.2",
+    "url": "^0.11.3",
     "use-places-autocomplete": "^4.0.1",
     "util": "^0.12.5"
   },
